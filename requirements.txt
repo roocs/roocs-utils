@@ -1,0 +1,3 @@
+numpy
+xarray>=0.15
+cfunits
