@@ -11,3 +11,7 @@ class CollectionParameter(_BaseParameter):
         for id in self.input:
             if not isinstance(id, str):
                 raise InvalidParameterValue("Each id must be a string")
+
+    def __str__(self):
+        return f'Datasets to analyse' \
+               f'\n '
