@@ -5,15 +5,8 @@ from roocs_utils.exceptions import InvalidParameterValue
 class LevelParameter(_BaseParameter):
 
     def _validate(self):
-        if not isinstance(self.input, tuple):
-            raise InvalidParameterValue('The level parameter should be passed in as a tuple')
-
-        """
-        Other things to check:
-        - starts with / or number
-        - ends with / or Z or number
-        - format of datetime
-        """
+        if not isinstance(self.input, int):
+            raise InvalidParameterValue("Levels should be passed in as integers")
 
     @property
     def str(self):
