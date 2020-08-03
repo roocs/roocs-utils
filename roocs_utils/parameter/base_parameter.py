@@ -6,7 +6,7 @@ from roocs_utils.exceptions import InvalidParameterValue
 class _BaseParameter(object):
     def __init__(self, input):
         self.input = input
-        self.result = parse()
+        self._result = self._parse()
         self._validate()
 
     def _validate(self):
@@ -18,30 +18,32 @@ class _BaseParameter(object):
 
     def _parse(self):
         if isinstance(self.input, self.__class__):
-            return self.input
+            return self.input._parse()
 
-        if self.input is None:
-            return self.input
+        elif self.__class__.__name__ in ("TimeParameter", "LevelParameter"):
+            return self._parse_range()
 
-        elif self.__class__ is TimeParameter or LevelParameter:
-            return parse_range
+        elif self.__class__.__name__ is "AreaParameter":
+            return self._parse_sequence(expected_length=4)
 
         else:
-            return parse_sequence
+            return self._parse_sequence()
 
     def _parse_range(self):
-        if self.input == '/':
+        if self.input in ('/', None):
             start = None
             end = None
         
         elif isinstance(self.input, str):
-            if '/' not in input:
+            if '/' not in self.input:
                 raise InvalidParameterValue("The parameter should be passed in as a range separated by /")
-            start = self.input.split('/')[0]
-            end = self.input.split('/')[1]
+
+            # use str() to convert empty string to None
+            start = str(self.input.split('/')[0]) or None
+            end = str(self.input.split('/')[1]) or None
 
         elif isinstance(self.input, collections.Sequence):
-            if len(self.input) > 2:
+            if len(self.input) > 2 or len(self.input) < 2:
                 raise InvalidParameterValue(f"The parameter should be a range. Expected 2 values, "
                                             f"received {len(self.input)}")
 
@@ -50,7 +52,6 @@ class _BaseParameter(object):
 
         else:
             raise InvalidParameterValue(f"The parameter is not in an accepted format")
-
         return start, end
 
     def _parse_sequence(self, expected_length=None):
@@ -63,11 +64,10 @@ class _BaseParameter(object):
         else:
             raise InvalidParameterValue(f"The parameter is not in an accepted format")
 
-        if expected:
-            if len(sequence) != expected:
-                raise InvalidParameterValue(f"The parameter should be of length {expected_length} but is of length"
+        if expected_length:
+            if len(sequence) != expected_length:
+                raise InvalidParameterValue(f"The parameter should be of length {expected_length} but is of length "
                                             f"{len(sequence)}")
-
         return sequence
 
     def __str__(self):

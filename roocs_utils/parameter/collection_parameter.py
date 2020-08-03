@@ -3,15 +3,23 @@ from roocs_utils.exceptions import InvalidParameterValue
 
 
 class CollectionParameter(_BaseParameter):
-    
+
     def _validate(self):
-        if not isinstance(self.input, list):
-            if not isinstance(self.input, tuple):
-                raise InvalidParameterValue("Collections must be a list or tuple")
-        for id in self.input:
-            if not isinstance(id, str):
+        self._parse_ids()
+
+    def _parse_ids(self):
+        for value in self._result:
+            if not isinstance(value, str):
                 raise InvalidParameterValue("Each id must be a string")
 
+        return tuple(self._result)
+
+    @property
+    def tuple(self):
+        return self._parse_ids()
+
     def __str__(self):
-        return f'Datasets to analyse' \
-               f'\n '
+        string = 'Datasets to analyse:'
+        for i in self.tuple:
+            string += f'\n{i}'
+        return string
