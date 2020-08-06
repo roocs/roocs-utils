@@ -9,7 +9,7 @@ You can contribute in many ways:
 
 ### Report Bugs
 
-Report bugs at https://github.com/ellesmith88/roocs_utils/issues.
+Report bugs at https://github.com/roocs/roocs-utils/issues.
 
 If you are reporting a bug, please include:
 
@@ -35,7 +35,7 @@ articles, and such.
 
 ### Submit Feedback
 
-The best way to send feedback is to file an issue at https://github.com/ellesmith88/roocs_utils/issues.
+The best way to send feedback is to file an issue at https://github.com/ellesmith88/roocs-utils/issues.
 
 If you are proposing a feature:
 
@@ -46,17 +46,17 @@ If you are proposing a feature:
 
 ### Get Started!
 
-Ready to contribute? Here's how to set up `roocs_utils` for local development.
+Ready to contribute? Here's how to set up `roocs-utils` for local development.
 
-1. Fork the `roocs_utils` repo on GitHub.
+1. Fork the `roocs-utils` repo on GitHub.
 2. Clone your fork locally::
 
-    $ git clone git@github.com:your_name_here/roocs_utils.git
+    $ git clone git@github.com:your_name_here/roocs-utils.git
 
 3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
 
-    $ mkvirtualenv roocs_utils
-    $ cd roocs_utils/
+    $ mkvirtualenv roocs-utils
+    $ cd roocs-utils/
     $ python setup.py develop
 
 4. Create a branch for local development::
@@ -68,7 +68,7 @@ Ready to contribute? Here's how to set up `roocs_utils` for local development.
 5. When you are done making changes, check that your changes pass flake8 and the
    tests, including testing other Python versions with tox::
 
-    $ flake8 roocs_utils tests
+    $ flake8 roocs-utils tests
     $ python setup.py test or py.test
     $ tox
 
