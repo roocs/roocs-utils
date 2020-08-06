@@ -55,14 +55,13 @@ def test_validate_error_len_1_tuple():
 def test_asdict():
     area = "0.,49.,10.,65"
     parameter = AreaParameter(area)
-    assert parameter.asdict() == {"west": 0,
-                                  "south": 49,
-                                  "east": 10,
-                                  "north": 65}
+    assert parameter.asdict() == {"lon_bnds": [0, 10],
+                                  "lat_bnds": [49, 65]}
 
 
 def test_class_instance():
     area = "0.,49.,10.,65"
     parameter = AreaParameter(area)
     new_parameter = AreaParameter(parameter)
-    assert new_parameter.tuple == (0., 49., 10., 65)
+    assert new_parameter.tuple == (0., 49., 10., 65.)
+

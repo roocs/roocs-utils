@@ -22,10 +22,8 @@ class AreaParameter(_BaseParameter):
         return tuple(area)
 
     def asdict(self):
-        return {"west": self.tuple[0],
-                "south": self.tuple[1],
-                "east": self.tuple[2],
-                "north": self.tuple[3]}
+        return {"lon_bnds": [self.tuple[0],self.tuple[2]],
+                "lat_bnds": [self.tuple[1], self.tuple[3]]}
 
     @property
     def tuple(self):
