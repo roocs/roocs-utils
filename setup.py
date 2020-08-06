@@ -3,20 +3,17 @@
 
 """The setup script."""
 
-from setuptools import setup, find_packages
-
 __author__ = "Eleanor Smith"
 __contact__ = "eleanor.smith@stfc.ac.uk"
 __copyright__ = "Copyright 2018 United Kingdom Research and Innovation"
 __license__ = "BSD - see LICENSE file in top-level package directory"
 
-
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from setuptools import setup
 
 # One strategy for storing the overall version is to put it in the top-level
 # package's __init__ but Nb. __init__.py files are not needed to declare
 # packages in Python 3
-from roocs_utils import __version__ as _package_version
 
 # Populate long description setting with content of README
 #
@@ -26,12 +23,22 @@ with open("README.md") as readme_file:
     _long_description = readme_file.read()
 
 
-requirements = [ ]
+requirements = [line.strip() for line in open("requirements.txt")]
 
 setup_requirements = ['pytest-runner', ]
 
-test_requirements = ['pytest', ]
+test_requirements = ['pytest', 'tox']
 
+docs_requirements = [
+    "sphinx",
+    "sphinx-rtd-theme",
+    "nbsphinx",
+    "pandoc",
+    "ipython",
+    "ipykernel",
+    "jupyter_client",
+    "matplotlib",
+]
 
 setup(
     author=__author__,
@@ -69,7 +76,7 @@ setup(
 
     # This qualifier can be used to selectively exclude Python versions -
     # in this case early Python 2 and 3 releases
-    python_requires='>=3.5.0',
+    python_requires='>=3.6.0',
     entry_points={
         'console_scripts': [
             'roocs_utils=roocs_utils.cli:main',
@@ -82,11 +89,12 @@ setup(
     include_package_data=True,
     keywords='roocs_utils',
     name='roocs_utils',
-    packages=['roocs_utils', 'roocs_utils.xarray_utils'],
+    packages=['roocs_utils', 'roocs_utils.xarray_utils', 'roocs_utils.*'],
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/ellesmith88/roocs_utils',
-    version=_package_version,
+    extras_require={"docs": docs_requirements, "dev": dev_requirements},
+    url='https://github.com/roocs/roocs_utils',
+    version=__version__,
     zip_safe=False,
 )
