@@ -25,6 +25,7 @@ with open("README.md") as readme_file:
 
 
 requirements = [line.strip() for line in open("requirements.txt")]
+
 dev_requirements = [line.strip() for line in open("requirements_dev.txt")]
 
 setup_requirements = ['pytest-runner', ]

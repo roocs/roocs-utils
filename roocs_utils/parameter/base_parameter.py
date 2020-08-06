@@ -23,7 +23,7 @@ class _BaseParameter(object):
         elif self.__class__.__name__ in ("TimeParameter", "LevelParameter"):
             return self._parse_range()
 
-        elif self.__class__.__name__ is "AreaParameter":
+        elif self.__class__.__name__ == "AreaParameter":
             return self._parse_sequence(expected_length=4)
 
         else:
