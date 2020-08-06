@@ -1,3 +1,4 @@
 numpy
 xarray>=0.15
 cfunits
+python-dateutil>=2.8.1
