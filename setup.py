@@ -91,7 +91,7 @@ setup(
     include_package_data=True,
     keywords='roocs_utils',
     name='roocs_utils',
-    packages=['roocs_utils', 'roocs_utils.xarray_utils', 'roocs_utils.*'],
+    packages=find_packages(include=['roocs_utils', 'roocs_utils.xarray_utils', 'roocs_utils.*']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
