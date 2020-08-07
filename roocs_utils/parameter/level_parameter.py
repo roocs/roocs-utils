@@ -4,6 +4,8 @@ from roocs_utils.exceptions import InvalidParameterValue
 
 class LevelParameter(_BaseParameter):
 
+    parse_method = '_parse_range'
+
     def _validate(self):
         self._parse_levels()
 

@@ -4,6 +4,8 @@ from roocs_utils.exceptions import InvalidParameterValue
 
 class CollectionParameter(_BaseParameter):
 
+    parse_method = '_parse_sequence'
+
     def _validate(self):
         self._parse_ids()
 

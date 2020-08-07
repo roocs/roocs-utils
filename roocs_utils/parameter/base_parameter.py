@@ -1,9 +1,14 @@
 import collections
+from pydoc import locate
 
 from roocs_utils.exceptions import InvalidParameterValue
 
 
 class _BaseParameter(object):
+
+    parser_method = "UNDEFINED"
+    expected_length = None
+
     def __init__(self, input):
         self.input = input
         self._result = self._parse()
@@ -20,17 +25,11 @@ class _BaseParameter(object):
         if isinstance(self.input, self.__class__):
             return self.input._parse()
 
-        elif self.__class__.__name__ in ("TimeParameter", "LevelParameter"):
-            return self._parse_range()
-
-        elif self.__class__.__name__ == "AreaParameter":
-            return self._parse_sequence(expected_length=4)
-
         else:
-            return self._parse_sequence()
+            return getattr(self, self.parse_method)()
 
     def _parse_range(self):
-        if self.input in ('/', None):
+        if self.input in ('/', None, ''):
             start = None
             end = None
         
@@ -38,25 +37,24 @@ class _BaseParameter(object):
             if '/' not in self.input:
                 raise InvalidParameterValue("The parameter should be passed in as a range separated by /")
 
-            # use str() to convert empty string to None
-            start = str(self.input.split('/')[0]) or None
-            end = str(self.input.split('/')[1]) or None
+            # empty string either side of '/' is converted to None
+            start, end = [x.strip() or None for x in self.input.split('/')]
 
         elif isinstance(self.input, collections.Sequence):
-            if len(self.input) > 2 or len(self.input) < 2:
+            if len(self.input) != 2:
                 raise InvalidParameterValue(f"The parameter should be a range. Expected 2 values, "
                                             f"received {len(self.input)}")
 
-            start = self.input[0]
-            end = self.input[1]
+            start, end = self.input
 
         else:
             raise InvalidParameterValue(f"The parameter is not in an accepted format")
         return start, end
 
-    def _parse_sequence(self, expected_length=None):
-        if isinstance(self.input, str):
-            sequence = self.input.split(',')
+    def _parse_sequence(self):
+        # check str or bytes
+        if isinstance(self.input, (str, bytes)):
+            sequence = [x.strip() for x in self.input.split(',')]
 
         elif isinstance(self.input, collections.Sequence):
             sequence = self.input
@@ -64,10 +62,11 @@ class _BaseParameter(object):
         else:
             raise InvalidParameterValue(f"The parameter is not in an accepted format")
 
-        if expected_length:
-            if len(sequence) != expected_length:
-                raise InvalidParameterValue(f"The parameter should be of length {expected_length} but is of length "
+        if self.expected_length:
+            if len(sequence) != self.expected_length:
+                raise InvalidParameterValue(f"The parameter should be of length {self.expected_length} but is of length "
                                             f"{len(sequence)}")
+
         return sequence
 
     def __str__(self):

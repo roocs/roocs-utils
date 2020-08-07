@@ -4,6 +4,9 @@ from roocs_utils.exceptions import InvalidParameterValue
 
 class AreaParameter(_BaseParameter):
 
+    parse_method = '_parse_sequence'
+    expected_length = 4
+
     def _validate(self):
         self._parse_values()
 

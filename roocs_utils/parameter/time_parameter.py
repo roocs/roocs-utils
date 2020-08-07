@@ -6,6 +6,8 @@ from dateutil import parser as date_parser
 
 class TimeParameter(_BaseParameter):
 
+    parse_method = '_parse_range'
+
     def _validate(self):
         try:
             self._parse_times()
