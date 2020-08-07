@@ -119,6 +119,18 @@ def test_none():
     assert parameter.tuple == (None, None)
 
 
+def test_empty_string():
+    level = ""
+    parameter = LevelParameter(level)
+    assert parameter.tuple == (None, None)
+
+
+def test_white_space():
+    level = " 1000 /2000"
+    parameter = LevelParameter(level)
+    assert parameter.tuple == (1000, 2000)
+
+
 def test_class_instance():
     level = "1000/2000"
     parameter = LevelParameter(level)

@@ -53,7 +53,10 @@ class _BaseParameter(object):
 
     def _parse_sequence(self):
         # check str or bytes
-        if isinstance(self.input, (str, bytes)):
+        if self.input in (None, ''):
+            raise InvalidParameterValue(f"This parameter must be provided")
+
+        elif isinstance(self.input, (str, bytes)):
             sequence = [x.strip() for x in self.input.split(',')]
 
         elif isinstance(self.input, collections.Sequence):

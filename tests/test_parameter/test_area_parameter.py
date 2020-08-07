@@ -59,6 +59,26 @@ def test_asdict():
                                   "lat_bnds": [49, 65]}
 
 
+def test_whitespace():
+    area = "0., 49., 10., 65"
+    parameter = AreaParameter(area)
+    assert parameter.tuple == (0., 49., 10., 65)
+
+
+def test_empty_string():
+    area = ""
+    with pytest.raises(InvalidParameterValue) as exc:
+        AreaParameter(area)
+    assert str(exc.value) == "This parameter must be provided"
+
+
+def test_none():
+    area = None
+    with pytest.raises(InvalidParameterValue) as exc:
+        AreaParameter(area)
+    assert str(exc.value) == "This parameter must be provided"
+    
+
 def test_class_instance():
     area = "0.,49.,10.,65"
     parameter = AreaParameter(area)

@@ -54,6 +54,30 @@ def test_one_id():
     assert parameter.tuple == ("cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga",)
 
 
+def test_whitespace():
+    collection = "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga, " \
+                 "cmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga "
+
+    parameter = CollectionParameter(collection)
+    assert parameter.tuple == ("cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga",
+                               "cmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga")
+
+
+def test_empty_string():
+    collection = ""
+    with pytest.raises(InvalidParameterValue) as exc:
+        CollectionParameter(collection)
+    assert str(exc.value) == "This parameter must be provided"
+
+
+def test_none():
+    collection = None
+
+    with pytest.raises(InvalidParameterValue) as exc:
+        CollectionParameter(collection)
+    assert str(exc.value) == "This parameter must be provided"
+
+
 def test_class_instance():
     collection = "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga," \
            "cmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"

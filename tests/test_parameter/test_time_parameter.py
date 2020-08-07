@@ -89,6 +89,18 @@ def test_none():
     assert parameter.tuple == (None, None)
 
 
+def test_empty_string():
+    time = ""
+    parameter = TimeParameter(time)
+    assert parameter.tuple == (None, None)
+
+
+def test_white_space():
+    time = "2085-01-01T12:00:00Z / 2120-12-30T12:00:00Z "
+    parameter = TimeParameter(time)
+    assert parameter.tuple == ("2085-01-01T12:00:00+00:00", "2120-12-30T12:00:00+00:00")
+
+
 def test_class_instance():
     time = "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
     parameter = TimeParameter(time)
