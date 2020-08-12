@@ -4,9 +4,10 @@ from roocs_utils.exceptions import InvalidParameterValue
 from dateutil import parser as date_parser
 import datetime
 
+
 class TimeParameter(_BaseParameter):
 
-    parse_method = '_parse_range'
+    parse_method = "_parse_range"
 
     def _validate(self):
         try:
@@ -20,10 +21,18 @@ class TimeParameter(_BaseParameter):
         start, end = self._result
 
         if start is not None:
-            start = date_parser.parse(start, default=datetime.datetime(2005, 1, 1)).isoformat().split("-")[0]
+            start = (
+                date_parser.parse(start, default=datetime.datetime(2005, 1, 1))
+                .isoformat()
+                .split("-")[0]
+            )
         if end is not None:
-            end = date_parser.parse(end, default=datetime.datetime(2005, 12, 30)).isoformat().split("-")[0]
-        
+            end = (
+                date_parser.parse(end, default=datetime.datetime(2005, 12, 30))
+                .isoformat()
+                .split("-")[0]
+            )
+
         return start, end
 
     @property
@@ -34,10 +43,11 @@ class TimeParameter(_BaseParameter):
     # was start/end time - changed to date as xclim uses date
     def asdict(self):
         if self.tuple is not None:
-            return {"start_date": self.tuple[0],
-                    "end_date": self.tuple[1]}
+            return {"start_date": self.tuple[0], "end_date": self.tuple[1]}
 
     def __str__(self):
-        return f'Time period to subset over' \
-               f'\n start time: {self.tuple[0]}' \
-               f'\n end time: {self.tuple[1]}'
+        return (
+            f"Time period to subset over"
+            f"\n start time: {self.tuple[0]}"
+            f"\n end time: {self.tuple[1]}"
+        )

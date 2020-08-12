@@ -8,9 +8,11 @@ from roocs_utils.exceptions import InvalidParameterValue
 def test__str__():
     time = "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
     parameter = TimeParameter(time)
-    assert parameter.__str__() == 'Time period to subset over' \
-                                  f'\n start time: 2085' \
-                                  f'\n end time: 2120'
+    assert (
+        parameter.__str__() == "Time period to subset over"
+        f"\n start time: 2085"
+        f"\n end time: 2120"
+    )
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
 
@@ -25,7 +27,10 @@ def test_validate_error_len_1_tuple():
     time = ("2085-01-01T12:00:00Z",)
     with pytest.raises(InvalidParameterValue) as exc:
         TimeParameter(time)
-    assert str(exc.value) == "TimeParameter should be a range. Expected 2 values, received 1"
+    assert (
+        str(exc.value)
+        == "TimeParameter should be a range. Expected 2 values, received 1"
+    )
 
 
 # should datetime objects be allowed?
@@ -47,7 +52,9 @@ def test_validate_error_no_slash():
     time = "2085-01-01T12:00:00Z 2120-12-30T12:00:00Z"
     with pytest.raises(InvalidParameterValue) as exc:
         TimeParameter(time)
-    assert str(exc.value) == "TimeParameter should be passed in as a range separated by /"
+    assert (
+        str(exc.value) == "TimeParameter should be passed in as a range separated by /"
+    )
 
 
 def test_trailing_slash():
@@ -71,16 +78,14 @@ def test_tuple():
 def test_as_dict():
     time = "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
     parameter = TimeParameter(time)
-    assert parameter.asdict() == {"start_date": "2085",
-                                  "end_date": "2120"}
+    assert parameter.asdict() == {"start_date": "2085", "end_date": "2120"}
 
 
 def test_slash_none():
     time = "/"
     parameter = TimeParameter(time)
     assert parameter.tuple == (None, None)
-    assert parameter.asdict() == {"start_date": None,
-                                  "end_date": None}
+    assert parameter.asdict() == {"start_date": None, "end_date": None}
 
 
 def test_none():
@@ -105,4 +110,4 @@ def test_class_instance():
     time = "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
     parameter = TimeParameter(time)
     new_parameter = TimeParameter(parameter)
-    assert new_parameter.tuple == ('2085', '2120')
+    assert new_parameter.tuple == ("2085", "2120")

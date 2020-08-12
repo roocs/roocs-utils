@@ -4,7 +4,7 @@ from roocs_utils.exceptions import InvalidParameterValue, MissingParameterValue
 
 class CollectionParameter(_BaseParameter):
 
-    parse_method = '_parse_sequence'
+    parse_method = "_parse_sequence"
 
     def _validate(self):
         if self._result is None:
@@ -24,7 +24,7 @@ class CollectionParameter(_BaseParameter):
         return self._parse_ids()
 
     def __str__(self):
-        string = 'Datasets to analyse:'
+        string = "Datasets to analyse:"
         for i in self.tuple:
-            string += f'\n{i}'
+            string += f"\n{i}"
         return string
