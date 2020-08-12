@@ -31,14 +31,15 @@ class LevelParameter(_BaseParameter):
 
         return start, end
 
-    def asdict(self):
-
-        return {"start": self.tuple[0],
-                "end": self.tuple[1]}
-
     @property
     def tuple(self):
-        return self._parse_levels()
+        if self._parse_levels() is not (None, None):
+            return self._parse_levels()
+
+    def asdict(self):
+        if self.tuple is not None:
+            return {"start": self.tuple[0],
+                    "end": self.tuple[1]}
 
     def __str__(self):
         return f'Level range to subset over' \

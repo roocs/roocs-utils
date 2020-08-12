@@ -25,14 +25,14 @@ def test_validate_error_format():
     level = 1000
     with pytest.raises(InvalidParameterValue) as exc:
         LevelParameter(level)
-    assert str(exc.value) == "The parameter is not in an accepted format"
+    assert str(exc.value) == "LevelParameter is not in an accepted format"
 
 
 def test_validate_error_len_1_tuple():
     level = (1000,)
     with pytest.raises(InvalidParameterValue) as exc:
         LevelParameter(level)
-    assert str(exc.value) == "The parameter should be a range. Expected 2 values, received 1"
+    assert str(exc.value) == "LevelParameter should be a range. Expected 2 values, received 1"
 
 
 def test_not_numbers():
@@ -53,7 +53,7 @@ def test_validate_error_no_slash():
     level = "1000 2000"
     with pytest.raises(InvalidParameterValue) as exc:
         LevelParameter(level)
-    assert str(exc.value) == "The parameter should be passed in as a range separated by /"
+    assert str(exc.value) == "LevelParameter should be passed in as a range separated by /"
 
 
 def test_tuple():

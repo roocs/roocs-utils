@@ -1,7 +1,7 @@
 import pytest
 
 from roocs_utils.parameter.collection_parameter import CollectionParameter
-from roocs_utils.exceptions import InvalidParameterValue
+from roocs_utils.exceptions import InvalidParameterValue, MissingParameterValue
 
 
 def test__str__():
@@ -36,7 +36,7 @@ def test_validate_error_id():
 
     with pytest.raises(InvalidParameterValue) as exc:
         CollectionParameter(collection)
-    assert str(exc.value) == "Each id must be a string"
+    assert str(exc.value) == "Each id in a collection must be a string"
 
 
 def test_string():
@@ -65,17 +65,17 @@ def test_whitespace():
 
 def test_empty_string():
     collection = ""
-    with pytest.raises(InvalidParameterValue) as exc:
+    with pytest.raises(MissingParameterValue) as exc:
         CollectionParameter(collection)
-    assert str(exc.value) == "This parameter must be provided"
+    assert str(exc.value) == "CollectionParameter must be provided"
 
 
 def test_none():
     collection = None
 
-    with pytest.raises(InvalidParameterValue) as exc:
+    with pytest.raises(MissingParameterValue) as exc:
         CollectionParameter(collection)
-    assert str(exc.value) == "This parameter must be provided"
+    assert str(exc.value) == "CollectionParameter must be provided"
 
 
 def test_class_instance():

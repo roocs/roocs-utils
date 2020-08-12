@@ -25,6 +25,12 @@ def test_tuple():
     assert parameter.tuple == (0., 49., 10., 65)
 
 
+def test_area_is_tuple_string():
+    area = ('0', '-10', '120', '40')
+    parameter = AreaParameter(area)
+    assert parameter.tuple == (0., -10., 120., 40.)
+
+
 def test_input_list():
     area = [0, 49.5, 10, 65]
     parameter = AreaParameter(area)
@@ -35,7 +41,7 @@ def test_validate_error_number():
     area = 0
     with pytest.raises(InvalidParameterValue) as exc:
         AreaParameter(area)
-    assert str(exc.value) == "The parameter is not in an accepted format"
+    assert str(exc.value) == "AreaParameter is not in an accepted format"
 
 
 def test_validate_error_words():
@@ -49,14 +55,14 @@ def test_validate_error_len_1_tuple():
     area = (0, 65)
     with pytest.raises(InvalidParameterValue) as exc:
         AreaParameter(area)
-    assert str(exc.value) == "The parameter should be of length 4 but is of length 2"
+    assert str(exc.value) == "AreaParameter should be of length 4 but is of length 2"
 
 
 def test_asdict():
     area = "0.,49.,10.,65"
     parameter = AreaParameter(area)
-    assert parameter.asdict() == {"lon_bnds": [0, 10],
-                                  "lat_bnds": [49, 65]}
+    assert parameter.asdict() == {"lon_bnds": (0, 10),
+                                  "lat_bnds": (49, 65)}
 
 
 def test_whitespace():
@@ -67,16 +73,20 @@ def test_whitespace():
 
 def test_empty_string():
     area = ""
-    with pytest.raises(InvalidParameterValue) as exc:
-        AreaParameter(area)
-    assert str(exc.value) == "This parameter must be provided"
+    assert AreaParameter(area).asdict() is None
+    assert AreaParameter(area).tuple is None
 
 
 def test_none():
     area = None
-    with pytest.raises(InvalidParameterValue) as exc:
-        AreaParameter(area)
-    assert str(exc.value) == "This parameter must be provided"
+    assert AreaParameter(area).asdict() is None
+    assert AreaParameter(area).tuple is None
+    
+    
+def test_none_2():
+    area = None
+    assert AreaParameter(area).asdict() is None
+    assert AreaParameter(area).tuple is None
     
 
 def test_class_instance():
