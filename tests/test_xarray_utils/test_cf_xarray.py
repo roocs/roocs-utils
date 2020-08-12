@@ -13,10 +13,16 @@ test_path = (
 
 def test_get_standard_names():
     ds = xr.open_mfdataset(f1, use_cftime=True, combine="by_coords")
-    assert ds.cf.get_standard_names() == ['air_temperature', 'height', 'latitude', 'longitude', 'time']
-    
+    assert ds.cf.get_standard_names() == [
+        "air_temperature",
+        "height",
+        "latitude",
+        "longitude",
+        "time",
+    ]
 
-@pytest.mark.xfail(reason='left has height coord')
+
+@pytest.mark.xfail(reason="left has height coord")
 def test_get_latitude():
     ds = xr.open_mfdataset(f1, use_cftime=True, combine="by_coords")
     xr.testing.assert_identical(ds["lat"], ds.cf["lat"])
@@ -34,12 +40,12 @@ def test_get_latitude_2():
 
 def test_get_lat_lon_names_from_ds():
     ds = xr.open_mfdataset(f1, use_cftime=True, combine="by_coords")
-    assert ds.cf["latitude"].name == 'lat'
-    assert ds.cf["longitude"].name == 'lon'
+    assert ds.cf["latitude"].name == "lat"
+    assert ds.cf["longitude"].name == "lon"
     # not sure how it will deal with lats
 
 
-@pytest.mark.xfail(reason='left has height coord')
+@pytest.mark.xfail(reason="left has height coord")
 def test_get_time():
     ds = xr.open_mfdataset(f1, use_cftime=True, combine="by_coords")
     xr.testing.assert_identical(ds["time"], ds.cf["time"])

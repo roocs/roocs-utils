@@ -6,11 +6,13 @@ from roocs_utils.exceptions import InvalidParameterValue
 
 
 def test__str__():
-    level = '1000/2000'
+    level = "1000/2000"
     parameter = LevelParameter(level)
-    assert parameter.__str__() == 'Level range to subset over' \
-                                  f'\n start: 1000.0' \
-                                  f'\n end: 2000.0'
+    assert (
+        parameter.__str__() == "Level range to subset over"
+        f"\n start: 1000.0"
+        f"\n end: 2000.0"
+    )
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
 
@@ -25,14 +27,17 @@ def test_validate_error_format():
     level = 1000
     with pytest.raises(InvalidParameterValue) as exc:
         LevelParameter(level)
-    assert str(exc.value) == "The parameter is not in an accepted format"
+    assert str(exc.value) == "LevelParameter is not in an accepted format"
 
 
 def test_validate_error_len_1_tuple():
     level = (1000,)
     with pytest.raises(InvalidParameterValue) as exc:
         LevelParameter(level)
-    assert str(exc.value) == "The parameter should be a range. Expected 2 values, received 1"
+    assert (
+        str(exc.value)
+        == "LevelParameter should be a range. Expected 2 values, received 1"
+    )
 
 
 def test_not_numbers():
@@ -40,8 +45,8 @@ def test_not_numbers():
     with pytest.raises(InvalidParameterValue) as exc:
         LevelParameter(level)
     assert str(exc.value) == "Level values must be a number"
-    
-    
+
+
 def test_word_string():
     level = "level/range"
     with pytest.raises(InvalidParameterValue) as exc:
@@ -53,7 +58,9 @@ def test_validate_error_no_slash():
     level = "1000 2000"
     with pytest.raises(InvalidParameterValue) as exc:
         LevelParameter(level)
-    assert str(exc.value) == "The parameter should be passed in as a range separated by /"
+    assert (
+        str(exc.value) == "LevelParameter should be passed in as a range separated by /"
+    )
 
 
 def test_tuple():
@@ -101,16 +108,14 @@ def test_trailing_slash():
 def test_as_dict():
     level = "1000/2000"
     parameter = LevelParameter(level)
-    assert parameter.asdict() == {"start": 1000,
-                                  "end": 2000}
+    assert parameter.asdict() == {"start": 1000, "end": 2000}
 
 
 def test_slash_none():
     level = "/"
     parameter = LevelParameter(level)
     assert parameter.tuple == (None, None)
-    assert parameter.asdict() == {"start": None,
-                                  "end": None}
+    assert parameter.asdict() == {"start": None, "end": None}
 
 
 def test_none():
