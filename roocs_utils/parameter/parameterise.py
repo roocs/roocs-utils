@@ -9,6 +9,7 @@ from roocs_utils.parameter import (
 def parameterise_rook(collection=None, area=None, level=None, time=None):
     parameters = {}
 
+    parameters['collection'] = collection_parameter.CollectionParameter(collection).tuple
     parameters['area'] = area_parameter.AreaParameter(area).tuple
     parameters['time'] = time_parameter.TimeParameter(time).tuple
     parameters['level'] = level_parameter.LevelParameter(level).tuple
