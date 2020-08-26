@@ -57,10 +57,11 @@ class _BaseParameter(object):
         return start, end
 
     def _parse_sequence(self):
-        # check str or bytes
+        
         if self.input in (None, ""):
             sequence = None
 
+        # check str or bytes
         elif isinstance(self.input, (str, bytes)):
             sequence = [x.strip() for x in self.input.split(",")]
 

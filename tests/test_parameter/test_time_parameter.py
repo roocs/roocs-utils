@@ -78,14 +78,14 @@ def test_tuple():
 def test_as_dict():
     time = "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
     parameter = TimeParameter(time)
-    assert parameter.asdict() == {"start_date": "2085", "end_date": "2120"}
+    assert parameter.asdict() == {"start_time": "2085", "end_time": "2120"}
 
 
 def test_slash_none():
     time = "/"
     parameter = TimeParameter(time)
     assert parameter.tuple == (None, None)
-    assert parameter.asdict() == {"start_date": None, "end_date": None}
+    assert parameter.asdict() == {"start_time": None, "end_time": None}
 
 
 def test_none():

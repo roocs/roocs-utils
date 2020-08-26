@@ -43,7 +43,7 @@ class TimeParameter(_BaseParameter):
     # was start/end time - changed to date as xclim uses date
     def asdict(self):
         if self.tuple is not None:
-            return {"start_date": self.tuple[0], "end_date": self.tuple[1]}
+            return {"start_time": self.tuple[0], "end_time": self.tuple[1]}
 
     def __str__(self):
         return (
