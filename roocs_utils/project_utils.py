@@ -49,7 +49,7 @@ def get_project_name(dset):
                 return project
     elif dset.count('.') > 6:
         return dset.split('.')[0].lower()
-    elif dset.endswith('.nc'):
+    elif dset.endswith('.nc') or os.path.isfile(dset):
         dset = xr.open_mfdataset(dset, use_cftime=True, combine='by_coords')
         return get_project_from_ds(dset)
     else:
