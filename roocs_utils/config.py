@@ -9,7 +9,7 @@ _CONFIG = None
 def get_config(package=None):
     global _CONFIG
 
-    if not _CONFIG:
+    if True: #not _CONFIG:
         _load_config(package)
 
     return _CONFIG
