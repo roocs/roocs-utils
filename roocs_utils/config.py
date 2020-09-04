@@ -28,6 +28,11 @@ def _gather_config_files(package=None):
         if os.path.isfile(pkg_config):
             conf_files.append(pkg_config)
 
+    # add system config /etc/roocs.ini
+    sys_config = os.path.abspath(os.path.join(os.sep, 'etc', 'roocs.ini'))
+    if os.path.isfile(sys_config):
+        conf_files.append(sys_config)
+
     ROOCS_CONFIG = 'ROOCS_CONFIG'
     if ROOCS_CONFIG in os.environ:
         conf_files.extend(os.environ[ROOCS_CONFIG].split(':'))
