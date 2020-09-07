@@ -11,7 +11,9 @@ from roocs_utils.parameter import (
 def parameterise(collection=None, area=None, level=None, time=None):
 
     # if collection is a dataset/dataarray it doesn't need to be parameterised
-    if type(collection) not in (xr.core.dataarray.DataArray, xr.core.dataset.Dataset):
+    if type(collection) not in (xr.core.dataarray.DataArray, xr.core.dataset.Dataset) \
+        and collection is not None:
+
         collection = collection_parameter.CollectionParameter(collection)
 
     area = area_parameter.AreaParameter(area)
