@@ -10,8 +10,8 @@ def test__str__():
     parameter = TimeParameter(time)
     assert (
         parameter.__str__() == "Time period to subset over"
-        f"\n start time: 2085"
-        f"\n end time: 2120"
+        f"\n start time: 2085-01-01T12:00:00+00:00"
+        f"\n end time: 2120-12-30T12:00:00+00:00"
     )
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
@@ -60,25 +60,25 @@ def test_validate_error_no_slash():
 def test_trailing_slash():
     time = "2085-01-01T12:00:00Z/"
     parameter = TimeParameter(time)
-    assert parameter.tuple == ("2085", None)
+    assert parameter.tuple == ("2085-01-01T12:00:00+00:00", None)
 
 
 def test_starting_slash():
     time = "/2120-12-30T12:00:00Z"
     parameter = TimeParameter(time)
-    assert parameter.tuple == (None, "2120")
+    assert parameter.tuple == (None, "2120-12-30T12:00:00+00:00")
 
 
 def test_tuple():
     time = "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
     parameter = TimeParameter(time)
-    assert parameter.tuple == ("2085", "2120")
+    assert parameter.tuple == ("2085-01-01T12:00:00+00:00", "2120-12-30T12:00:00+00:00")
 
 
 def test_as_dict():
     time = "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
     parameter = TimeParameter(time)
-    assert parameter.asdict() == {"start_time": "2085", "end_time": "2120"}
+    assert parameter.asdict() == {"start_time": "2085-01-01T12:00:00+00:00", "end_time": "2120-12-30T12:00:00+00:00"}
 
 
 def test_slash_none():
@@ -103,11 +103,11 @@ def test_empty_string():
 def test_white_space():
     time = "2085-01-01T12:00:00Z / 2120-12-30T12:00:00Z "
     parameter = TimeParameter(time)
-    assert parameter.tuple == ("2085", "2120")
+    assert parameter.tuple == ("2085-01-01T12:00:00+00:00", "2120-12-30T12:00:00+00:00")
 
 
 def test_class_instance():
     time = "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
     parameter = TimeParameter(time)
     new_parameter = TimeParameter(parameter)
-    assert new_parameter.tuple == ("2085", "2120")
+    assert new_parameter.tuple == ("2085-01-01T12:00:00+00:00", "2120-12-30T12:00:00+00:00")

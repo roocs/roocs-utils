@@ -1,7 +1,7 @@
 import re
 
 from dask.utils import byte_sizes
-	
+
 
 def parse_size(size):
     """
@@ -10,8 +10,10 @@ def parse_size(size):
     :param: size [string]
     :return: integer (number of bytes)
     """
+    n, suffix = re.match('^(\d+\.?\d*)([a-zA-Z]+)$', size).groups()
+
     try:
-        n, suffix = re.match('^(\d+\.?\d*)([a-zA-Z]+)$', size).groups()
+
         multiplier = byte_sizes[suffix.lower()]
 
         size_in_bytes = multiplier * float(n)
