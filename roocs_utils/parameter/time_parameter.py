@@ -22,12 +22,12 @@ class TimeParameter(_BaseParameter):
 
         if start is not None:
             start = (
-                date_parser.parse(start, default=datetime.datetime(2005, 1, 1))
+                date_parser.parse(start, default=datetime.datetime(datetime.MINYEAR, 1, 1))
                 .isoformat()
             )
         if end is not None:
             end = (
-                date_parser.parse(end, default=datetime.datetime(2005, 12, 30))
+                date_parser.parse(end, default=datetime.datetime(datetime.MAXYEAR, 12, 31))
                 .isoformat()
             )
 
