@@ -27,7 +27,7 @@ class TimeParameter(_BaseParameter):
             )
         if end is not None:
             end = (
-                date_parser.parse(end, default=datetime.datetime(datetime.MAXYEAR, 12, 31))
+                date_parser.parse(end, default=datetime.datetime(datetime.MAXYEAR, 12, 30))
                 .isoformat()
             )
 

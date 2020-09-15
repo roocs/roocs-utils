@@ -13,7 +13,8 @@ import xarray as xr
 from roocs_utils import CONFIG
 from roocs_utils.xarray_utils.xarray_utils import get_coord_type
 
-output_dir = "/gws/smf/j04/cp4cds1/c3s_34e"
+output_dir = "/gws/smf/j04/cp4cds1/c3s_34e/inventory"
+_common_c3s_dir = '/group_workspaces/jasmin2/cp4cds1/vol1/data'
 
 
 def arg_parse():
@@ -170,54 +171,93 @@ def build_dict(dr, proj_dict, base_dir):
     facet_rule = proj_dict['facet_rule']
     facets = dict([_ for _ in zip(facet_rule, comps)])
 
-    var_id = facets.get('variable') or facets.get('variable_id')
+    try:
+        var_id = facets.get('variable') or facets.get('variable_id')
 
-    dims, shape, tm = get_var_metadata(fpaths, var_id)
-    size, size_gb, files = get_size_data(fpaths)
-    coord_d = get_coord_info(fpaths)
+        dims, shape, tm = get_var_metadata(fpaths, var_id)
+        size, size_gb, files = get_size_data(fpaths)
+        coord_d = get_coord_info(fpaths)
 
-    d = OrderedDict()
-    d['path'] = rel_dir
-    d['ds_id'] = rel_dir.replace('/', '.')
-    d['var_id'] = var_id
-    d['array_dims'] = dims
-    d['array_shape'] = shape
-    d['time'] = tm
-    d.update(coord_d)
-    d['size'] = size
-    d['size_gb'] = size_gb
-    d['file_count'] = files
-    d['facets'] = facets
+        d = OrderedDict()
+        d['path'] = rel_dir
+        d['ds_id'] = rel_dir.replace('/', '.')
+        d['var_id'] = var_id
+        d['array_dims'] = dims
+        d['array_shape'] = shape
+        d['time'] = tm
+        d.update(coord_d)
+        d['size'] = size
+        d['size_gb'] = size_gb
+        d['file_count'] = files
+        d['facets'] = facets
 
-    return d
+        return d
+
+    except Exception as exc:
+        print(f"[ERROR] Error with directory {dr}: {exc} ")
 
 
 def _get_project_list():
     projects = [_.split(':')[1] for _ in CONFIG.keys() if _.startswith('project:')]
-    return projects 
+    return projects
 
+
+def _get_start_dir(dr, project):
+
+    if dr.startswith(_common_c3s_dir):
+        dr = os.path.join(dr, project)
+
+    return dr
+
+
+def get_models(project):
+    d = CONFIG[f'project:{project}']
+
+    start_dir = _get_start_dir(d['base_dir'], project)
+    
+    if project == "c3s-cordex":
+        models_path = glob.glob(f"{start_dir}/output/EUR-11/*/*/")
+    elif project == "c3s-cmip5":
+        models_path = glob.glob(f"{start_dir}/output1/*/*/")
+    else:
+        raise Exception("Unknown Project")
+    
+    return models_path
+    
 
 def batch_run(project):
     # queue = "long-serial"
     # wallclock = "168:00"
     
     queue = "short-serial"
-    wallclock = "23:59"
-    output_base = f"{output_dir}/{project}"
+    wallclock = "06:00:00"
     current_directory = os.getcwd()
+    memory_limit = f"--mem=32000"
 
-    # bsub_cmd = (
-    #     f"bsub -q {queue} -W {wallclock} -o "
-    #     f"{output_base}.out -e {output_base}.err "
-    #     f"{current_directory}/roocs_utils/inventory/run_inventory.py -pr {project}"
-    # )
-    
-    sbatch_cmd = f'sbatch -p {queue} -t {wallclock} -o ' \
-                 f'{output_base}.out -e {output_base}.err '  \
-                 f'{current_directory}/roocs_utils/inventory/run_inventory.py -pr {project}'
+    model_paths = get_models(project)
 
-    subprocess.call(sbatch_cmd, shell=True)
-    print(f"running {sbatch_cmd}")
+    for pth in model_paths:
+        model_inst = '/'.join(pth.split('/')[-3:-1])
+        output_base = f"{output_dir}/{project}_{model_inst}"
+
+        # bsub_cmd = (
+        #     f"bsub -q {queue} -W {wallclock} -o "
+        #     f"{output_base}.out -e {output_base}.err "
+        #     f"{current_directory}/roocs_utils/inventory/run_inventory.py -pr {project}
+        #     -m {pth}"
+        # )
+
+        # sbatch_cmd = f'sbatch -p {queue} -t {wallclock} -o ' \
+        #              f'{output_base}.out -e {output_base}.err {memory_limit} '  \
+        #              f'{current_directory}/roocs_utils/inventory/run_inventory.py -pr {project}
+        #               -m {pth}'
+        #
+        # subprocess.call(sbatch_cmd, shell=True)
+        # print(f"running {sbatch_cmd}")
+
+        cmd = f"python {current_directory}/roocs_utils/inventory/run_inventory.py -pr {project}" \
+              f" -m {pth}"
+        subprocess.call(cmd, shell=True)
 
 
 if __name__ == '__main__':
