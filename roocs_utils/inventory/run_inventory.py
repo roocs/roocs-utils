@@ -41,7 +41,7 @@ def write_all(project, model_path):
     d = CONFIG[f'project:{project}']
 
     start_dir = model_path
-    model_inst = '/'.join(model_path.split('/')[-3:-1])
+    model_inst = '_'.join(model_path.split('/')[-3:-1])
 
     paths = []
 

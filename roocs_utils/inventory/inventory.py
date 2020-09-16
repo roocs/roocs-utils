@@ -230,14 +230,14 @@ def batch_run(project):
     # wallclock = "168:00"
     
     queue = "short-serial"
-    wallclock = "06:00:00"
+    wallclock = "24:00:00"
     current_directory = os.getcwd()
     memory_limit = f"--mem=32000"
 
     model_paths = get_models(project)
 
     for pth in model_paths:
-        model_inst = '/'.join(pth.split('/')[-3:-1])
+        model_inst = '_'.join(pth.split('/')[-3:-1])
         output_base = f"{output_dir}/{project}_{model_inst}"
 
         # bsub_cmd = (
@@ -247,17 +247,17 @@ def batch_run(project):
         #     -m {pth}"
         # )
 
-        # sbatch_cmd = f'sbatch -p {queue} -t {wallclock} -o ' \
-        #              f'{output_base}.out -e {output_base}.err {memory_limit} '  \
-        #              f'{current_directory}/roocs_utils/inventory/run_inventory.py -pr {project}
-        #               -m {pth}'
-        #
-        # subprocess.call(sbatch_cmd, shell=True)
-        # print(f"running {sbatch_cmd}")
+        sbatch_cmd = f'sbatch -p {queue} -t {wallclock} -o ' \
+                     f'{output_base}.out -e {output_base}.err {memory_limit} '  \
+                     f'{current_directory}/roocs_utils/inventory/run_inventory.py -pr {project} ' \
+                     f'-m {pth}'
 
-        cmd = f"python {current_directory}/roocs_utils/inventory/run_inventory.py -pr {project}" \
-              f" -m {pth}"
-        subprocess.call(cmd, shell=True)
+        subprocess.call(sbatch_cmd, shell=True)
+        print(f"running {sbatch_cmd}")
+
+        # cmd = f"python {current_directory}/roocs_utils/inventory/run_inventory.py -pr {project}" \
+        #       f" -m {pth}"
+        # subprocess.call(cmd, shell=True)
 
 
 if __name__ == '__main__':
