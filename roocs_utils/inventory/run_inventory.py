@@ -11,7 +11,7 @@ from roocs_utils import CONFIG
 
 VERSION = re.compile('^v\d{8}$')
 LIMIT = 1000000000
-LIMIT = 1
+# LIMIT = 1
 
 
 def arg_parse():
