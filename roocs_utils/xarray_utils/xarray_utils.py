@@ -74,17 +74,17 @@ def get_main_variable(ds):
     flat_dims = [dim for sublist in data_dims for dim in sublist]
 
     results = {}
-    skips = ["bnd", "bound"]
+    # skips = ["bnd", "bound"]
 
     for var_id, data in ds.variables.items():
 
         if var_id in flat_dims:
             continue
-        if any(skip in var_id for skip in skips):
-            continue
+        # if any(skip in var_id for skip in skips):
+        #     continue
         else:
-            results.update({var_id: data.dims})
-
+            results.update({var_id: ds[var_id].size})
+    print(results)
     result = max(results, key=results.get)
 
     if result is None:
