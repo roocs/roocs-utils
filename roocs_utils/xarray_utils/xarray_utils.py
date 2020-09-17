@@ -68,18 +68,19 @@ def get_coord_type(coord):
 # from old version of clisops
 
 
-def get_main_variable(dset):
-
-    data_dims = [data.dims for var_id, data in dset.variables.items()]
+def get_main_variable(ds):
+    import pdb;pdb.set_trace()
+    data_dims = [data.dims for var_id, data in ds.variables.items()]
     flat_dims = [dim for sublist in data_dims for dim in sublist]
 
     results = {}
+    skips = ["bnd", "bound"]
 
-    for var_id, data in dset.variables.items():
+    for var_id, data in ds.variables.items():
 
         if var_id in flat_dims:
             continue
-        if "bnd" in var_id:
+        if any(skip in var_id for skip in skips):
             continue
         else:
             results.update({var_id: data.dims})
