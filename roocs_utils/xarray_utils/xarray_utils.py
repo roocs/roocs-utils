@@ -69,7 +69,7 @@ def get_coord_type(coord):
 
 
 def get_main_variable(ds):
-    import pdb;pdb.set_trace()
+
     data_dims = [data.dims for var_id, data in ds.variables.items()]
     flat_dims = [dim for sublist in data_dims for dim in sublist]
 
