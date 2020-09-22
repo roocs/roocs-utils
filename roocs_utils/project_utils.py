@@ -34,7 +34,7 @@ def get_project_from_ds(ds):
 
 
 def get_base_dirs_dict():
-    projects = CONFIG['common']['known_projects']
+    projects = [_.split(':')[1] for _ in CONFIG.keys() if _.startswith('project:')]
     base_dirs = {project: CONFIG[f'project:{project}']['base_dir'] for project in projects}
     return base_dirs
 
