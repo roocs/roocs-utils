@@ -65,26 +65,22 @@ def get_coord_type(coord):
     return None
 
 
-# from old version of clisops
-
-
-def get_main_variable(ds):
+def get_main_variable(ds, exclude_common_coords=True):
 
     data_dims = [data.dims for var_id, data in ds.variables.items()]
     flat_dims = [dim for sublist in data_dims for dim in sublist]
 
     results = {}
-    skips = ["bnd", "bound"]
+    common_coords = ["bnd", "bound", "lat", "lon", "time"]
 
     for var_id, data in ds.variables.items():
 
         if var_id in flat_dims:
             continue
-        if any(skip in var_id for skip in skips):
+        if exclude_common_coords is True and any(coord in var_id for coord in common_coords):
             continue
         else:
-            results.update({var_id: data.dims})
-
+            results.update({var_id: len(ds[var_id].shape)})
     result = max(results, key=results.get)
 
     if result is None:
