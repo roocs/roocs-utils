@@ -3,6 +3,7 @@
 import os
 import glob
 import yaml
+import oyaml
 import time
 import argparse
 import subprocess
@@ -14,6 +15,7 @@ from roocs_utils import CONFIG
 from roocs_utils.xarray_utils.xarray_utils import get_coord_type
 
 output_dir = "/gws/smf/j04/cp4cds1/c3s_34e/inventory"
+# output_dir = "/home/users/esmith88/roocs/inventory"
 _common_c3s_dir = '/group_workspaces/jasmin2/cp4cds1/vol1/data'
 
 
@@ -44,11 +46,27 @@ class CustomDumper(yaml.SafeDumper):
 CustomDumper.add_representer(OrderedDict, CustomDumper.represent_dict_preserve_order)
 
 
-def to_yaml(name, content):
+# def to_yaml(name, content):
+#
+#     inv_path = f'{output_dir}/{name}.yml'
+#     with open(inv_path, 'w') as writer:
+#         yaml.dump(content, writer, Dumper=CustomDumper)
+#
+#     print(f'[INFO] Wrote: {inv_path}')
+
+
+def to_yaml(name, new_content):
 
     inv_path = f'{output_dir}/{name}.yml'
-    with open(inv_path, 'w') as writer: 
-        yaml.dump(content, writer, Dumper=CustomDumper)
+    if not os.path.isfile(inv_path):
+
+        with open(inv_path, "a") as f:
+            f.write("---\n")
+
+    sdump = oyaml.dump(new_content, Dumper=CustomDumper)
+
+    with open(inv_path, "a") as f:
+        f.write(sdump)
 
     print(f'[INFO] Wrote: {inv_path}')
 
@@ -155,18 +173,22 @@ def get_size_data(fpaths):
     return size, size_gb, files
 
 
-def build_dict(dr, proj_dict, base_dir):
+def build_dict(dr, proj_dict, base_dir, project, model_inst):
     fpaths = glob.glob(f'{dr}/*.nc')
 
     rel_dir = dr.replace(base_dir, '').strip('/')
     comps = rel_dir.split('/')
 
+    error_output_path = f"{output_dir}/logs/errors"
+
     if len(fpaths) < 1:
-        d = OrderedDict()
-        d['path'] = rel_dir
-        d['ds_id'] = rel_dir.replace('/', '.')
-        d['Note'] = f"No files available."
-        return d
+
+        # make output directory
+        if not os.path.exists(error_output_path):
+            os.makedirs(error_output_path)
+
+        with open(os.path.join(error_output_path, f"{project}_{model_inst}.txt"), 'a') as f:
+            f.write(f"\n[ERROR] No files available for directory {dr}")
 
     facet_rule = proj_dict['facet_rule']
     facets = dict([_ for _ in zip(facet_rule, comps)])
@@ -194,7 +216,13 @@ def build_dict(dr, proj_dict, base_dir):
         return d
 
     except Exception as exc:
-        print(f"[ERROR] Error with directory {dr}: {exc} ")
+        
+        # make output directory
+        if not os.path.exists(error_output_path):
+            os.makedirs(error_output_path)
+
+        with open(os.path.join(error_output_path, f"{project}_{model_inst}.txt"), 'a') as f:
+            f.write(f"\n[ERROR] Error with directory {dr}: {exc}")
 
 
 def _get_project_list():
@@ -238,7 +266,12 @@ def batch_run(project):
 
     for pth in model_paths:
         model_inst = '_'.join(pth.split('/')[-3:-1])
-        output_base = f"{output_dir}/{project}_{model_inst}"
+        lotus_output_base = f"{output_dir}/batch_outputs/"
+        lotus_output_path = f"{output_dir}/batch_outputs/{project}_{model_inst}"
+
+        # make output directory
+        if not os.path.exists(lotus_output_base):
+            os.makedirs(lotus_output_base)
 
         # bsub_cmd = (
         #     f"bsub -q {queue} -W {wallclock} -o "
@@ -248,7 +281,7 @@ def batch_run(project):
         # )
 
         sbatch_cmd = f'sbatch -p {queue} -t {wallclock} -o ' \
-                     f'{output_base}.out -e {output_base}.err {memory_limit} '  \
+                     f'{lotus_output_path}.out -e {lotus_output_path}.err {memory_limit} '  \
                      f'{current_directory}/roocs_utils/inventory/run_inventory.py -pr {project} ' \
                      f'-m {pth}'
 
