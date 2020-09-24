@@ -35,11 +35,20 @@ def is_longitude(coord):
 
 
 def is_level(coord):
-    raise NotImplementedError()
+    if hasattr(coord, "units"):
+        if Units(coord.units).ispressure:
+            return True
+
+    if hasattr(coord, "positive"):
+        if coord.attrs.get("positive", None) == "up" or "down":
+            return True
+
+    if hasattr(coord, "axis"):
+        if coord.attrs.get("axis", None) == "Z":
+            return True
 
 
 def is_time(coord):
-
     if coord.values.size > 1:
         if hasattr(coord.values[0], "calendar"):
             if Units(calendar=coord.values[0].calendar).isreftime:
@@ -59,6 +68,8 @@ def get_coord_type(coord):
         return "longitude"
     elif is_latitude(coord):
         return "latitude"
+    elif is_level(coord):
+        return "level"
     elif is_time(coord):
         return "time"
 

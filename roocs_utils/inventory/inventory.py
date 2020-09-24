@@ -1,21 +1,33 @@
 #!/usr/bin/env python
 
 import os
-import re
 import glob
 import yaml
+import oyaml
 import time
+import argparse
+import subprocess
 from collections import OrderedDict
 
 import xarray as xr
 
 from roocs_utils import CONFIG
+from roocs_utils.xarray_utils.xarray_utils import get_coord_type
 
+output_dir = "/gws/smf/j04/cp4cds1/c3s_34e/inventory"
+# output_dir = "/home/users/esmith88/roocs/inventory"
 _common_c3s_dir = '/group_workspaces/jasmin2/cp4cds1/vol1/data'
 
-VERSION = re.compile('^v\d+$')
-LIMIT = 1000000000
-LIMIT = 1
+
+def arg_parse():
+    parser = argparse.ArgumentParser()
+
+    project_choices = _get_project_list()
+
+    parser.add_argument('-pr', '--project', type=str, choices=project_choices, required=True,
+                        help=f'Project, must be one of: {project_choices}')
+
+    return parser.parse_args()
 
 
 class CustomDumper(yaml.SafeDumper):
@@ -34,11 +46,27 @@ class CustomDumper(yaml.SafeDumper):
 CustomDumper.add_representer(OrderedDict, CustomDumper.represent_dict_preserve_order)
 
 
-def to_yaml(name, content):
+# def to_yaml(name, content):
+#
+#     inv_path = f'{output_dir}/{name}.yml'
+#     with open(inv_path, 'w') as writer:
+#         yaml.dump(content, writer, Dumper=CustomDumper)
+#
+#     print(f'[INFO] Wrote: {inv_path}')
 
-    inv_path = f'{name}.yml'
-    with open(inv_path, 'w') as writer: 
-        yaml.dump(content, writer, Dumper=CustomDumper)
+
+def to_yaml(name, new_content):
+
+    inv_path = f'{output_dir}/{name}.yml'
+    if not os.path.isfile(inv_path):
+
+        with open(inv_path, "a") as f:
+            f.write("---\n")
+
+    sdump = oyaml.dump(new_content, Dumper=CustomDumper)
+
+    with open(inv_path, "a") as f:
+        f.write(sdump)
 
     print(f'[INFO] Wrote: {inv_path}')
 
@@ -52,7 +80,7 @@ def read_inventory(project):
     base_dir = data[0]['base_dir']
 
     for d in data[1:]:
-        path = os.path.join(basedir, d['path'])
+        path = os.path.join(base_dir, d['path'])
         d['path'] = path
 
     return {'header': data[0], 'records': data[1:]}
@@ -69,10 +97,9 @@ def test_all():
 def get_time_info(fpaths, var_id):
 
     all_times = []
-
     for fpath in sorted(fpaths):
 
-        ds = xr.open_dataset(fpath)
+        ds = xr.open_dataset(fpath, use_cftime=True)
         times = ds[var_id].time.values
 
         all_times.extend(list(times))
@@ -81,15 +108,14 @@ def get_time_info(fpaths, var_id):
     return (len(all_times), all_times[0].isoformat() + ' ' + all_times[-1].isoformat())
 
 
-def get_var_metadata(dr, var_id):
+def get_var_metadata(fpaths, var_id):
 
-    fpaths = glob.glob(f'{dr}/*.nc')
     time_length, time_string = get_time_info(fpaths, var_id)
 
     f1 = fpaths[0]
     print(f'[INFO] Reading {f1}')
 
-    ds = xr.open_dataset(f1)
+    ds = xr.open_dataset(f1, use_cftime=True)
     dims = ds[var_id].dims
 
     shape_annotated = []
@@ -113,40 +139,95 @@ def get_var_metadata(dr, var_id):
     return dims, shape, time_string
 
 
-def build_dict(dr, proj_dict, base_dir):
-    rel_dir = dr.replace(base_dir, '').strip('/')
-    comps = rel_dir.split('/')
+def get_coord_info(fpaths):
 
-    facet_rule = proj_dict['facet_rule']
-    facets = dict([_ for _ in zip(facet_rule, comps)])
-    var_id = facets['variable']
-
-    dims, shape, tm = get_var_metadata(dr, var_id)
+    ds = xr.open_mfdataset(fpaths, use_cftime=True, combine='by_coords')
 
     d = OrderedDict()
-    d['path'] = rel_dir
-    d['dsid'] = rel_dir.replace('/', '.')
-    d['var_id'] = var_id
-    d['array_dims'] = dims
-    d['array_shape'] = shape
-    d['time'] = tm
-    d['facets'] = facets
+    
+    for coord_id in sorted(ds.coords):
+
+        coord = ds.coords[coord_id]
+        type = get_coord_type(coord)
+
+        if type == "time" or type is None:
+            continue
+
+        data = coord.values
+        mn, mx = data.min(), data.max()
+        
+        d[f"{type}"] = f"{mn} {mx}"
 
     return d
 
 
-def write_inventory(project, d, paths):
+def get_size_data(fpaths):
 
-    base = d['base_dir']
-    header = {'project': project, 'base_dir': base}
+    files = len(fpaths)
 
-    records = [header] + [build_dict(_, d, base) for _ in sorted(paths)]
-    to_yaml(project, records)
+    ds = xr.open_mfdataset(fpaths, use_cftime=True, combine='by_coords')
+
+    size = ds.nbytes
+    size_gb = size/1E+9
+
+    return size, size_gb, files
+
+
+def build_dict(dr, proj_dict, base_dir, project, model_inst):
+    fpaths = glob.glob(f'{dr}/*.nc')
+
+    rel_dir = dr.replace(base_dir, '').strip('/')
+    comps = rel_dir.split('/')
+
+    error_output_path = f"{output_dir}/logs/errors"
+
+    if len(fpaths) < 1:
+
+        # make output directory
+        if not os.path.exists(error_output_path):
+            os.makedirs(error_output_path)
+
+        with open(os.path.join(error_output_path, f"{project}_{model_inst}.txt"), 'a') as f:
+            f.write(f"\n[ERROR] No files available for directory {dr}")
+
+    facet_rule = proj_dict['facet_rule']
+    facets = dict([_ for _ in zip(facet_rule, comps)])
+
+    try:
+        var_id = facets.get('variable') or facets.get('variable_id')
+
+        dims, shape, tm = get_var_metadata(fpaths, var_id)
+        size, size_gb, files = get_size_data(fpaths)
+        coord_d = get_coord_info(fpaths)
+
+        d = OrderedDict()
+        d['path'] = rel_dir
+        d['ds_id'] = rel_dir.replace('/', '.')
+        d['var_id'] = var_id
+        d['array_dims'] = dims
+        d['array_shape'] = shape
+        d['time'] = tm
+        d.update(coord_d)
+        d['size'] = size
+        d['size_gb'] = size_gb
+        d['file_count'] = files
+        d['facets'] = facets
+
+        return d
+
+    except Exception as exc:
+        
+        # make output directory
+        if not os.path.exists(error_output_path):
+            os.makedirs(error_output_path)
+
+        with open(os.path.join(error_output_path, f"{project}_{model_inst}.txt"), 'a') as f:
+            f.write(f"\n[ERROR] Error with directory {dr}: {exc}")
 
 
 def _get_project_list():
     projects = [_.split(':')[1] for _ in CONFIG.keys() if _.startswith('project:')]
-    return projects 
+    return projects
 
 
 def _get_start_dir(dr, project):
@@ -154,36 +235,66 @@ def _get_start_dir(dr, project):
     if dr.startswith(_common_c3s_dir):
         dr = os.path.join(dr, project)
 
-    return dr 
+    return dr
 
 
-def write_all():
+def get_models(project):
+    d = CONFIG[f'project:{project}']
 
-    for project in _get_project_list(): 
+    start_dir = _get_start_dir(d['base_dir'], project)
+    
+    if project == "c3s-cordex":
+        models_path = glob.glob(f"{start_dir}/output/EUR-11/*/*/")
+    elif project == "c3s-cmip5":
+        models_path = glob.glob(f"{start_dir}/output1/*/*/")
+    else:
+        raise Exception("Unknown Project")
+    
+    return models_path
+    
 
-        if project != 'c3s-cmip5': continue
-        d = CONFIG[f'project:{project}']
-        
-        start_dir = _get_start_dir(d['base_dir'], project)
+def batch_run(project):
+    # queue = "long-serial"
+    # wallclock = "168:00"
+    
+    queue = "short-serial"
+    wallclock = "24:00:00"
+    current_directory = os.getcwd()
+    memory_limit = f"--mem=32000"
 
-        paths = []
+    model_paths = get_models(project)
 
-        for item, _1, _2 in os.walk(start_dir):
-            if VERSION.match(os.path.basename(item)):
-                paths.append(item)
+    for pth in model_paths:
+        model_inst = '_'.join(pth.split('/')[-3:-1])
+        lotus_output_base = f"{output_dir}/batch_outputs/"
+        lotus_output_path = f"{output_dir}/batch_outputs/{project}_{model_inst}"
 
-            if len(paths) > LIMIT: break
- 
-            if len(paths) > 0 and len(paths) % 100 == 0:
-                write_inventory(project, d, paths)
-                print(f'[INFO] Written so far: {len(paths)}')
-               
-        time.sleep(1)
-        write_inventory(project, d, paths)
+        # make output directory
+        if not os.path.exists(lotus_output_base):
+            os.makedirs(lotus_output_base)
+
+        # bsub_cmd = (
+        #     f"bsub -q {queue} -W {wallclock} -o "
+        #     f"{output_base}.out -e {output_base}.err "
+        #     f"{current_directory}/roocs_utils/inventory/run_inventory.py -pr {project}
+        #     -m {pth}"
+        # )
+
+        sbatch_cmd = f'sbatch -p {queue} -t {wallclock} -o ' \
+                     f'{lotus_output_path}.out -e {lotus_output_path}.err {memory_limit} '  \
+                     f'{current_directory}/roocs_utils/inventory/run_inventory.py -pr {project} ' \
+                     f'-m {pth}'
+
+        subprocess.call(sbatch_cmd, shell=True)
+        print(f"running {sbatch_cmd}")
+
+        # cmd = f"python {current_directory}/roocs_utils/inventory/run_inventory.py -pr {project}" \
+        #       f" -m {pth}"
+        # subprocess.call(cmd, shell=True)
 
 
 if __name__ == '__main__':
 
-    #test_all()
-    write_all()
-    #inv = read_inventory('c3s-cmip5')
+    args = arg_parse()
+    batch_run(args.project)
+
