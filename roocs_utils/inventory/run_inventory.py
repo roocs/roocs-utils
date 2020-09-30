@@ -11,7 +11,7 @@ from roocs_utils import CONFIG
 
 output_dir = "/gws/smf/j04/cp4cds1/c3s_34e/inventory"
 # output_dir = "/home/users/esmith88/roocs/inventory"
-VERSION = re.compile('^v\d{8}$')
+VERSION = re.compile('^v\d{2,}$')
 LIMIT = 1000000000
 
 
@@ -32,10 +32,10 @@ def write_inventory(project, model_inst, d, paths):
     base = d['base_dir']
     header = {'project': project, 'base_dir': base}
 
-    records = [header] + [build_dict(_, d, base, project, model_inst) for _ in sorted(paths)]
+    records = [build_dict(_, d, base, project, model_inst) for _ in sorted(paths)]
     name = f"{project}_{model_inst}"
 
-    to_yaml(name, records)
+    to_yaml(name, records, header)
 
 
 def write_all(project, model_path):

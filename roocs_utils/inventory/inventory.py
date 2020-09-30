@@ -55,13 +55,13 @@ CustomDumper.add_representer(OrderedDict, CustomDumper.represent_dict_preserve_o
 #     print(f'[INFO] Wrote: {inv_path}')
 
 
-def to_yaml(name, new_content):
+def to_yaml(name, new_content, header):
 
     inv_path = f'{output_dir}/{name}.yml'
     if not os.path.isfile(inv_path):
 
-        with open(inv_path, "a") as f:
-            f.write("---\n")
+        with open(inv_path, "w") as f:
+            f.write(header)
 
     sdump = oyaml.dump(new_content, Dumper=CustomDumper)
 
@@ -99,13 +99,16 @@ def get_time_info(fpaths, var_id):
     all_times = []
     for fpath in sorted(fpaths):
 
-        ds = xr.open_dataset(fpath, use_cftime=True)
-        times = ds[var_id].time.values
+        try:
+            ds = xr.open_dataset(fpath, use_cftime=True)
+            times = ds[var_id].time.values
 
-        all_times.extend(list(times))
-        ds.close()
+            all_times.extend(list(times))
+            ds.close()
+        except AttributeError:
+            return 0, None
 
-    return (len(all_times), all_times[0].isoformat() + ' ' + all_times[-1].isoformat())
+    return len(all_times), all_times[0].isoformat() + ' ' + all_times[-1].isoformat()
 
 
 def get_var_metadata(fpaths, var_id):
@@ -156,7 +159,7 @@ def get_coord_info(fpaths):
         data = coord.values
         mn, mx = data.min(), data.max()
         
-        d[f"{type}"] = f"{mn} {mx}"
+        d[f"{type}"] = f"{mn:.4f} {mx:.4f}"
 
     return d
 
@@ -170,7 +173,7 @@ def get_size_data(fpaths):
     size = ds.nbytes
     size_gb = size/1E+9
 
-    return size, size_gb, files
+    return size, f"{size_gb:.4f}", files
 
 
 def build_dict(dr, proj_dict, base_dir, project, model_inst):
@@ -216,7 +219,7 @@ def build_dict(dr, proj_dict, base_dir, project, model_inst):
         return d
 
     except Exception as exc:
-        
+
         # make output directory
         if not os.path.exists(error_output_path):
             os.makedirs(error_output_path)
@@ -290,6 +293,7 @@ def batch_run(project):
 
         # cmd = f"python {current_directory}/roocs_utils/inventory/run_inventory.py -pr {project}" \
         #       f" -m {pth}"
+        # print(cmd)
         # subprocess.call(cmd, shell=True)
 
 
