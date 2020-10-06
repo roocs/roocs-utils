@@ -81,12 +81,16 @@ def get_coord_type(coord):
     return None
 
 
-def get_coord_by_type(ds, coord_type):
+def get_coord_by_type(ds, coord_type, ignore_aux_coords=True):
     'Can take a Dataset or DataArray'
     if coord_type not in known_coord_types:
         raise Exception(f'Coordinate type not known: {coord_type}')
 
     for coord_id in ds.coords:
+        # If ignore_aux_coords is True then ignore coords that are not dimensions
+        if ignore_aux_coords and coord_id not in ds.dims:
+            continue
+
         coord = ds.coords[coord_id]
 
         if get_coord_type(coord) == coord_type:
