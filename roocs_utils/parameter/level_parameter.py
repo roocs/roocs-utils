@@ -1,3 +1,5 @@
+import numbers
+
 from roocs_utils.parameter.base_parameter import _BaseParameter
 from roocs_utils.exceptions import InvalidParameterValue
 
@@ -10,39 +12,35 @@ class LevelParameter(_BaseParameter):
         self._parse_levels()
 
     def _parse_levels(self):
-        # should this default to the start and end levels of the data?
-        start, end = self._result
+        result = [None, None]
 
-        for value in self._result:
+        for count, value in enumerate(self._result):
             if value is None:
-                pass
-            elif isinstance(value, str):
-                if not value.replace(".", "", 1).isdigit():
-                    raise InvalidParameterValue("Level values must be a number")
-            else:
-                if not (isinstance(value, float) or isinstance(value, int)):
+                continue
+
+            if isinstance(value, str):
+                try:
+                    value = float(value)
+                except Exception:
                     raise InvalidParameterValue("Level values must be a number")
 
-            # convert to floats?
-            if start is not None:
-                start = float(start)
-            if end is not None:
-                end = float(end)
+            if not isinstance(value, numbers.Number):
+                raise InvalidParameterValue("Level values must be a number")
 
-        return start, end
+            result[count] = value
+
+        return tuple(result)
 
     @property
     def tuple(self):
-        if self._parse_levels() is not (None, None):
-            return self._parse_levels()
+        return self._parse_levels()
 
     def asdict(self):
-        if self.tuple is not None:
-            return {"start": self.tuple[0], "end": self.tuple[1]}
+        return {"first_level": self.tuple[0], "last_level": self.tuple[1]}
 
     def __str__(self):
         return (
             f"Level range to subset over"
-            f"\n start: {self.tuple[0]}"
-            f"\n end: {self.tuple[1]}"
+            f"\n first_level: {self.tuple[0]}"
+            f"\n last_level: {self.tuple[1]}"
         )
