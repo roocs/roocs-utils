@@ -5,6 +5,11 @@ import xarray as xr
 from cfunits import Units
 
 
+known_coord_types = [
+    'time', 'level', 'latitude', 'longitude'
+]
+
+
 # from dachar
 def get_coord_by_attr(ds, attr, value):
     coords = ds.coords
@@ -76,13 +81,31 @@ def get_coord_type(coord):
     return None
 
 
+def get_coord_by_type(ds, coord_type, ignore_aux_coords=True):
+    'Can take a Dataset or DataArray'
+    if coord_type not in known_coord_types:
+        raise Exception(f'Coordinate type not known: {coord_type}')
+
+    for coord_id in ds.coords:
+        # If ignore_aux_coords is True then ignore coords that are not dimensions
+        if ignore_aux_coords and coord_id not in ds.dims:
+            continue
+
+        coord = ds.coords[coord_id]
+
+        if get_coord_type(coord) == coord_type:
+            return coord
+
+    return None
+
+
 def get_main_variable(ds, exclude_common_coords=True):
 
     data_dims = [data.dims for var_id, data in ds.variables.items()]
     flat_dims = [dim for sublist in data_dims for dim in sublist]
 
     results = {}
-    common_coords = ["bnd", "bound", "lat", "lon", "time"]
+    common_coords = ["bnd", "bound", "lat", "lon", "time", "level"]
 
     for var_id, data in ds.variables.items():
 

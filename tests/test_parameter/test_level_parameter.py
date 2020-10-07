@@ -10,8 +10,8 @@ def test__str__():
     parameter = LevelParameter(level)
     assert (
         parameter.__str__() == "Level range to subset over"
-        f"\n start: 1000.0"
-        f"\n end: 2000.0"
+        f"\n first_level: 1000.0"
+        f"\n last_level: 2000.0"
     )
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
@@ -108,14 +108,14 @@ def test_trailing_slash():
 def test_as_dict():
     level = "1000/2000"
     parameter = LevelParameter(level)
-    assert parameter.asdict() == {"start": 1000, "end": 2000}
+    assert parameter.asdict() == {"first_level": 1000, "last_level": 2000}
 
 
 def test_slash_none():
     level = "/"
     parameter = LevelParameter(level)
     assert parameter.tuple == (None, None)
-    assert parameter.asdict() == {"start": None, "end": None}
+    assert parameter.asdict() == {"first_level": None, "last_level": None}
 
 
 def test_none():
