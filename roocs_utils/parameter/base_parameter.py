@@ -1,4 +1,4 @@
-import collections
+from collections.abc import Sequence
 from pydoc import locate
 
 from roocs_utils.exceptions import InvalidParameterValue, MissingParameterValue
@@ -41,7 +41,7 @@ class _BaseParameter(object):
             # empty string either side of '/' is converted to None
             start, end = [x.strip() or None for x in self.input.split("/")]
 
-        elif isinstance(self.input, collections.Sequence):
+        elif isinstance(self.input, Sequence):
             if len(self.input) != 2:
                 raise InvalidParameterValue(
                     f"{self.__class__.__name__} should be a range. Expected 2 values, "
@@ -65,7 +65,7 @@ class _BaseParameter(object):
         elif isinstance(self.input, (str, bytes)):
             sequence = [x.strip() for x in self.input.split(",")]
 
-        elif isinstance(self.input, collections.Sequence):
+        elif isinstance(self.input, Sequence):
             sequence = self.input
 
         else:
