@@ -5,7 +5,6 @@
 
 __author__ = "Elle Smith"
 __contact__ = "eleanor.smith@stfc.ac.uk"
-__version__ = ""
 __copyright__ = "Copyright 2018 United Kingdom Research and Innovation"
 __license__ = "BSD - see LICENSE file in top-level package directory"
 
@@ -97,6 +96,6 @@ setup(
     extras_require={"docs": docs_requirements},
     package_data={'roocs_utils': ['etc/roocs.ini']},
     url='https://github.com/roocs/roocs_utils',
-    version=__version__,
+    version="0.1.1",
     zip_safe=False,
 )
