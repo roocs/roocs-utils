@@ -1,7 +1,8 @@
 from collections.abc import Sequence
 from pydoc import locate
 
-from roocs_utils.exceptions import InvalidParameterValue, MissingParameterValue
+from roocs_utils.exceptions import InvalidParameterValue
+from roocs_utils.exceptions import MissingParameterValue
 
 
 class _BaseParameter(object):
@@ -60,7 +61,7 @@ class _BaseParameter(object):
         return start, end
 
     def _parse_sequence(self):
-        
+
         if self.input in (None, ""):
             sequence = None
 

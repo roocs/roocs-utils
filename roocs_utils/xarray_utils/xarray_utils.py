@@ -5,15 +5,13 @@ import xarray as xr
 from cfunits import Units
 
 
-known_coord_types = [
-    'time', 'level', 'latitude', 'longitude'
-]
+known_coord_types = ["time", "level", "latitude", "longitude"]
 
 
 # from dachar
 def get_coord_by_attr(ds, attr, value):
     """
-    Returns a coordinate based on a known 
+    Returns a coordinate based on a known
     :param ds: Xarray Dataset or DataArray
     :param attr: (str) Name of attribute to look for.
     :param value: Expected value of attribute you are looking for.
@@ -124,9 +122,9 @@ def get_coord_by_type(ds, coord_type, ignore_aux_coords=True):
                             Default is True.
     :return: Xarray Dataset coordinate (ds.coords[coord_id])
     """
-    'Can take a Dataset or DataArray'
+    "Can take a Dataset or DataArray"
     if coord_type not in known_coord_types:
-        raise Exception(f'Coordinate type not known: {coord_type}')
+        raise Exception(f"Coordinate type not known: {coord_type}")
 
     for coord_id in ds.coords:
         # If ignore_aux_coords is True then ignore coords that are not dimensions
@@ -162,7 +160,9 @@ def get_main_variable(ds, exclude_common_coords=True):
 
         if var_id in flat_dims:
             continue
-        if exclude_common_coords is True and any(coord in var_id for coord in common_coords):
+        if exclude_common_coords is True and any(
+            coord in var_id for coord in common_coords
+        ):
             continue
         else:
             results.update({var_id: len(ds[var_id].shape)})

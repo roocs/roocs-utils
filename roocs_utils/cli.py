@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """Console script for roocs_utils."""
 
 __author__ = """Eleanor Smith"""

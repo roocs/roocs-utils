@@ -1,14 +1,15 @@
-from roocs_utils.parameter.base_parameter import _BaseParameter
-from roocs_utils.exceptions import InvalidParameterValue
+import datetime
 
 from dateutil import parser as date_parser
-import datetime
+
+from roocs_utils.exceptions import InvalidParameterValue
+from roocs_utils.parameter.base_parameter import _BaseParameter
 
 
 class TimeParameter(_BaseParameter):
     """
     Class for time parameter used in subsetting operation.
-    
+
     Time can be input as:
         A string of slash separated values: "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
         A sequence of strings: e.g. ("2085-01-01T12:00:00Z", "2120-12-30T12:00:00Z")
@@ -42,22 +43,20 @@ class TimeParameter(_BaseParameter):
         start, end = self._result
 
         if start is not None:
-            start = (
-                date_parser.parse(start, default=datetime.datetime(datetime.MINYEAR, 1, 1))
-                .isoformat()
-            )
+            start = date_parser.parse(
+                start, default=datetime.datetime(datetime.MINYEAR, 1, 1)
+            ).isoformat()
         if end is not None:
-            end = (
-                date_parser.parse(end, default=datetime.datetime(datetime.MAXYEAR, 12, 30))
-                .isoformat()
-            )
+            end = date_parser.parse(
+                end, default=datetime.datetime(datetime.MAXYEAR, 12, 30)
+            ).isoformat()
 
         return start, end
 
     @property
     def tuple(self):
         """ Returns a tuple of the time values """
-        if self._parse_times() is not (None, None):
+        if self._parse_times() != (None, None):
             return self._parse_times()
 
     def asdict(self):

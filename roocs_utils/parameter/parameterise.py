@@ -1,11 +1,9 @@
 import xarray as xr
 
-from roocs_utils.parameter import (
-    collection_parameter,
-    area_parameter,
-    time_parameter,
-    level_parameter,
-)
+from roocs_utils.parameter import area_parameter
+from roocs_utils.parameter import collection_parameter
+from roocs_utils.parameter import level_parameter
+from roocs_utils.parameter import time_parameter
 
 
 def parameterise(collection=None, area=None, level=None, time=None):

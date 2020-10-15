@@ -1,7 +1,7 @@
 import pytest
 
-from roocs_utils.parameter.area_parameter import AreaParameter
 from roocs_utils.exceptions import InvalidParameterValue
+from roocs_utils.parameter.area_parameter import AreaParameter
 
 
 def test__str__():

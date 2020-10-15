@@ -1,8 +1,9 @@
-import pytest
 import datetime
 
-from roocs_utils.parameter.time_parameter import TimeParameter
+import pytest
+
 from roocs_utils.exceptions import InvalidParameterValue
+from roocs_utils.parameter.time_parameter import TimeParameter
 
 
 def test__str__():
@@ -78,7 +79,10 @@ def test_tuple():
 def test_as_dict():
     time = "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
     parameter = TimeParameter(time)
-    assert parameter.asdict() == {"start_time": "2085-01-01T12:00:00+00:00", "end_time": "2120-12-30T12:00:00+00:00"}
+    assert parameter.asdict() == {
+        "start_time": "2085-01-01T12:00:00+00:00",
+        "end_time": "2120-12-30T12:00:00+00:00",
+    }
 
 
 def test_slash_none():
@@ -110,4 +114,7 @@ def test_class_instance():
     time = "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
     parameter = TimeParameter(time)
     new_parameter = TimeParameter(parameter)
-    assert new_parameter.tuple == ("2085-01-01T12:00:00+00:00", "2120-12-30T12:00:00+00:00")
+    assert new_parameter.tuple == (
+        "2085-01-01T12:00:00+00:00",
+        "2120-12-30T12:00:00+00:00",
+    )

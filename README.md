@@ -32,7 +32,7 @@ $ python roocs_utils/inventory/inventory.py -pr c3s-cmip5
 [INFO] Reading /group_workspaces/jasmin2/cp4cds1/vol1/data/c3s-cmip5/output1/MOHC/HadGEM2-ES/rcp45/mon/atmos/Amon/r1i1p1/ts/v201111                                                                  28/ts_Amon_HadGEM2-ES_rcp45_r1i1p1_209912-212411.nc
 [INFO] Wrote: c3s-cmip5_MOHC_HadGEM2-ES.yml
 ```
-One file is created for each model/institute pairing. These can be merged to one file 
+One file is created for each model/institute pairing. These can be merged to one file
 using `roocs_utils/inventory/merge_yaml.py`
 
 Writes:

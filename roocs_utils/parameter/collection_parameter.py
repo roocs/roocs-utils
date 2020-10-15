@@ -1,11 +1,12 @@
+from roocs_utils.exceptions import InvalidParameterValue
+from roocs_utils.exceptions import MissingParameterValue
 from roocs_utils.parameter.base_parameter import _BaseParameter
-from roocs_utils.exceptions import InvalidParameterValue, MissingParameterValue
 
 
 class CollectionParameter(_BaseParameter):
     """
     Class for collection parameter used in operations.
-    
+
     A collection can be input as:
         A string of comma separated values: "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga,"\
                                             "cmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"

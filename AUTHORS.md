@@ -8,4 +8,3 @@
 
 * Eleanor Smith <eleanor.smith@stfc.ac.uk>
 * Carsten Ehbrecht <ehbrecht@dkrz.de>
-

@@ -10,7 +10,7 @@ def parse_size(size):
     :param size: (str) size to parse in any unit
     :return : (int) number of bytes
     """
-    n, suffix = re.match('^(\d+\.?\d*)([a-zA-Z]+)$', size).groups()
+    n, suffix = re.match(r"^(\d+\.?\d*)([a-zA-Z]+)$", size).groups()
 
     try:
 
@@ -18,8 +18,6 @@ def parse_size(size):
 
         size_in_bytes = multiplier * float(n)
     except KeyError as e:
-        raise ValueError(f"Could not interpret '{suffix}' as a byte unit") 
+        raise ValueError(f"Could not interpret '{suffix}' as a byte unit")
 
     return size_in_bytes
-
-

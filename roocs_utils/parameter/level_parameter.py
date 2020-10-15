@@ -1,7 +1,7 @@
 import numbers
 
-from roocs_utils.parameter.base_parameter import _BaseParameter
 from roocs_utils.exceptions import InvalidParameterValue
+from roocs_utils.parameter.base_parameter import _BaseParameter
 
 
 class LevelParameter(_BaseParameter):

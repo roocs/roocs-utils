@@ -7,4 +7,3 @@ def to_isoformat(tm):
         return str(tm).split(".")[0]
     else:
         return tm.isoformat()
-

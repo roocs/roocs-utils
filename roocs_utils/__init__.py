@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """Top-level package for roocs-utils."""
 
 __author__ = """Eleanor Smith"""
@@ -9,4 +8,5 @@ __license__ = "BSD - see LICENSE file in top-level package directory"
 __version__ = "0.1.1"
 
 from roocs_utils.config import get_config
+
 CONFIG = get_config()
