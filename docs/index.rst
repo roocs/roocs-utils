@@ -9,6 +9,7 @@ Welcome to roocs-utils's documentation!
    installation
    usage
    modules
+   notebooks/index
    contributing
    authors
    history

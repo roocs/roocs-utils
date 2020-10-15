@@ -68,5 +68,5 @@ def test_get_main_var_include_common_coords():
     ds = xr.open_mfdataset(CMIP5_FPATHS[1], use_cftime=True, combine="by_coords")
     var_id = get_main_variable(ds, exclude_common_coords=False)
     
-    # incorrectly identified main variable and coomon_coords not excluded
+    # incorrectly identified main variable and common_coords included in search
     assert var_id == 'lat_bnds'

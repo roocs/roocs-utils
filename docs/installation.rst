@@ -23,29 +23,43 @@ you through the process.
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
 
-From sources
+Install from GitHub
 ------------
 
-The sources for roocs-utils can be downloaded from the `Github repo`_.
-
-You can either clone the public repository:
+roocs-utils can be downloaded from the `Github repo`_.
 
 .. code-block:: console
 
-    $ git clone git://github.com/ellesmith88/roocs_utils
+    $ git clone git://github.com/roocs/roocs-utils
+    $ cd roocs-utils
 
-Or download the `tarball`_:
-
-.. code-block:: console
-
-    $ curl  -OL https://github.com/ellesmith88/roocs_utils/tarball/master
-
-Once you have a copy of the source, you can install it with:
+Get the submodules with ESGF test data:
 
 .. code-block:: console
 
-    $ python setup.py install
+   $ git submodule update --init --recursive
 
 
-.. _Github repo: https://github.com/ellesmith88/roocs_utils
-.. _tarball: https://github.com/ellesmith88/roocs_utils/tarball/master
+Create Conda environment named `roocs_utils`:
+
+.. code-block:: console
+
+   $ conda env create -f environment.yml
+   $ source activate roocs_utils
+
+
+Install roocs-utils in development mode:
+
+.. code-block:: console
+
+    $ pip install -r requirements.txt
+    $ pip install -r requirements_dev.txt
+    $ pip install -e .
+
+Run tests:
+
+.. code-block:: console
+
+    $ python -m pytest tests/
+
+.. _Github repo: https://github.com/roocs/roocs-utils
