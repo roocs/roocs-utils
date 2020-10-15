@@ -42,10 +42,8 @@ def test_validate_error_id():
 
 
 def test_string():
-    collection = (
-        "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga,"
-        "cmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
-    )
+    collection = "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga,"\
+                 "cmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
 
     parameter = CollectionParameter(collection)
     assert parameter.tuple == (

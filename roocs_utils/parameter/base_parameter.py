@@ -5,6 +5,9 @@ from roocs_utils.exceptions import InvalidParameterValue, MissingParameterValue
 
 
 class _BaseParameter(object):
+    """
+    Base class for parameters used in operations (e.g. subset, average etc.)
+    """
 
     parser_method = "UNDEFINED"
 

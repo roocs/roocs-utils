@@ -1,9 +1,11 @@
 # Credits
 
-## Development Lead
+## Lead
 
-* Eleanor Smith <eleanor.smith@stfc.ac.uk>
+* Ag Stephens <ag.stephens@stfc.ac.uk>
 
 ## Contributors
 
-None yet. Why not be the first?
+* Eleanor Smith <eleanor.smith@stfc.ac.uk>
+* Carsten Ehbrecht <ehbrecht@dkrz.de>
+

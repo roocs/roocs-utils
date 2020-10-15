@@ -3,6 +3,24 @@ from roocs_utils.exceptions import InvalidParameterValue
 
 
 class AreaParameter(_BaseParameter):
+    """
+    Class for area parameter used in subsetting operation.
+
+    Area can be input as:
+        A string of comma separated values: "0.,49.,10.,65"
+        A sequence of strings: ("0", "-10", "120", "40")
+        A sequence of numbers: [0, 49.5, 10, 65]
+
+    An area must have 4 values.
+
+    Validates the area input and parses the values into numbers.
+
+    Methods
+    -------
+    tuple(self): Returns a tuple of the area values (property)
+    asdict(self): Returns a dictionary of the area values
+
+    """
 
     parse_method = "_parse_sequence"
 
@@ -34,9 +52,11 @@ class AreaParameter(_BaseParameter):
 
     @property
     def tuple(self):
+        """ Returns a tuple of the area values """
         return self._parse_values()
 
     def asdict(self):
+        """ Returns a dictionary of the area values """
         if self.tuple is not None:
             return {
                 "lon_bnds": (self.tuple[0], self.tuple[2]),

@@ -6,6 +6,27 @@ import datetime
 
 
 class TimeParameter(_BaseParameter):
+    """
+    Class for time parameter used in subsetting operation.
+    
+    Time can be input as:
+        A string of slash separated values: "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
+        A sequence of strings: e.g. ("2085-01-01T12:00:00Z", "2120-12-30T12:00:00Z")
+
+    A time input must be 2 values.
+
+    If using a string input a trailing slash indicates you want to use the earliest/
+    latest time of the dataset. e.g. "2085-01-01T12:00:00Z/" will subset from 01/01/2085 to the final time in
+    the dataset.
+
+    Validates the times input and parses the values into isoformat.
+
+    Methods
+    -------
+    tuple(self): Returns a tuple of the time values (property)
+    asdict(self): Returns a dictionary of the time values
+
+    """
 
     parse_method = "_parse_range"
 
@@ -35,11 +56,12 @@ class TimeParameter(_BaseParameter):
 
     @property
     def tuple(self):
+        """ Returns a tuple of the time values """
         if self._parse_times() is not (None, None):
             return self._parse_times()
 
-    # was start/end time - changed to date as xclim uses date
     def asdict(self):
+        """Returns a dictionary of the time values"""
         if self.tuple is not None:
             return {"start_time": self.tuple[0], "end_time": self.tuple[1]}
 

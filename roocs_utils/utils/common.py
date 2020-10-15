@@ -7,8 +7,8 @@ def parse_size(size):
     """
     Parse size string into number of bytes.
 
-    :param: size [string]
-    :return: integer (number of bytes)
+    :param size: (str) size to parse in any unit
+    :return : (int) number of bytes
     """
     n, suffix = re.match('^(\d+\.?\d*)([a-zA-Z]+)$', size).groups()
 
