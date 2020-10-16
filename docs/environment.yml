@@ -8,3 +8,6 @@ dependencies:
 - sphinx
 - nbsphinx
 - ipython
+- numpy>=1.16
+- xarray>=0.15
+- dask>=2.6
