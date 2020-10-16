@@ -147,7 +147,7 @@ texinfo_documents = [
         master_doc,
         "roocs_utils",
         "roocs-utils Documentation",
-        author,
+        "",
         "roocs_utils",
         "One line description of project.",
         "Miscellaneous",
