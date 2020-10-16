@@ -1,5 +1,5 @@
 Welcome to roocs-utils's documentation!
-======================================
+=======================================
 
 .. toctree::
    :maxdepth: 2
@@ -8,7 +8,6 @@ Welcome to roocs-utils's documentation!
    readme
    installation
    usage
-   modules
    notebooks/index
    contributing
    authors
