@@ -56,7 +56,7 @@ class TimeParameter(_BaseParameter):
     @property
     def tuple(self):
         """ Returns a tuple of the time values """
-        if self._parse_times() != (None, None):
+        if self._parse_times() is not (None, None):
             return self._parse_times()
 
     def asdict(self):
