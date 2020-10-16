@@ -8,6 +8,7 @@ Welcome to roocs-utils's documentation!
    readme
    installation
    usage
+   api
    notebooks/index
    contributing
    authors
