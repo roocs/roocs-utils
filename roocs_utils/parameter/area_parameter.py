@@ -15,11 +15,6 @@ class AreaParameter(_BaseParameter):
 
     Validates the area input and parses the values into numbers.
 
-    Methods
-    -------
-    tuple(self): Returns a tuple of the area values (property)
-    asdict(self): Returns a dictionary of the area values
-
     """
 
     parse_method = "_parse_sequence"

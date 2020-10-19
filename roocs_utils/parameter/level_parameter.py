@@ -21,11 +21,6 @@ class LevelParameter(_BaseParameter):
 
     Validates the level input and parses the values into numbers.
 
-    Methods
-    -------
-    tuple(self): Returns a tuple of the level values (property)
-    asdict(self): Returns a dictionary of the level values
-
     """
 
     parse_method = "_parse_range"

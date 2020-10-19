@@ -15,10 +15,6 @@ class CollectionParameter(_BaseParameter):
 
     Validates the input and parses the ids.
 
-    Methods
-    -------
-    tuple(self): Returns a tuple of the collection ids (property)
-
     """
 
     parse_method = "_parse_sequence"

@@ -22,11 +22,6 @@ class TimeParameter(_BaseParameter):
 
     Validates the times input and parses the values into isoformat.
 
-    Methods
-    -------
-    tuple(self): Returns a tuple of the time values (property)
-    asdict(self): Returns a dictionary of the time values
-
     """
 
     parse_method = "_parse_range"

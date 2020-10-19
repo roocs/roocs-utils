@@ -35,6 +35,12 @@ Parameters
    :undoc-members:
    :show-inheritance:
 
+.. automodule:: roocs_utils.parameter.parameterise
+   :noindex:
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Xarray Utils
 ============
