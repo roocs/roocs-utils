@@ -5,7 +5,31 @@ API
 Parameters
 ==========
 
-.. automodule:: roocs_utils.parameter
+.. automodule:: roocs_utils.parameter.base_parameter
+   :noindex:
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: roocs_utils.parameter.area_parameter
+   :noindex:
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: roocs_utils.parameter.collection_parameter
+   :noindex:
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: roocs_utils.parameter.level_parameter
+   :noindex:
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: roocs_utils.parameter.time_parameter
    :noindex:
    :members:
    :undoc-members:
