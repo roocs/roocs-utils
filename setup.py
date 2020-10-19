@@ -19,8 +19,7 @@ from setuptools import setup
 #
 # Use markdown format read me file as GitHub will render it automatically
 # on package page
-with open("README.md") as readme_file:
-    _long_description = readme_file.read()
+_long_description = open(os.path.join(here, "README.rst")).read()
 
 
 requirements = [line.strip() for line in open("requirements.txt")]
