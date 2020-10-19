@@ -78,7 +78,7 @@ setup(
     entry_points={"console_scripts": ["roocs_utils=roocs_utils.cli:main",],},
     install_requires=requirements,
     long_description=_long_description,
-    long_description_content_type="text/markdown",
+    long_description_content_type="text/x-rst",
     include_package_data=True,
     keywords="roocs_utils",
     name="roocs_utils",
