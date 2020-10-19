@@ -10,6 +10,7 @@ __version__ = "0.1.2"
 
 from setuptools import find_packages
 from setuptools import setup
+import os
 
 # One strategy for storing the overall version is to put it in the top-level
 # package's __init__ but Nb. __init__.py files are not needed to declare
