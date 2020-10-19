@@ -22,16 +22,6 @@ Xarray Utils
    :show-inheritance:
 
 
-Project Utils
-=============
-
-.. automodule:: roocs_utils.project_utils
-   :noindex:
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
 Other utilities
 ===============
 

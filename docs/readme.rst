@@ -1,5 +1,5 @@
-======
-README
-======
+===========
+Quick Guide
+===========
 
 .. include:: ../README.rst
