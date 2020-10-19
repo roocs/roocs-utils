@@ -1,7 +1,5 @@
-
 roocs-utils
 ===========
-
 
 .. image:: https://img.shields.io/pypi/v/roocs_utils.svg
    :target: https://pypi.python.org/pypi/roocs_utils

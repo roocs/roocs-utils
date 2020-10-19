@@ -5,7 +5,6 @@ import xarray as xr
 from roocs_utils import CONFIG
 
 
-# from dachar
 def map_facet(facet, project):
     # Return mapped value or the same facet name
     proj_mappings = CONFIG[f"project:{project}"]["mappings"]

@@ -11,7 +11,8 @@ known_coord_types = ["time", "level", "latitude", "longitude"]
 # from dachar
 def get_coord_by_attr(ds, attr, value):
     """
-    Returns a coordinate based on a known
+    Returns a coordinate based on a known attribute of a coordinate.
+
     :param ds: Xarray Dataset or DataArray
     :param attr: (str) Name of attribute to look for.
     :param value: Expected value of attribute you are looking for.
@@ -28,6 +29,7 @@ def get_coord_by_attr(ds, attr, value):
 
 def is_latitude(coord):
     """
+    Determines if a coordinate is latitude.
 
     :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
     :return: (bool) True if the coordinate is latitude.
@@ -42,6 +44,7 @@ def is_latitude(coord):
 
 def is_longitude(coord):
     """
+    Determines if a coordinate is longitude.
 
     :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
     :return: (bool) True if the coordinate is longitude.
@@ -56,6 +59,7 @@ def is_longitude(coord):
 
 def is_level(coord):
     """
+    Determines if a coordinate is level.
 
     :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
     :return: (bool) True if the coordinate is level.
@@ -75,6 +79,7 @@ def is_level(coord):
 
 def is_time(coord):
     """
+    Determines if a coordinate is time.
 
     :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
     :return: (bool) True if the coordinate is time.
@@ -97,7 +102,7 @@ def get_coord_type(coord):
     Gets the coordinate type.
 
     :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
-    :return: The type of coordinate as a string. One of longitude, latitude, time, level or None
+    :return: The type of coordinate as a string. Either longitude, latitude, time, level or None
     """
 
     if is_longitude(coord):
@@ -114,7 +119,7 @@ def get_coord_type(coord):
 
 def get_coord_by_type(ds, coord_type, ignore_aux_coords=True):
     """
-    Returns the xarray Dataset or DataArray coordinate
+    Returns the xarray Dataset or DataArray coordinate of the specified type.
 
     :param ds: Xarray Dataset or DataArray
     :param coord_type: (str) Coordinate type to find.

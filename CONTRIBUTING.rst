@@ -44,7 +44,7 @@ articles, and such.
 Submit Feedback
 ^^^^^^^^^^^^^^^
 
-The best way to send feedback is to file an issue at https://github.com/ellesmith88/roocs-utils/issues.
+The best way to send feedback is to file an issue at https://github.com/roocs/roocs-utils/issues.
 
 If you are proposing a feature:
 
