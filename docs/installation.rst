@@ -23,7 +23,7 @@ you through the process.
 
 
 Install from GitHub
-------------
+-------------------
 
 roocs-utils can be downloaded from the `Github repo`_.
 

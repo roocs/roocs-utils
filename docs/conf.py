@@ -126,9 +126,8 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass
 # [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "roocs_utils.tex", "roocs-utils Documentation", "manual",),
+    (master_doc, "roocs_utils.tex", "roocs-utils Documentation", author, "manual",),
 ]
-
 
 # -- Options for manual page output ------------------------------------
 
@@ -147,7 +146,7 @@ texinfo_documents = [
         master_doc,
         "roocs_utils",
         "roocs-utils Documentation",
-        "",
+        author,
         "roocs_utils",
         "One line description of project.",
         "Miscellaneous",
