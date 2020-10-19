@@ -5,13 +5,19 @@ import xarray as xr
 from cfunits import Units
 
 
-known_coord_types = [
-    'time', 'level', 'latitude', 'longitude'
-]
+known_coord_types = ["time", "level", "latitude", "longitude"]
 
 
 # from dachar
 def get_coord_by_attr(ds, attr, value):
+    """
+    Returns a coordinate based on a known attribute of a coordinate.
+
+    :param ds: Xarray Dataset or DataArray
+    :param attr: (str) Name of attribute to look for.
+    :param value: Expected value of attribute you are looking for.
+    :return: Coordinate of xarray dataset if found.
+    """
     coords = ds.coords
 
     for coord in coords.values():
@@ -22,6 +28,12 @@ def get_coord_by_attr(ds, attr, value):
 
 
 def is_latitude(coord):
+    """
+    Determines if a coordinate is latitude.
+
+    :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
+    :return: (bool) True if the coordinate is latitude.
+    """
     if hasattr(coord, "units"):
         if Units(coord.units).islatitude:
             return True
@@ -31,6 +43,12 @@ def is_latitude(coord):
 
 
 def is_longitude(coord):
+    """
+    Determines if a coordinate is longitude.
+
+    :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
+    :return: (bool) True if the coordinate is longitude.
+    """
     if hasattr(coord, "units"):
         if Units(coord.units).islongitude:
             return True
@@ -40,6 +58,12 @@ def is_longitude(coord):
 
 
 def is_level(coord):
+    """
+    Determines if a coordinate is level.
+
+    :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
+    :return: (bool) True if the coordinate is level.
+    """
     if hasattr(coord, "units"):
         if Units(coord.units).ispressure:
             return True
@@ -54,6 +78,12 @@ def is_level(coord):
 
 
 def is_time(coord):
+    """
+    Determines if a coordinate is time.
+
+    :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
+    :return: (bool) True if the coordinate is time.
+    """
     if coord.values.size > 1:
         if hasattr(coord.values[0], "calendar"):
             if Units(calendar=coord.values[0].calendar).isreftime:
@@ -68,6 +98,12 @@ def is_time(coord):
 
 
 def get_coord_type(coord):
+    """
+    Gets the coordinate type.
+
+    :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
+    :return: The type of coordinate as a string. Either longitude, latitude, time, level or None
+    """
 
     if is_longitude(coord):
         return "longitude"
@@ -82,9 +118,18 @@ def get_coord_type(coord):
 
 
 def get_coord_by_type(ds, coord_type, ignore_aux_coords=True):
-    'Can take a Dataset or DataArray'
+    """
+    Returns the xarray Dataset or DataArray coordinate of the specified type.
+
+    :param ds: Xarray Dataset or DataArray
+    :param coord_type: (str) Coordinate type to find.
+    :param ignore_aux_coords: (bool) If True then coordinates that are not dimensions are ignored.
+                            Default is True.
+    :return: Xarray Dataset coordinate (ds.coords[coord_id])
+    """
+    "Can take a Dataset or DataArray"
     if coord_type not in known_coord_types:
-        raise Exception(f'Coordinate type not known: {coord_type}')
+        raise Exception(f"Coordinate type not known: {coord_type}")
 
     for coord_id in ds.coords:
         # If ignore_aux_coords is True then ignore coords that are not dimensions
@@ -100,6 +145,15 @@ def get_coord_by_type(ds, coord_type, ignore_aux_coords=True):
 
 
 def get_main_variable(ds, exclude_common_coords=True):
+    """
+    Finds the main variable of an xarray Dataset
+
+    :param ds: xarray Dataset
+    :param exclude_common_coords: (bool) If True then common coordinates are excluded from the search for the
+                                main variable. common coordinates are time, level, latitude, longitude and bounds.
+                                Default is True.
+    :return: (str) The main variable of the dataset e.g. 'tas'
+    """
 
     data_dims = [data.dims for var_id, data in ds.variables.items()]
     flat_dims = [dim for sublist in data_dims for dim in sublist]
@@ -111,7 +165,9 @@ def get_main_variable(ds, exclude_common_coords=True):
 
         if var_id in flat_dims:
             continue
-        if exclude_common_coords is True and any(coord in var_id for coord in common_coords):
+        if exclude_common_coords is True and any(
+            coord in var_id for coord in common_coords
+        ):
             continue
         else:
             results.update({var_id: len(ds[var_id].shape)})

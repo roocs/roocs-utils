@@ -1,8 +1,8 @@
 #!/usr/bin/env python
+import glob
+import os
 
 import oyaml as yaml
-import os
-import glob
 
 from roocs_utils.inventory.inventory import CustomDumper
 
@@ -25,8 +25,7 @@ def write(new_yaml_data_dict):
         f.write(sdump)
 
 
-for i in range(1, len(yaml_files)-1):
-    with open(yaml_files[i], 'r') as yamlfile1:
+for i in range(1, len(yaml_files) - 1):
+    with open(yaml_files[i], "r") as yamlfile1:
         cmip5_update = yaml.load(yamlfile1, Loader=yaml.SafeLoader)
     write(cmip5_update)
-

@@ -1,8 +1,21 @@
+from roocs_utils.exceptions import InvalidParameterValue
+from roocs_utils.exceptions import MissingParameterValue
 from roocs_utils.parameter.base_parameter import _BaseParameter
-from roocs_utils.exceptions import InvalidParameterValue, MissingParameterValue
 
 
 class CollectionParameter(_BaseParameter):
+    """
+    Class for collection parameter used in operations.
+
+    A collection can be input as:
+        A string of comma separated values: "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga,"\
+                                            "cmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
+        A sequence of strings: e.g. ("cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga,"
+                                     "cmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga")
+
+    Validates the input and parses the ids.
+
+    """
 
     parse_method = "_parse_sequence"
 
@@ -21,6 +34,7 @@ class CollectionParameter(_BaseParameter):
 
     @property
     def tuple(self):
+        """ Returns a tuple of the collection ids """
         return self._parse_ids()
 
     def __str__(self):

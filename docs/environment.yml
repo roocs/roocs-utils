@@ -1,0 +1,18 @@
+# conda env create -f environment.yml
+name: rook-docs
+channels:
+- conda-forge
+- defaults
+dependencies:
+- pywps>=4.2
+- sphinx
+- nbsphinx
+- ipython
+- numpy>=1.16
+- xarray>=0.15
+- dask>=2.6
+- udunits2>=2.2
+- cfunits>=3.2.7
+- python-dateutil>=2.8.1
+- cf_xarray>=0.2.1 # Note that conda-forge package is cf_xarray (!= cf-xarray)
+- netCDF4>=1.4

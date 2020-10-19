@@ -1,8 +1,9 @@
-import pytest
 import datetime
 
-from roocs_utils.parameter.level_parameter import LevelParameter
+import pytest
+
 from roocs_utils.exceptions import InvalidParameterValue
+from roocs_utils.parameter.level_parameter import LevelParameter
 
 
 def test__str__():

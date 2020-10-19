@@ -1,7 +1,8 @@
 import pytest
 
+from roocs_utils.exceptions import InvalidParameterValue
+from roocs_utils.exceptions import MissingParameterValue
 from roocs_utils.parameter.collection_parameter import CollectionParameter
-from roocs_utils.exceptions import InvalidParameterValue, MissingParameterValue
 
 
 def test__str__():
