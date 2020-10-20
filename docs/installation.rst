@@ -11,7 +11,7 @@ To install roocs-utils, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install roocs_utils
+    $ pip install roocs-utils
 
 This is the preferred method to install roocs-utils, as it will always install the most recent stable release.
 
