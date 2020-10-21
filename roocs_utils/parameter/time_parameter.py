@@ -11,8 +11,8 @@ class TimeParameter(_BaseParameter):
     Class for time parameter used in subsetting operation.
 
     Time can be input as:
-        A string of slash separated values: "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
-        A sequence of strings: e.g. ("2085-01-01T12:00:00Z", "2120-12-30T12:00:00Z")
+    A string of slash separated values: "2085-01-01T12:00:00Z/2120-12-30T12:00:00Z"
+    A sequence of strings: e.g. ("2085-01-01T12:00:00Z", "2120-12-30T12:00:00Z")
 
     A time input must be 2 values.
 
