@@ -8,10 +8,10 @@ class LevelParameter(_BaseParameter):
     """
     Class for level parameter used in subsetting operation.
 
-    Level can be input as:
-        A string of slash separated values: "1000/2000"
-        A sequence of strings: e.g. ("1000.50", "2000.60")
-        A sequence of numbers: e.g. (1000.50, 2000.60)
+    | Level can be input as:
+    | A string of slash separated values: "1000/2000"
+    | A sequence of strings: e.g. ("1000.50", "2000.60")
+    | A sequence of numbers: e.g. (1000.50, 2000.60)
 
     A level input must be 2 values.
 

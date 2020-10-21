@@ -8,5 +8,10 @@ __license__ = "BSD - see LICENSE file in top-level package directory"
 __version__ = "0.1.2"
 
 from roocs_utils.config import get_config
+import roocs_utils
 
 CONFIG = get_config()
+
+from .parameter import *
+from .xarray_utils import *
+from .utils import *

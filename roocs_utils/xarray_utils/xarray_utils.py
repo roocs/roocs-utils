@@ -41,6 +41,8 @@ def is_latitude(coord):
     elif coord.attrs.get("standard_name", None) == "latitude":
         return True
 
+    return False
+
 
 def is_longitude(coord):
     """
@@ -55,6 +57,8 @@ def is_longitude(coord):
 
     elif coord.attrs.get("standard_name", None) == "longitude":
         return True
+
+    return False
 
 
 def is_level(coord):
@@ -76,6 +80,8 @@ def is_level(coord):
         if coord.attrs.get("axis", None) == "Z":
             return True
 
+    return False
+
 
 def is_time(coord):
     """
@@ -95,6 +101,8 @@ def is_time(coord):
 
     elif coord.attrs.get("standard_name", None) == "time":
         return True
+
+    return False
 
 
 def get_coord_type(coord):
