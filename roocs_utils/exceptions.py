@@ -9,5 +9,5 @@ class MissingParameterValue(Exception):
 
 # from dachar
 class InconsistencyError(Exception):
-    """ Raised when there is some inconsistency which prevents files
-    being scanned. """
+    """Raised when there is some inconsistency which prevents files
+    being scanned."""
