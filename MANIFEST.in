@@ -8,5 +8,3 @@ recursive-include roocs_utils *
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
-
-
