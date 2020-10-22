@@ -1,14 +1,10 @@
-include AUTHORS.rst
-include CONTRIBUTING.rst
-include HISTORY.rst
+include MakeFile
+include *.txt
+include *.rst
 include LICENSE
-include README.rst
-include requirements.txt
-include requirements_dev.txt
-include etc/roocs.ini
 
-recursive-include tests *
+recursive-include etc *
+recursive-include roocs_utils *
+
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
-
-recursive-include docs *.md *.rst conf.py Makefile make.bat *.jpg *.png *.gif
