@@ -1,10 +1,22 @@
-
 Version History
 ===============
+v0.1.4 (2020-10-22)
+-------------------
+
+Fixing pip install
+
+
+Bug Fixes
+^^^^^^^^^
+
+
+* Importing and using roocs-utils when pip installing now works
+
+
 v0.1.3 (2020-10-21)
 -------------------
 
-Fixing formatting of doc strings and pip install
+Fixing formatting of doc strings
 
 
 New Features
@@ -13,11 +25,7 @@ New Features
 
 * Added a notebook to show examples
 
-Bug Fixes
-^^^^^^^^^
 
-
-* Importing and using roocs-utils when pip installing now works
 
 Other Changes
 ^^^^^^^^^^^^^
