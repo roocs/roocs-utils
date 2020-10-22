@@ -1,7 +1,7 @@
 
 Version History
 ===============
-v0.1.3 (2020-10-15)
+v0.1.3 (2020-10-21)
 -------------------
 
 Fixing formatting of doc strings and pip install
