@@ -16,7 +16,16 @@ Bug Fixes
 v0.1.3 (2020-10-21)
 -------------------
 
-Fixing formatting of doc strings
+Fixing formatting of doc strings and imports
+
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+
+
+* Use of ``roocs_utils.parameter.parameterise.parameterise``:
+import should now be ``from roocs_utils.parameter import parameterise``
+and usage should be, for example ``parameters = parameterise(collection=ds, time=time, area=area, level=level)``
 
 
 New Features
