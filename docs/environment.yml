@@ -1,5 +1,5 @@
 # conda env create -f environment.yml
-name: rook-docs
+name: roocs-utils-docs
 channels:
 - conda-forge
 - defaults

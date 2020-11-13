@@ -7,10 +7,10 @@ repos:
     rev: v3.3.0
     hooks:
     -   id: trailing-whitespace
-        exclude: 'setup.cfg'
+        exclude: setup.cfg
         language_version: python3
     -   id: end-of-file-fixer
-        exclude: 'setup.cfg'
+        exclude: setup.cfg
         language_version: python3
     -   id: check-yaml
         language_version: python3
