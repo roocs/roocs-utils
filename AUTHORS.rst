@@ -2,15 +2,12 @@
 Credits
 =======
 
-Lead
-----
-
-
+Development Lead
+----------------
 * Ag Stephens ag.stephens@stfc.ac.uk
 
-Contributors
-------------
-
+Co-Developers
+-------------
 
 * Eleanor Smith eleanor.smith@stfc.ac.uk
 * Carsten Ehbrecht ehbrecht@dkrz.de
