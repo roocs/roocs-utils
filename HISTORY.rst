@@ -1,5 +1,15 @@
 Version History
 ===============
+
+v0.1.5 (unreleased)
+-------------------
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+
+* Replaced use of ``cfunits`` by ``cf_xarray`` and ``cftime`` (new dependency) in ``roocs_utils.xarray_utils``.
+
+
 v0.1.4 (2020-10-22)
 -------------------
 

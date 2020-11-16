@@ -1,8 +1,9 @@
 from datetime import datetime
 
+import cf_xarray  # noqa
+import cftime
 import numpy as np
 import xarray as xr
-from cfunits import Units
 
 
 known_coord_types = ["time", "level", "latitude", "longitude"]
@@ -34,11 +35,10 @@ def is_latitude(coord):
     :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
     :return: (bool) True if the coordinate is latitude.
     """
-    if hasattr(coord, "units"):
-        if Units(coord.units).islatitude:
-            return True
+    if "latitude" in coord.cf and coord.cf["latitude"].name == coord.name:
+        return True
 
-    elif coord.attrs.get("standard_name", None) == "latitude":
+    if coord.attrs.get("standard_name", None) == "latitude":
         return True
 
     return False
@@ -51,11 +51,10 @@ def is_longitude(coord):
     :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
     :return: (bool) True if the coordinate is longitude.
     """
-    if hasattr(coord, "units"):
-        if Units(coord.units).islongitude:
-            return True
+    if "longitude" in coord.cf and coord.cf["longitude"].name == coord.name:
+        return True
 
-    elif coord.attrs.get("standard_name", None) == "longitude":
+    if coord.attrs.get("standard_name", None) == "longitude":
         return True
 
     return False
@@ -68,9 +67,8 @@ def is_level(coord):
     :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
     :return: (bool) True if the coordinate is level.
     """
-    if hasattr(coord, "units"):
-        if Units(coord.units).ispressure:
-            return True
+    if "vertical" in coord.cf and coord.cf["vertical"].name == coord.name:
+        return True
 
     if hasattr(coord, "positive"):
         if coord.attrs.get("positive", None) == "up" or "down":
@@ -90,16 +88,20 @@ def is_time(coord):
     :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
     :return: (bool) True if the coordinate is time.
     """
-    if coord.values.size > 1:
-        if hasattr(coord.values[0], "calendar"):
-            if Units(calendar=coord.values[0].calendar).isreftime:
-                return True
+    if "time" in coord.cf and coord.cf["time"].name == coord.name:
+        return True
 
-    elif hasattr(coord, "axis"):
+    if np.issubdtype(coord.dtype, np.datetime64):
+        return True
+
+    if isinstance(np.atleast_1d(coord.values)[0], cftime.datetime):
+        return True
+
+    if hasattr(coord, "axis"):
         if coord.axis == "T":
             return True
 
-    elif coord.attrs.get("standard_name", None) == "time":
+    if coord.attrs.get("standard_name", None) == "time":
         return True
 
     return False
