@@ -1,8 +1,8 @@
 Version History
 ===============
 
-v0.1.5 (unreleased)
--------------------
+v0.1.5
+------
 
 Breaking Changes
 ^^^^^^^^^^^^^^^^
