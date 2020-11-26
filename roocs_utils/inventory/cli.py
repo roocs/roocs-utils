@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """Console script for roocs_utils.inventory package."""
-
 import argparse
 import os
 import shutil
@@ -10,6 +9,7 @@ import sys
 from roocs_utils import CONFIG
 from roocs_utils.inventory import logging
 from roocs_utils.inventory.batch import BatchManager
+from roocs_utils.inventory.inventory_new import to_yaml
 from roocs_utils.inventory.task import TaskManager
 from roocs_utils.inventory.utils import get_pickle_store
 
@@ -196,7 +196,7 @@ def _get_arg_parser_list(parser):
         "--project",
         type=str,
         required=True,
-        help="Project to clean out directories for.",
+        help="Project to list.",
     )
 
     parser.add_argument(
@@ -223,6 +223,52 @@ def list_main(args):
             print(f"Record: {dataset_id}, {content}")
 
     print(f"\nTotal records: {len(records)}")
+
+
+def _get_arg_parser_write(parser):
+
+    parser.add_argument(
+        "-p",
+        "--project",
+        type=str,
+        required=True,
+        help="Project to write inventory for.",
+    )
+
+    parser.add_argument(
+        "-v",
+        "--version",
+        default="local",
+        help="Version of inventory to write, either 'local' (default - with file names) "
+        "or 'c3s' (without file names).",
+    )
+
+    return parser
+
+
+def parse_args_write(args):
+    return args.project, args.version
+
+
+def write_main(args):
+    project, version = parse_args_write(args)
+    pstore = get_pickle_store("inventory", project)
+    records = pstore.read().items()
+
+    if version == "c3s":
+        inv_file = CONFIG[f"project:{project}"]["c3s_inventory_file"]
+
+        for dataset_id, content in records:
+            del content["files"]
+            to_yaml(content, project, version)
+
+    else:
+        inv_file = CONFIG[f"project:{project}"]["local_inventory_file"]
+
+        for dataset_id, content in records:
+            to_yaml(content, project, version)
+
+    print(f"Inventory written: {inv_file}")
 
 
 def show_errors_main(args):
@@ -261,6 +307,10 @@ def main():
     list_parser = subparsers.add_parser("list")
     _get_arg_parser_list(list_parser)
     list_parser.set_defaults(func=list_main)
+
+    write_parser = subparsers.add_parser("write")
+    _get_arg_parser_write(write_parser)
+    write_parser.set_defaults(func=write_main)
 
     show_errors_parser = subparsers.add_parser("show-errors")
     _get_arg_parser_project(show_errors_parser)

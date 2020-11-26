@@ -1,17 +1,16 @@
 import os
 
-from roocs_utils.inventory import logging
 from roocs_utils import CONFIG
+from roocs_utils.inventory import logging
 from roocs_utils.inventory.batch import BatchManager
 from roocs_utils.inventory.lotus import Lotus
-from roocs_utils.inventory.utils import create_dir
 from roocs_utils.inventory.scanner import Scanner
+from roocs_utils.inventory.utils import create_dir
 
 LOGGER = logging.getLogger(__file__)
 
 
 class ConversionTask(object):
-
     def __init__(self, batch_number, project, run_mode="lotus"):
         self._batch_number = batch_number
         self._project = project
@@ -37,7 +36,7 @@ class ConversionTask(object):
         LOGGER.info(f"Submitting to Lotus: {self._batch_number}")
         cmd = (
             f"./roocs_utils/inventory/cli.py "
-            f"run -b {self._batch_number} -r local"
+            f"run -b {self._batch_number}  -p {self._project} -r local"
         )
 
         duration = CONFIG["workflow"]["max_duration"]

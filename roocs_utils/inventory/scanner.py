@@ -4,15 +4,16 @@ import traceback
 
 import xarray as xr
 
-from roocs_utils.inventory import logging
 from roocs_utils import CONFIG
-from roocs_utils.inventory.utils import get_pickle_store, get_var_id
+from roocs_utils.inventory import logging
+from roocs_utils.inventory.inventory_new import create_inventory
+from roocs_utils.inventory.utils import get_pickle_store
+from roocs_utils.inventory.utils import get_var_id
 
 LOGGER = logging.getLogger(__file__)
 
 
 class Scanner(object):
-    
     def __init__(self, batch, project):
         self._batch = batch
         self._project = project
@@ -36,10 +37,7 @@ class Scanner(object):
         LOGGER.info(f"Scanning dataset: {dataset_id}")
 
         try:
-            content = {'dsid': dataset_id, 'facets':
-                         {'model': 'testmodel',
-                          'version': 34.5}} #extract_info(dataset_id)
-            # CALL THE inventory here...!!!
+            content = create_inventory(self._project, dataset_id)
         except Exception:
             msg = f"Failed to extract content for: {dataset_id}"
             return self._wrap_exception(dataset_id, msg)
