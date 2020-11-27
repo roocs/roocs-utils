@@ -131,11 +131,6 @@ def create_inventory(project, ds_id):
     return d
 
 
-class MyDumper(yaml.Dumper):
-    def increase_indent(self, flow=False, indentless=False):
-        return super(MyDumper, self).increase_indent(flow, False)
-
-
 def to_yaml(content, project, version):
     proj_dict = CONFIG[f"project:{project}"]
     base_dir = proj_dict["base_dir"]
@@ -150,7 +145,7 @@ def to_yaml(content, project, version):
         with open(inv_path, "w") as f:
             oyaml.dump(header, f)
 
-    sdump = oyaml.dump(content, Dumper=MyDumper, default_flow_style=False)
+    sdump = oyaml.dump(content, default_flow_style=False)
 
     with open(inv_path, "a") as f:
-        f.write(sdump.replace("path", "\npath"))
+        f.write(sdump.replace("- path", "\n- path"))

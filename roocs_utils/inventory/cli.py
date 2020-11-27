@@ -260,13 +260,13 @@ def write_main(args):
 
         for dataset_id, content in records:
             del content["files"]
-            to_yaml(content, project, version)
+            to_yaml([content], project, version)
 
     else:
         inv_file = CONFIG[f"project:{project}"]["local_inventory_file"]
 
         for dataset_id, content in records:
-            to_yaml(content, project, version)
+            to_yaml([content], project, version)
 
     print(f"Inventory written: {inv_file}")
 
