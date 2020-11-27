@@ -9,7 +9,7 @@ import sys
 from roocs_utils import CONFIG
 from roocs_utils.inventory import logging
 from roocs_utils.inventory.batch import BatchManager
-from roocs_utils.inventory.inventory_new import to_yaml
+from roocs_utils.inventory.inventory import to_yaml
 from roocs_utils.inventory.task import TaskManager
 from roocs_utils.inventory.utils import get_pickle_store
 

@@ -6,7 +6,7 @@ import xarray as xr
 
 from roocs_utils import CONFIG
 from roocs_utils.inventory import logging
-from roocs_utils.inventory.inventory_new import create_inventory
+from roocs_utils.inventory.inventory import create_inventory
 from roocs_utils.inventory.utils import get_pickle_store
 from roocs_utils.inventory.utils import get_var_id
 
