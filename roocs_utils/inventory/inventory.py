@@ -11,8 +11,6 @@ import yaml
 from roocs_utils import CONFIG
 from roocs_utils.xarray_utils.xarray_utils import get_coord_type
 
-# import numbers
-
 
 def get_time_info(fpaths, var_id):
 
@@ -46,13 +44,13 @@ def get_coord_info(fpaths):
 
         data = coord.values
 
-        # if isinstance(coord.values[0], numbers.Number)
-        mn, mx = data.min(), data.max()
+        if isinstance(coord.values[0], str) or isinstance(coord.values[0], bytes):
+            continue
 
-        d[f"{type}"] = f"{mn:.2f} {mx:.2f}"
+        else:
+            mn, mx = data.min(), data.max()
 
-        # else:
-        #   d[f"{type}"] = len(data)
+            d[f"{type}"] = f"{mn:.2f} {mx:.2f}"
 
     return d
 
