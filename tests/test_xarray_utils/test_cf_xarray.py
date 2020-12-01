@@ -13,13 +13,15 @@ test_path = (
 
 def test_get_standard_names():
     ds = xr.open_mfdataset(f1, use_cftime=True, combine="by_coords")
-    assert ds.cf.get_standard_names() == [
-        "air_temperature",
-        "height",
-        "latitude",
-        "longitude",
-        "time",
-    ]
+    assert sorted(ds.cf.get_standard_names()) == sorted(
+        [
+            "air_temperature",
+            "height",
+            "latitude",
+            "longitude",
+            "time",
+        ]
+    )
 
 
 @pytest.mark.xfail(reason="left has height coord")
