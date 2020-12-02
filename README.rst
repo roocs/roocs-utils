@@ -49,7 +49,7 @@ Once the list of datasets is collated a number of batches must be created:
     
 The option ``-p`` is required to specify the project.
 
-Once the batches are created, the inventory maker can be run - either locally or on lotus. 
+Once the batches are created, the inventory maker can be run - either locally or on lotus. The settings for how many datasets to be included in a batch and the maximum duration of each job on lotus can also be changed in ``roocs_utils/etc/roocs.ini``.
 
 Each batch can be run idependently, e.g. running batch 1 locally:
 
@@ -62,8 +62,6 @@ or running all batches on lotus:
 .. code-block::
 
     $ python roocs_utils/inventory/cli.py run -p c3s-cmip6 -r lotus
-    
-The settings for how many datasets to be included in a batch and the maximum duration of each job on lotus can also be changed in ``roocs_utils/etc/roocs.ini``.
 
 This creates a pickle file containing an ordered dictionary of the inventory for each dataset. It also creates a pickle file for any errors.
 
