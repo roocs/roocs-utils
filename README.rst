@@ -41,6 +41,10 @@ data holdings in a YAML format.
 For each project in ``roocs_utils/etc/roocs.ini`` there are options to set the file paths for the inputs and outputs of this inventory maker.
 A list of datasets to include in the inventory needs to be provided. The path to this list for each project can be set in ``roocs_utils/etc/roocs.ini``
 
+
+Creating batches
+================
+
 Once the list of datasets is collated a number of batches must be created:
 
 .. code-block::
@@ -48,6 +52,9 @@ Once the list of datasets is collated a number of batches must be created:
     $ python roocs_utils/inventory/cli.py create-batches -p c3s-cmip6 
     
 The option ``-p`` is required to specify the project.
+
+Creating inventory records
+==========================
 
 Once the batches are created, the inventory maker can be run - either locally or on lotus. The settings for how many datasets to be included in a batch and the maximum duration of each job on lotus can also be changed in ``roocs_utils/etc/roocs.ini``.
 
@@ -64,6 +71,9 @@ or running all batches on lotus:
     $ python roocs_utils/inventory/cli.py run -p c3s-cmip6 -r lotus
 
 This creates a pickle file containing an ordered dictionary of the inventory for each dataset. It also creates a pickle file for any errors.
+
+Viewing records and errors
+==========================
 
 To view the records:
 
@@ -82,6 +92,9 @@ To just get a count of how many datasets have been scanned:
 .. code-block::
 
     $ python roocs_utils/inventory/cli.py list -p c3s-cmip6 -c
+
+Writing the inventory
+=====================
 
 The final command is to write the inventory to a yaml file. There are 2 options for this.
 
