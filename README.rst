@@ -72,6 +72,7 @@ To view the records:
     $ python roocs_utils/inventory/cli.py list -p c3s-cmip6
     
 and to see any errors:
+
 .. code-block::
 
     $ python roocs_utils/inventory/cli.py show-errors -p c3s-cmip6
