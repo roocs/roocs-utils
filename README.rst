@@ -36,7 +36,36 @@ Features
 ^^^^^^^^^^^^^^^^^^^
 
 The module ``roocs_utils.inventory`` provides tools for writing inventories of the known
-data holdings in a YAML format, e.g.:
+data holdings in a YAML format.
+
+For each project in ``roocs_utils/etc/roocs.ini`` there are options to set the file paths for the inputs and outputs of this inventory maker.
+A list of datasets to include in the inventory needs to be provided. The path to this list for each project can be set in ``roocs_utils/etc/roocs.ini``
+
+Once the list of datasets is collated a number of batches must be created:
+
+.. code-block:: shell
+
+    $ python roocs_utils/inventory/cli.py create-batches -p c3s-cmip6 
+    
+The option ``-p`` is required to specify the project.
+
+Once the batches are created, the inventory maker can be run - either locally or on lotus. 
+
+Each batch can be run idependently, e.g. running batch 1 locally:
+
+.. code-block:: shell
+
+    $ python roocs_utils/inventory/cli.py run -p c3s-cmip6 -b 1 -r local 
+    
+or running all batches on lotus:
+
+.. code-block:: shell
+
+    $ python roocs_utils/inventory/cli.py run -p c3s-cmip6 -r lotus
+    
+The settings for how many datasets to be included in a batch and the maximum duration of each job on lotus can also be changed in ``roocs_utils/etc/roocs.ini``.
+
+This creates a pickle file ...
 
 .. code-block:: shell
 
