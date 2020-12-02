@@ -85,13 +85,14 @@ To just get a count of how many datasets have been scanned:
 
 The final command is to write the inventory to a yaml file. There are 2 options for this.
 
+1.
 .. code-block::
 
     $ python roocs_utils/inventory/cli.py list -p c3s-cmip6 -v full
     
 writes the inventory files and includes the file names for each dataset:  
 
-``c3s-cmip6-inventorty-full.yml``
+``c3s-cmip6-inventory-full.yml``
 
 .. code-block::
 
@@ -120,13 +121,14 @@ writes the inventory files and includes the file names for each dataset:
       files:
       - rsutcs_Amon_CanESM5_ssp370_r1i1p1f1_gn_201501-210012.nc
 
+2.
 .. code-block::
 
     $ python roocs_utils/inventory/cli.py list -p c3s-cmip6 -v c3s    
     
 writes the inventory files but does not include file names:     
 
-``c3s-cmip6-inventorty-full.yml``
+``c3s-cmip6-inventory-full.yml``
 
 .. code-block::
 
