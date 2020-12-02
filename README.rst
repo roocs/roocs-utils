@@ -43,7 +43,7 @@ A list of datasets to include in the inventory needs to be provided. The path to
 
 Once the list of datasets is collated a number of batches must be created:
 
-.. code-block:: shell
+.. code-block::
 
     $ python roocs_utils/inventory/cli.py create-batches -p c3s-cmip6 
     
@@ -53,55 +53,108 @@ Once the batches are created, the inventory maker can be run - either locally or
 
 Each batch can be run idependently, e.g. running batch 1 locally:
 
-.. code-block:: shell
+.. code-block::
 
     $ python roocs_utils/inventory/cli.py run -p c3s-cmip6 -b 1 -r local 
     
 or running all batches on lotus:
 
-.. code-block:: shell
+.. code-block::
 
     $ python roocs_utils/inventory/cli.py run -p c3s-cmip6 -r lotus
     
 The settings for how many datasets to be included in a batch and the maximum duration of each job on lotus can also be changed in ``roocs_utils/etc/roocs.ini``.
 
-This creates a pickle file ...
+This creates a pickle file containing an ordered dictionary of the inventory for each dataset. It also creates a pickle file for any errors.
 
-.. code-block:: shell
+To view the records:
 
-   $ python roocs_utils/inventory/inventory.py -pr c3s-cmip5
-   [INFO] Reading /group_workspaces/jasmin2/cp4cds1/vol1/data/c3s-cmip5/output1/MOHC/HadGEM2-ES/rcp45/mon/atmos/Amon/r1i1p1/tas/v20111                                                                  128/tas_Amon_HadGEM2-ES_rcp45_r1i1p1_212412-214911.nc
-   [INFO] Reading /group_workspaces/jasmin2/cp4cds1/vol1/data/c3s-cmip5/output1/MOHC/HadGEM2-ES/rcp45/mon/atmos/Amon/r1i1p1/ts/v201111                                                                  28/ts_Amon_HadGEM2-ES_rcp45_r1i1p1_209912-212411.nc
-   [INFO] Wrote: c3s-cmip5_MOHC_HadGEM2-ES.yml
+.. code-block::
 
-One file is created for each model/institute pairing. These can be merged to one file
-using ``roocs_utils/inventory/merge_yaml.py``
+    $ python roocs_utils/inventory/cli.py list -p c3s-cmip6
+    
+and to see any errors:
+.. code-block::
 
-Writes:
+    $ python roocs_utils/inventory/cli.py show-errors -p c3s-cmip6
 
-.. code-block:: shell
+To just get a count of how many datasets have been scanned:
 
-   - base_dir: /group_workspaces/jasmin2/cp4cds1/vol1/data/
-     project: c3s-cmip5
+.. code-block::
 
-   - path: c3s-cmip5/output1/MOHC/HadGEM2-ES/rcp45/mon/atmos/Amon/r1i1p1/tas/v20111128
-     dsid: c3s-cmip5.output1.MOHC.HadGEM2-ES.rcp45.mon.atmos.Amon.r1i1p1.tas.v20111128
-     var_id: tas
-     array_dims: time lat lon
-     array_shape: 3529 145 192
-     time: 2005-12-16T00:00:00 2299-12-16T00:00:00
-     facets:
-       activity: c3s-cmip5
-       ensemble_member: r1i1p1
-       experiment: rcp45
-       frequency: mon
-       institute: MOHC
-       mip_table: Amon
-       model: HadGEM2-ES
-       product: output1
-       realm: atmos
-       variable: tas
-       version: v20111128
+    $ python roocs_utils/inventory/cli.py list -p c3s-cmip6 -c
+
+The final command is to write the inventory to a yaml file. There are 2 options for this.
+
+.. code-block::
+
+    $ python roocs_utils/inventory/cli.py list -p c3s-cmip6 -v full
+    
+writes the inventory files and includes the file names for each dataset:  
+
+``c3s-cmip6-inventorty-full.yml``
+
+.. code-block::
+
+    - path: CMIP6/ScenarioMIP/CCCma/CanESM5/ssp370/r1i1p1f1/Amon/rsutcs/gn/v20190429
+      ds_id: CMIP6.ScenarioMIP.CCCma.CanESM5.ssp370.r1i1p1f1.Amon.rsutcs.gn.v20190429
+      var_id: rsutcs
+      array_dims: time lat lon
+      array_shape: 1032 64 128
+      time: 2015-01-16T12:00:00 2100-12-16T12:00:00
+      latitude: -87.86 87.86
+      longitude: 0.00 357.19
+      size: 33845952
+      size_gb: 0.03
+      file_count: 1
+      facets:
+        mip_era: CMIP6
+        activity_id: ScenarioMIP
+        institution_id: CCCma
+        source_id: CanESM5
+        experiment_id: ssp370
+        member_id: r1i1p1f1
+        table_id: Amon
+        variable_id: rsutcs
+        grid_label: gn
+        version: v20190429
+      files:
+      - rsutcs_Amon_CanESM5_ssp370_r1i1p1f1_gn_201501-210012.nc
+
+.. code-block::
+
+    $ python roocs_utils/inventory/cli.py list -p c3s-cmip6 -v c3s    
+    
+writes the inventory files but does not include file names:     
+
+``c3s-cmip6-inventorty-full.yml``
+
+.. code-block::
+
+    - path: CMIP6/ScenarioMIP/CCCma/CanESM5/ssp370/r1i1p1f1/Amon/rsutcs/gn/v20190429
+      ds_id: CMIP6.ScenarioMIP.CCCma.CanESM5.ssp370.r1i1p1f1.Amon.rsutcs.gn.v20190429
+      var_id: rsutcs
+      array_dims: time lat lon
+      array_shape: 1032 64 128
+      time: 2015-01-16T12:00:00 2100-12-16T12:00:00
+      latitude: -87.86 87.86
+      longitude: 0.00 357.19
+      size: 33845952
+      size_gb: 0.03
+      file_count: 1
+      facets:
+        mip_era: CMIP6
+        activity_id: ScenarioMIP
+        institution_id: CCCma
+        source_id: CanESM5
+        experiment_id: ssp370
+        member_id: r1i1p1f1
+        table_id: Amon
+        variable_id: rsutcs
+        grid_label: gn
+        version: v20190429
+
+Full is the default and will happen when no version is provided.
 
 Credits
 =======
