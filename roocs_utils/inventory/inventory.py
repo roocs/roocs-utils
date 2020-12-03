@@ -144,7 +144,7 @@ def to_yaml(content, project, version):
     if version == "c3s":
         inv_path = CONFIG[f"project:{project}"]["c3s_inventory_file"]
     else:
-        inv_path = CONFIG[f"project:{project}"]["local_inventory_file"]
+        inv_path = CONFIG[f"project:{project}"]["full_inventory_file"]
 
     if not os.path.isfile(inv_path):
         with open(inv_path, "w") as f:

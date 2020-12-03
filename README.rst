@@ -49,8 +49,8 @@ Once the list of datasets is collated a number of batches must be created:
 
 .. code-block::
 
-    $ python roocs_utils/inventory/cli.py create-batches -p c3s-cmip6 
-    
+    $ python roocs_utils/inventory/cli.py create-batches -p c3s-cmip6
+
 The option ``-p`` is required to specify the project.
 
 Creating inventory records
@@ -62,8 +62,8 @@ Each batch can be run idependently, e.g. running batch 1 locally:
 
 .. code-block::
 
-    $ python roocs_utils/inventory/cli.py run -p c3s-cmip6 -b 1 -r local 
-    
+    $ python roocs_utils/inventory/cli.py run -p c3s-cmip6 -b 1 -r local
+
 or running all batches on lotus:
 
 .. code-block::
@@ -80,7 +80,7 @@ To view the records:
 .. code-block::
 
     $ python roocs_utils/inventory/cli.py list -p c3s-cmip6
-    
+
 and to see any errors:
 
 .. code-block::
@@ -102,9 +102,9 @@ The final command is to write the inventory to a yaml file. There are 2 options 
 
 .. code-block::
 
-    $ python roocs_utils/inventory/cli.py list -p c3s-cmip6 -v full
-    
-writes the inventory file ``c3s-cmip6-inventory-full.yml`` and includes the file names for each dataset:  
+    $ python roocs_utils/inventory/cli.py list -p c3s-cmip6 -v files
+
+writes the inventory file ``c3s-cmip6-inventory-files.yml`` and includes the file names for each dataset:
 
 
 .. code-block::
@@ -138,9 +138,9 @@ writes the inventory file ``c3s-cmip6-inventory-full.yml`` and includes the file
 
 .. code-block::
 
-    $ python roocs_utils/inventory/cli.py list -p c3s-cmip6 -v c3s    
-    
-writes the inventory file ``c3s-cmip6-inventory.yml`` and does not include file names:     
+    $ python roocs_utils/inventory/cli.py list -p c3s-cmip6 -v c3s
+
+writes the inventory file ``c3s-cmip6-inventory.yml`` and does not include file names:
 
 
 .. code-block::
@@ -168,7 +168,7 @@ writes the inventory file ``c3s-cmip6-inventory.yml`` and does not include file 
         grid_label: gn
         version: v20190429
 
-Full is the default and will happen when no version is provided.
+Files is the default and will happen when no version is provided.
 
 Credits
 =======

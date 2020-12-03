@@ -238,8 +238,8 @@ def _get_arg_parser_write(parser):
     parser.add_argument(
         "-v",
         "--version",
-        default="local",
-        help="Version of inventory to write, either 'local' (default - with file names) "
+        default="files",
+        help="Version of inventory to write, either 'files' (default - with file names) "
         "or 'c3s' (without file names).",
     )
 
@@ -263,7 +263,7 @@ def write_main(args):
             to_yaml([content], project, version)
 
     else:
-        inv_file = CONFIG[f"project:{project}"]["local_inventory_file"]
+        inv_file = CONFIG[f"project:{project}"]["full_inventory_file"]
 
         for dataset_id, content in records:
             to_yaml([content], project, version)
