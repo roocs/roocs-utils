@@ -49,7 +49,7 @@ def test_get_project_base_dir():
     assert cmip5_base_dir == "/badc/cmip5/data"
 
     c3s_cordex_base_dir = get_project_base_dir("c3s-cordex")
-    assert c3s_cordex_base_dir == "/group_workspaces/jasmin2/cp4cds1/vol1/data/"
+    assert c3s_cordex_base_dir == "/group_workspaces/jasmin2/cp4cds1/vol1/data"
 
     with pytest.raises(Exception) as exc:
         get_project_base_dir("test")
