@@ -139,7 +139,7 @@ def create_inventory(project, ds_id):
 def to_yaml(content, project, version):
     proj_dict = CONFIG[f"project:{project}"]
     base_dir = proj_dict["base_dir"]
-    header = {"project": project, "base_dir": base_dir}
+    header = [{"project": project, "base_dir": base_dir}]
 
     if version == "c3s":
         inv_path = CONFIG[f"project:{project}"]["c3s_inventory_file"]

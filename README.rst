@@ -102,7 +102,7 @@ The final command is to write the inventory to a yaml file. There are 2 options 
 
 .. code-block::
 
-    $ python roocs_utils/inventory/cli.py list -p c3s-cmip6 -v files
+    $ python roocs_utils/inventory/cli.py write -p c3s-cmip6 -v files
 
 writes the inventory file ``c3s-cmip6-inventory-files.yml`` and includes the file names for each dataset:
 
@@ -138,7 +138,7 @@ writes the inventory file ``c3s-cmip6-inventory-files.yml`` and includes the fil
 
 .. code-block::
 
-    $ python roocs_utils/inventory/cli.py list -p c3s-cmip6 -v c3s
+    $ python roocs_utils/inventory/cli.py write -p c3s-cmip6 -v c3s
 
 writes the inventory file ``c3s-cmip6-inventory.yml`` and does not include file names:
 
