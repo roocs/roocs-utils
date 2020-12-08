@@ -6,7 +6,6 @@ from collections import OrderedDict
 
 import oyaml
 import xarray as xr
-import yaml
 
 from roocs_utils import CONFIG
 from roocs_utils.xarray_utils.xarray_utils import get_coord_type
