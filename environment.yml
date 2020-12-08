@@ -8,5 +8,6 @@ dependencies:
  - dask>=2.6
  - cftime
  - python-dateutil>=2.8.1
- - cf_xarray>=0.2.1 # Note that conda-forge package is cf_xarray (!= cf-xarray)
+ - cf_xarray>=0.3.1 # Note that conda-forge package is cf_xarray (!= cf-xarray)
  - netCDF4>=1.4
+ - oyaml>=0.9

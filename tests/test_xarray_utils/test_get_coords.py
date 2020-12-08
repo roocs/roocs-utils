@@ -1,4 +1,6 @@
-# from dachar
+import os
+
+import pytest
 import xarray as xr
 
 from roocs_utils.xarray_utils.xarray_utils import get_coord_type
@@ -11,6 +13,7 @@ test_path = (
     "tests/mini-esgf-data/test_data/badc/cmip5/data/cmip5"
     "/output1/INM/inmcm4/rcp45/mon/ocean/Omon/r1i1p1/latest/zostoga/*.nc"
 )
+text_coord_path = "/badc/cmip6/data/CMIP6/ScenarioMIP/IPSL/IPSL-CM6A-LR/ssp245/r1i1p1f1/Lmon/landCoverFrac/gr/v20190119/*.nc"
 
 
 # test dataset with no known problems
@@ -106,3 +109,11 @@ def test_order_of_coords():
     assert coord_sizes == [1, 1140]
     assert ds["lev"].shape == (1,)
     assert ds["time"].shape == (1140,)
+
+
+@pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
+def test_text_coord_not_level():
+    ds = xr.open_mfdataset(text_coord_path, use_cftime=True, combine="by_coords")
+    coord_type = get_coord_type(ds.sector)
+    assert coord_type is None
+    assert coord_type != "level"
