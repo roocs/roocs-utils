@@ -44,13 +44,9 @@ def get_coord_info(fpaths):
 
         data = coord.values
 
-        if isinstance(coord.values[0], str) or isinstance(coord.values[0], bytes):
-            continue
+        mn, mx = data.min(), data.max()
 
-        else:
-            mn, mx = data.min(), data.max()
-
-            d[f"{type}"] = f"{mn:.2f} {mx:.2f}"
+        d[f"{type}"] = f"{mn:.2f} {mx:.2f}"
 
     return d
 
