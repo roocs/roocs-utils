@@ -1,6 +1,22 @@
 Version History
 ===============
 
+v0.2.0 (2020-12-15)
+-------------------
+
+Updating inventory maker
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+* cf_xarray>=0.3.1 now required due to differing level identification of coordinates between versions.
+* oyaml>=0.9 - new dependency for inventory
+* Interface to inventory maker changed. Detailed instructions for use added in README.
+
+Other Changes
+^^^^^^^^^^^^^
+* Inventory maker updated.
+
+
 v0.1.5 (2020-11-23)
 -------------------
 
