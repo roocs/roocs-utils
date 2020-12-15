@@ -21,7 +21,7 @@ project_name_attributes = {
     "cmip6": "mip_era",
     "cordex": "project_id",
     "c3s-cmip5": "project_id",
-    "c3s-cmip6": "NOT DEFINED YET",
+    "c3s-cmip6": "mip_era",
     "c3s-cordex": "project_id",
 }
 
@@ -30,6 +30,7 @@ def get_project_from_ds(ds):
     for key, value in project_name_attributes.items():
         if ds.attrs.get(value, "").lower() == key:
             project_name = key
+            # check if c3s
             return project_name
 
 
@@ -48,9 +49,10 @@ def get_project_name(dset):
         base_dirs_dict = get_base_dirs_dict()
         for project, base_dir in base_dirs_dict.items():
             if dset.startswith(base_dir):
+                # if cmip6 check if c3s
                 return project
     elif dset.count(".") > 6:
-        return dset.split(".")[0].lower()
+        return dset.split(".")[0].lower()  # if cmip6 check if c3s
     elif dset.endswith(".nc") or os.path.isfile(dset):
         dset = xr.open_mfdataset(dset, use_cftime=True, combine="by_coords")
         return get_project_from_ds(dset)
