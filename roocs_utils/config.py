@@ -60,7 +60,9 @@ def _to_float(i):
 
 def _to_boolean(i):
     if i != "False" and i != "True":
-        raise Exception(f"{i} is not valid - use True or False")
+        raise Exception(
+            f"{i} is not valid for boolean field - you must use either True or False"
+        )
     else:
         return eval(i)
 

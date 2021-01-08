@@ -5,7 +5,7 @@ import xarray as xr
 from roocs_utils import CONFIG
 
 
-class MapDataset:  # better name??
+class DatasetMapper:  # better name??
     def __init__(self, dset, project=None):
         """ can only be used with ds ids or data paths"""
         self._project = project
@@ -26,9 +26,8 @@ class MapDataset:  # better name??
         return base_dirs
 
     def deduce_project(self):
-
         if isinstance(self.dset, str):
-            if self.dset.count(".") > 6:
+            if self.dset.count(".") > 1:
                 return self.dset.split(".")[0].lower()
 
             elif self.dset.startswith("/"):
@@ -37,9 +36,7 @@ class MapDataset:  # better name??
                 for project, base_dir in base_dirs_dict.items():
                     if (
                         self.dset.startswith(base_dir)
-                        and CONFIG[f"project:{project}"].get(
-                            "is_default_for_path", True
-                        )
+                        and CONFIG[f"project:{project}"].get("is_default_for_path")
                         is True
                     ):
                         return project
@@ -58,7 +55,6 @@ class MapDataset:  # better name??
             )
 
     def _parse(self):
-
         if not self._project:
             self._project = self.deduce_project()
 
@@ -73,11 +69,14 @@ class MapDataset:  # better name??
                 self._base_dir, "/".join(self.dset.split(".")[1:])
             )
         # need to include project here
-        elif self.dset.startswith("/"):
-            self._data_path = self.dset
-            # think i need to include a project here
+        elif self.dset.startswith("/") or self.dset.endswith("*.nc"):
+
+            self._data_path = self.dset.replace("*.nc", "")
             self._ds_id = ".".join(
-                self.dset.replace(self._base_dir, "").strip("/").split("/")
+                self.dset.replace(self._base_dir, self._project)
+                .replace("*.nc", "")
+                .strip("/")
+                .split("/")
             )
 
         # set facets/files?
@@ -107,19 +106,35 @@ class MapDataset:  # better name??
 
 # You could imagine some utility functions that wrap the Dataset class.
 def derive_dset(dset):
-    return MapDataset(dset)
+    return DatasetMapper(dset).ds_id
 
 
 def open_xr_dataset(dset):
-    pass
+    dset = DatasetMapper(dset).data_path
+    files = os.path.join(dset, "*.nc")
+    return xr.open_mfdataset(files, use_cftime=True, combine="by_coords")
 
 
 def datapath_to_dsid(datapath):
-    return MapDataset(datapath).ds_id
+    return DatasetMapper(datapath).ds_id
 
 
 def dsid_to_datapath(dsid):
-    return MapDataset(dsid).ds_id
+    return DatasetMapper(dsid).ds_id
+
+
+def switch_dset(dset):
+    """
+    Switches between ds_path and ds_id.
+
+    :param project: top-level project
+    :param ds: either dataset path or dataset ID (DSID)
+    :return: either dataset path or dataset ID (DSID) - switched from the input.
+    """
+    if dset.startswith("/"):
+        return datapath_to_dsid(dset)
+    else:
+        return dsid_to_datapath(dset)
 
 
 def get_project_from_ds(ds):
@@ -136,7 +151,7 @@ def get_project_name(dset):
         return get_project_from_ds(dset)  # will not return c3s dataset
 
     else:
-        ds = MapDataset(dset)
+        ds = DatasetMapper(dset)
         return ds.deduce_project()
 
 
