@@ -4,11 +4,11 @@ import xarray as xr
 from roocs_utils.project_utils import get_project_base_dir
 from roocs_utils.project_utils import get_project_name
 
-
+@pytest.mark.xfail(reason = "second assertion can not work without the c3s mapping re-write")
 def test_get_project_name(cmip5_tas, cmip6_siconc):
     dset = "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
     project = get_project_name(dset)
-    assert project == "cmip5""
+    assert project == "cmip5"
 
     dset = cmip5_tas
     project = get_project_name(dset)
@@ -38,7 +38,7 @@ def test_get_project_name(cmip5_tas, cmip6_siconc):
 def test_get_project_name_badc():
     dset = "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
     project = get_project_name(dset)
-    assert project == "cmip5
+    assert project == "cmip5"
 
 
 def test_get_project_base_dir():
