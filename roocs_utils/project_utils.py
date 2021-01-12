@@ -1,8 +1,13 @@
+import glob
 import os
 
 import xarray as xr
 
 from roocs_utils import CONFIG
+from roocs_utils.exceptions import InvalidProject
+from roocs_utils.inventory import logging
+
+LOGGER = logging.getLogger(__file__)
 
 
 class DatasetMapper:  # better name??
@@ -14,10 +19,12 @@ class DatasetMapper:  # better name??
         self._base_dir = None
         self._ds_id = None
         self._data_path = None
+        self._files = []
 
         self._parse()
 
-    def get_base_dirs_dict(self):
+    @staticmethod
+    def _get_base_dirs_dict():
 
         projects = [_.split(":")[1] for _ in CONFIG.keys() if _.startswith("project:")]
         base_dirs = {
@@ -25,14 +32,15 @@ class DatasetMapper:  # better name??
         }
         return base_dirs
 
-    def deduce_project(self):
-        if isinstance(self.dset, str):
-            if self.dset.count(".") > 1:
-                return self.dset.split(".")[0].lower()
+    def _is_ds_id(self):
+        return self.dset.count(".") > 1
 
-            elif self.dset.startswith("/"):
+    def deduce_project(self):
+
+        if isinstance(self.dset, str):
+            if self.dset.startswith("/"):
                 # by default this returns c3s-cmip6 not cmip6 (as they have the same base_dir)
-                base_dirs_dict = self.get_base_dirs_dict()
+                base_dirs_dict = self._get_base_dirs_dict()
                 for project, base_dir in base_dirs_dict.items():
                     if (
                         self.dset.startswith(base_dir)
@@ -40,6 +48,9 @@ class DatasetMapper:  # better name??
                         is True
                     ):
                         return project
+
+            elif self._is_ds_id():
+                return self.dset.split(".")[0].lower()
 
             # this will not return c3s project names
             elif self.dset.endswith(".nc") or os.path.isfile(self.dset):
@@ -50,36 +61,43 @@ class DatasetMapper:  # better name??
 
         else:
             raise Exception(
-                f"The format of {self.dset} is not known and the project name could not"
+                f"The format of {self.dset} is not known and the project name could not "
                 f"be found."
             )
 
     def _parse(self):
-        if not self._project:
-            self._project = self.deduce_project()
 
         if not self._project:
-            return
+            try:
+                self._project = self.deduce_project()
+                self._base_dir = get_project_base_dir(self._project)
+            except InvalidProject:
+                LOGGER.info(f"The project could not be identified")
+                return
 
-        self._base_dir = get_project_base_dir(self._project)
+        if self.dset.startswith("/") or self.dset.endswith(".nc"):
+            if self.dset.endswith(".nc"):
+                if self.dset.endswith("*.nc"):
+                    self._files = sorted(glob.glob(self.dset))
+                else:
+                    self._files.append(self.dset)
+                self.dset = "/".join(self.dset.split("/")[:-1])
 
-        if self.dset.count(".") > 6:
+            self._data_path = self.dset
+            self._ds_id = ".".join(
+                self.dset.replace(self._base_dir, self._project).strip("/").split("/")
+            )
+
+        elif self._is_ds_id():
             self._ds_id = self.dset
             self._data_path = os.path.join(
                 self._base_dir, "/".join(self.dset.split(".")[1:])
             )
-        # need to include project here
-        elif self.dset.startswith("/") or self.dset.endswith("*.nc"):
 
-            self._data_path = self.dset.replace("*.nc", "")
-            self._ds_id = ".".join(
-                self.dset.replace(self._base_dir, self._project)
-                .replace("*.nc", "")
-                .strip("/")
-                .split("/")
-            )
+        if len(self._files) < 1:
+            self._files = sorted(glob.glob(os.path.join(self._data_path, "*.nc")))
 
-        # set facets/files?
+        # set facets?
 
     @property
     def raw(self):
@@ -97,22 +115,18 @@ class DatasetMapper:  # better name??
     def base_dir(self):
         return self._base_dir
 
+    @property
+    def files(self):
+        return self._files
+
     # @property
     # def facets(self):
     #
-    # @property
-    # def files(self):
 
 
 # You could imagine some utility functions that wrap the Dataset class.
 def derive_dset(dset):
-    return DatasetMapper(dset).ds_id
-
-
-def open_xr_dataset(dset):
-    dset = DatasetMapper(dset).data_path
-    files = os.path.join(dset, "*.nc")
-    return xr.open_mfdataset(files, use_cftime=True, combine="by_coords")
+    return DatasetMapper(dset).data_path
 
 
 def datapath_to_dsid(datapath):
@@ -120,7 +134,7 @@ def datapath_to_dsid(datapath):
 
 
 def dsid_to_datapath(dsid):
-    return DatasetMapper(dsid).ds_id
+    return DatasetMapper(dsid).data_path
 
 
 def switch_dset(dset):
@@ -169,4 +183,4 @@ def get_project_base_dir(project):
     try:
         return CONFIG[f"project:{project}"]["base_dir"]
     except KeyError:
-        raise Exception("The project supplied is not known.")
+        raise InvalidProject("The project supplied is not known.")

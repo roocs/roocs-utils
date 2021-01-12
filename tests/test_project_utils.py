@@ -8,7 +8,6 @@ from roocs_utils.project_utils import DatasetMapper
 from roocs_utils.project_utils import derive_dset
 from roocs_utils.project_utils import get_project_base_dir
 from roocs_utils.project_utils import get_project_name
-from roocs_utils.project_utils import open_xr_dataset
 from roocs_utils.project_utils import switch_dset
 
 
@@ -90,47 +89,28 @@ def test_DatasetMapper():
 
     assert dset.base_dir == "/badc/cmip6/data/CMIP6"
 
+    assert dset.files == [
+        "/badc/cmip6/data/CMIP6/CMIP/NCAR/CESM2/historical/r1i1p1f1/SImon/siconc/gn/latest"
+        "/siconc_SImon_CESM2_historical_r1i1p1f1_gn_185001-201412.nc"
+    ]
+
 
 def test_derive_dset():
 
-    dset = "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/historical/r1i1p1f1/SImon/siconc/gn/latest/*.nc"
+    dset = "c3s-cmip6.CMIP.MIROC.MIROC6.historical.r1i1p1f1.SImon.siconc.gn.latest"
     ds_id = derive_dset(dset)
 
     assert (
         ds_id
-        == "c3s-cmip6.CMIP.MIROC.MIROC6.historical.r1i1p1f1.SImon.siconc.gn.latest"
+        == "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/historical/r1i1p1f1/SImon/siconc/gn/latest"
     )
 
-    dset = os.path.join(
-        TESTS_HOME,
-        "mini-esgf-data/test_data/gws/nopw/j04/cp4cds1_vol1/data/c3s-cmip5/output1/ICHEC"
-        "/EC-EARTH/historical/day/atmos/day/r1i1p1/tas/v20131231/*.nc",
-    )
+    dset = "cmip5.output1.ICHEC.EC-EARTH.historical.day.atmos.day.r1i1p1.tas.v20131231"
     ds_id = derive_dset(dset)
 
     assert (
         ds_id
-        == "c3s-cmip5.output1.ICHEC.EC-EARTH.historical.day.atmos.day.r1i1p1.tas.v20131231"
-    )
-
-
-def test_open_xr_dataset():
-    dset = os.path.join(
-        TESTS_HOME,
-        "mini-esgf-data/test_data/gws/nopw/j04/cp4cds1_vol1/data/c3s-cmip5/output1/ICHEC"
-        "/EC-EARTH/historical/day/atmos/day/r1i1p1/tas/v20131231/*.nc",
-    )
-    ds_id = open_xr_dataset(dset)
-
-    assert ds_id == xr.open_mfdataset(
-        os.path.join(
-            TESTS_HOME,
-            "mini-esgf-data/test_data/gws/nopw/j04/cp4cds1_vol1/data"
-            "/c3s-cmip5/output1/ICHEC/EC-EARTH/historical/day/atmos/day"
-            "/r1i1p1/tas/v20131231/*.nc",
-        ),
-        use_cftime=True,
-        combine="by_coords",
+        == "/badc/cmip5/data/cmip5/output1/ICHEC/EC-EARTH/historical/day/atmos/day/r1i1p1/tas/v20131231"
     )
 
 

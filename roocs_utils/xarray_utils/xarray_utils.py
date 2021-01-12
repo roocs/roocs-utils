@@ -1,12 +1,36 @@
+import os
 from datetime import datetime
+from pathlib import Path
 
 import cf_xarray  # noqa
 import cftime
 import numpy as np
 import xarray as xr
 
+from ..project_utils import DatasetMapper
 
 known_coord_types = ["time", "level", "latitude", "longitude"]
+
+
+def open_xr_dataset(dset):
+    """
+    Opens an xarray dataset from a dataset input.
+
+    :param dset: (Str or Path) ds_id, directory path or file path ending in *.nc.
+    Any list will be interpreted as list of files
+    """
+
+    if not isinstance(dset, list):
+        if os.path.isfile(dset):
+            return xr.open_dataset(dset, use_cftime=True)
+
+        else:
+            dset = DatasetMapper(dset).files
+
+    if len(dset) > 1:
+        return xr.open_mfdataset(dset, use_cftime=True, combine="by_coords")
+    else:
+        return xr.open_dataset(dset[0], use_cftime=True)
 
 
 # from dachar
