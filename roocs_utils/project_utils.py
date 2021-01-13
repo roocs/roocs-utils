@@ -11,8 +11,19 @@ LOGGER = logging.getLogger(__file__)
 
 
 class DatasetMapper:  # better name??
-    def __init__(self, dset, project=None):
-        """ can only be used with ds ids or data paths"""
+    def __init__(self, dset, project=None, force=False):
+        """
+        Class to map to data path, dataset ID and files from any dataset input.
+
+        | dset must be a string and can be input as:
+        | A dataset ID: e.g. "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
+        | A file path: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/tas_Amon_HadGEM2-ES_rcp85_r1i1p1_200512-203011.nc"
+        | A path to a group of files: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc" or "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas"
+
+
+        When force=True, if the project can not be identified, any attempt to use the base_dir of a project
+        to resolve the data path will be ignored. Any of data_path, ds_id and files that can be set, will be set.
+        """
         self._project = project
         self.dset = dset
 
@@ -21,7 +32,7 @@ class DatasetMapper:  # better name??
         self._data_path = None
         self._files = []
 
-        self._parse()
+        self._parse(force)
 
     @staticmethod
     def _get_base_dirs_dict():
@@ -60,40 +71,50 @@ class DatasetMapper:  # better name??
                 return get_project_from_ds(dset)
 
         else:
-            raise Exception(
+            raise InvalidProject(
                 f"The format of {self.dset} is not known and the project name could not "
                 f"be found."
             )
 
-    def _parse(self):
-
+    def _parse(self, force):
+        # set project and base_dir
         if not self._project:
             try:
                 self._project = self.deduce_project()
                 self._base_dir = get_project_base_dir(self._project)
             except InvalidProject:
                 LOGGER.info(f"The project could not be identified")
-                return
+                if not force:
+                    return
 
+        # if a file, group of files or directory to files - find files
         if self.dset.startswith("/") or self.dset.endswith(".nc"):
             if self.dset.endswith(".nc"):
                 if self.dset.endswith("*.nc"):
                     self._files = sorted(glob.glob(self.dset))
                 else:
                     self._files.append(self.dset)
+                # remove file extension to create data_path
                 self.dset = "/".join(self.dset.split("/")[:-1])
 
             self._data_path = self.dset
-            self._ds_id = ".".join(
-                self.dset.replace(self._base_dir, self._project).strip("/").split("/")
-            )
 
+            # if base_dir identified, insert into data_path
+            if self._base_dir:
+                self._ds_id = ".".join(
+                    self.dset.replace(self._base_dir, self._project)
+                    .strip("/")
+                    .split("/")
+                )
+
+        # test if dataset id
         elif self._is_ds_id():
             self._ds_id = self.dset
             self._data_path = os.path.join(
                 self._base_dir, "/".join(self.dset.split(".")[1:])
             )
 
+        # use to data_path to find files if not set already
         if len(self._files) < 1:
             self._files = sorted(glob.glob(os.path.join(self._data_path, "*.nc")))
 
@@ -135,6 +156,11 @@ def datapath_to_dsid(datapath):
 
 def dsid_to_datapath(dsid):
     return DatasetMapper(dsid).data_path
+
+
+def dset_to_filepaths(dset, force=False):
+    mapper = DatasetMapper(dset, force=force)
+    return mapper.files
 
 
 def switch_dset(dset):

@@ -7,7 +7,7 @@ import cftime
 import numpy as np
 import xarray as xr
 
-from ..project_utils import DatasetMapper
+from ..project_utils import dset_to_filepaths
 
 known_coord_types = ["time", "level", "latitude", "longitude"]
 
@@ -20,13 +20,12 @@ def open_xr_dataset(dset):
     Any list will be interpreted as list of files
     """
 
+    # DatasetMapper doesn't handle lists
     if not isinstance(dset, list):
-        if os.path.isfile(dset):
-            return xr.open_dataset(dset, use_cftime=True)
+        # use force=True to allow all file paths to pass through DatasetMapper
+        dset = dset_to_filepaths(dset, force=True)
 
-        else:
-            dset = DatasetMapper(dset).files
-
+    # if a list - want multi-file dataset, else only one file so only need open_dataset
     if len(dset) > 1:
         return xr.open_mfdataset(dset, use_cftime=True, combine="by_coords")
     else:
