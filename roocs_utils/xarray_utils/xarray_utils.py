@@ -25,9 +25,10 @@ def open_xr_dataset(dset):
         # use force=True to allow all file paths to pass through DatasetMapper
         dset = dset_to_filepaths(dset, force=True)
 
-    # if a list - want multi-file dataset, else only one file so only need open_dataset
+    # if a list we want a multi-file dataset
     if len(dset) > 1:
         return xr.open_mfdataset(dset, use_cftime=True, combine="by_coords")
+    # if there is only one file we only need to call open_dataset
     else:
         return xr.open_dataset(dset[0], use_cftime=True)
 

@@ -10,7 +10,7 @@ from roocs_utils.inventory import logging
 LOGGER = logging.getLogger(__file__)
 
 
-class DatasetMapper:  # better name??
+class DatasetMapper:
     def __init__(self, dset, project=None, force=False):
         """
         Class to map to data path, dataset ID and files from any dataset input.
@@ -120,8 +120,6 @@ class DatasetMapper:  # better name??
         if len(self._files) < 1:
             self._files = sorted(glob.glob(os.path.join(self._data_path, "*.nc")))
 
-        # set facets?
-
     @property
     def raw(self):
         return self.dset
@@ -146,12 +144,7 @@ class DatasetMapper:  # better name??
     def project(self):
         return self._project
 
-    # @property
-    # def facets(self):
-    #
 
-
-# You could imagine some utility functions that wrap the Dataset class.
 def derive_dset(dset):
     return DatasetMapper(dset).data_path
 
