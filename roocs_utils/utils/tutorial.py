@@ -1,6 +1,7 @@
 """Testing and tutorial utilities module."""
 # Most of this code copied and adapted from xarray, xclim, and raven
 import logging
+import os
 import re
 from pathlib import Path
 from typing import List, Optional, Sequence, Union
@@ -20,12 +21,19 @@ LOGGER = logging.getLogger(__file__)
 __all__ = ["get_file", "open_dataset", "query_folder"]
 
 
+def _download_file(url, local_file):
+    local_file.parent.mkdir(parents=True, exist_ok=True)
+    LOGGER.info("Fetching remote file: %s" % local_file.as_posix())
+    urlretrieve(url, local_file)
+
+
 def _get(
     fullname: Path,
     github_url: str,
     branch: str,
     suffix: str,
     cache_dir: Path,
+    md5: str = None
 ) -> Path:
     cache_dir = cache_dir.absolute()
     local_file = cache_dir / branch / fullname
@@ -35,26 +43,26 @@ def _get(
     if not local_file.is_file():
         # This will always leave this directory on disk.
         # We may want to add an option to remove it.
-        local_file.parent.mkdir(parents=True, exist_ok=True)
-
         url = "/".join((github_url, "raw", branch, fullname.as_posix()))
-        LOGGER.info("Fetching remote file: %s" % fullname.as_posix())
-        urlretrieve(url, local_file)
+        _download_file(url, local_file)
 
-        try:
-            url = "/".join((github_url, "raw", branch, md5name.as_posix()))
-            LOGGER.info("Fetching remote file md5: %s" % md5name.as_posix())
-            urlretrieve(url, md5file)
-        except HTTPError as e:
-            msg = f"{md5name.as_posix()} not found. Aborting file retrieval."
-            local_file.unlink()
-            raise FileNotFoundError(msg) from e
+        if not md5:
+            try:
+                url = "/".join((github_url, "raw", branch, md5name.as_posix()))
+                _download_file(url, md5file)
+            except HTTPError as e:
+                msg = f"{md5name.as_posix()} not found. Aborting file retrieval."
+                local_file.unlink()
+                raise FileNotFoundError(msg) from e
 
         localmd5 = file_md5_checksum(local_file)
 
         try:
-            with open(md5file) as f:
-                remotemd5 = f.read()
+            if not md5:
+                with open(md5file) as f:
+                    remotemd5 = f.read()
+            else:
+                remotemd5 = md5
             if localmd5.strip() != remotemd5.strip():
                 local_file.unlink()
                 msg = """
@@ -72,6 +80,7 @@ def get_file(
     github_url: str = "https://github.com/Ouranosinc/xclim-testdata",
     branch: str = "main",
     cache_dir: Path = _default_cache_dir,
+    use_md5_manifest: bool = False
 ) -> Union[Path, List[Path]]:
     """
     Return a file from an online GitHub-like repository.
@@ -92,6 +101,12 @@ def get_file(
     -------
     Union[Path, List[Path]]
     """
+    md5manifest = cache_dir / branch / "md5.manifest"
+    if use_md5_manifest:
+        if not os.path.isfile(md5manifest):
+            url = "/".join((github_url, "raw", branch, "md5.manifest"))
+            _download_file(url, md5manifest)
+
     if isinstance(name, str):
         name = [name]
 
@@ -99,6 +114,17 @@ def get_file(
     for n in name:
         fullname = Path(n)
         suffix = fullname.suffix
+        md5 = None
+
+        if use_md5_manifest:
+            with open(md5manifest) as reader:
+                for line in reader:
+                    if str(fullname) in line:
+                        md5, path = line.strip().split()
+                        break
+                else:
+                    raise Exception(f'Could not find md5 for {fullname} in {md5manifest}')
+
         files.append(
             _get(
                 fullname=fullname,
@@ -106,8 +132,10 @@ def get_file(
                 branch=branch,
                 suffix=suffix,
                 cache_dir=cache_dir,
+                md5=md5
             )
         )
+    
     if len(files) == 1:
         return files[0]
     return files

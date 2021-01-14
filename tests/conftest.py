@@ -11,11 +11,16 @@ MINI_ESGF_KWARGS = dict(
     cache_dir = MINI_ESGF_CACHE_DIR
 )
 
+MD5_MANIFEST_REPOS = [
+    'https://github.com/roocs/mini-esgf-data'
+]
+
 
 def resolve_files(base_dir, kwargs, file_list):
     get_file(
         [os.path.join(base_dir, nc_file) for nc_file in file_list],
-        **kwargs
+        **kwargs,
+        use_md5_manifest = (kwargs['github_url'] in MD5_MANIFEST_REPOS)
     )
     return os.path.join(kwargs['cache_dir'], kwargs['branch'], base_dir, '*.nc')
 
@@ -45,7 +50,8 @@ def cmip5_tas():
 def cmip5_zostoga():
     return str(get_file(
         'test_data/badc/cmip5/data/cmip5/output1/INM/inmcm4/rcp45/mon/ocean/Omon/r1i1p1/latest/zostoga/zostoga_Omon_inmcm4_rcp45_r1i1p1_200601-210012.nc',
-        **MINI_ESGF_KWARGS
+        **MINI_ESGF_KWARGS,
+        use_md5_manifest = True
     ))
 
 
@@ -53,7 +59,8 @@ def cmip5_zostoga():
 def cmip6_siconc():
     return str(get_file(
         'test_data/badc/cmip6/data/CMIP6/CMIP/CCCma/CanESM5/historical/r1i1p1f1/SImon/siconc/gn/latest/siconc_SImon_CanESM5_historical_r1i1p1f1_gn_185001-201412.nc',
-        **MINI_ESGF_KWARGS
+        **MINI_ESGF_KWARGS,
+        use_md5_manifest = True
     ))
 
 
