@@ -17,13 +17,11 @@ CMIP5_FPATHS = [
 ]
 
 
-@pytest.mark.skipif(
-    os.path.isdir("/group_workspaces") is False, reason="data not available"
-)
+@pytest.mark.skipif(os.path.isdir("/gws") is False, reason="data not available")
 def test_get_main_var():
     data = (
-        "/group_workspaces/jasmin2/cp4cds1/vol1"
-        "/data/c3s-cmip5/output1/ICHEC/EC-EARTH/historical/day"
+        "/gws/nopw/j04/cp4cds1_vol1/data"
+        "/c3s-cmip5/output1/ICHEC/EC-EARTH/historical/day"
         "/atmos/day/r1i1p1/tas/latest/*.nc"
     )
 

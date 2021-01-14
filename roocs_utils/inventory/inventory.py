@@ -25,7 +25,7 @@ def get_time_info(fpaths, var_id):
             all_times.extend(list(times))
             ds.close()
         except AttributeError:
-            return 0, None
+            return 0, "undefined"
 
     return len(all_times), all_times[0].isoformat() + " " + all_times[-1].isoformat()
 
@@ -64,7 +64,6 @@ def get_size_data(fpaths):
 
 
 def get_var_metadata(fpaths, var_id):
-
     time_length, time_string = get_time_info(fpaths, var_id)
 
     f1 = fpaths[0]

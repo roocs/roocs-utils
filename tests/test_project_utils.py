@@ -96,6 +96,7 @@ class TestDatasetMapper:
     def test_base_dir(self):
         assert self.dm.base_dir == "/badc/cmip6/data/CMIP6"
 
+    @pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
     def test_files(self):
         assert self.dm.files == [
             "/badc/cmip6/data/CMIP6/CMIP/NCAR/CESM2/historical/r1i1p1f1/SImon/siconc/gn/latest"
@@ -103,6 +104,7 @@ class TestDatasetMapper:
         ]
 
 
+@pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
 def test_get_filepaths():
     dset = "c3s-cmip6.CMIP.MIROC.MIROC6.historical.r1i1p1f1.SImon.siconc.gn.latest"
 
