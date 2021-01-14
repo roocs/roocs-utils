@@ -4,6 +4,7 @@ import pytest
 import xarray as xr
 
 from ._common import TESTS_HOME
+from roocs_utils.exceptions import InvalidProject
 from roocs_utils.project_utils import DatasetMapper
 from roocs_utils.project_utils import derive_dset
 from roocs_utils.project_utils import dset_to_filepaths
@@ -187,14 +188,19 @@ def test_unknown_fpath_force():
     assert dm_force.data_path == "/tmp/tmpxi6d78ng/subset_tttaum9d"
     assert dm_force.ds_id is None
 
-    dm = DatasetMapper(dset)
-
-    assert dm.files == []
-    assert dm.data_path is None
-    assert dm.ds_id is None
-
     files = dset_to_filepaths(dset, force=True)
     assert files == [
         "/tmp/tmpxi6d78ng/subset_tttaum9d/"
         "rlds_Amon_IPSL-CM6A-LR_historical_r1i1p1f1_gr_19850116-20141216.nc"
     ]
+
+
+def test_unknown_fpath_no_force():
+    dset = "/tmp/tmpxi6d78ng/subset_tttaum9d/rlds_Amon_IPSL-CM6A-LR_historical_r1i1p1f1_gr_19850116-20141216.nc"
+
+    with pytest.raises(InvalidProject) as exc:
+        DatasetMapper(dset)
+    assert (
+        str(exc.value)
+        == "The project could not be identified and force was set to false"
+    )

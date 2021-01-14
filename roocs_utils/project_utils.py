@@ -46,7 +46,7 @@ class DatasetMapper:  # better name??
     def _is_ds_id(self):
         return self.dset.count(".") > 1
 
-    def deduce_project(self):
+    def _deduce_project(self):
 
         if isinstance(self.dset, str):
             if self.dset.startswith("/"):
@@ -80,12 +80,14 @@ class DatasetMapper:  # better name??
         # set project and base_dir
         if not self._project:
             try:
-                self._project = self.deduce_project()
+                self._project = self._deduce_project()
                 self._base_dir = get_project_base_dir(self._project)
             except InvalidProject:
                 LOGGER.info(f"The project could not be identified")
                 if not force:
-                    return
+                    raise InvalidProject(
+                        f"The project could not be identified and force was set to false"
+                    )
 
         # if a file, group of files or directory to files - find files
         if self.dset.startswith("/") or self.dset.endswith(".nc"):
@@ -140,6 +142,10 @@ class DatasetMapper:  # better name??
     def files(self):
         return self._files
 
+    @property
+    def project(self):
+        return self._project
+
     # @property
     # def facets(self):
     #
@@ -191,8 +197,7 @@ def get_project_name(dset):
         return get_project_from_ds(dset)  # will not return c3s dataset
 
     else:
-        ds = DatasetMapper(dset)
-        return ds.deduce_project()
+        return DatasetMapper(dset).project
 
 
 def map_facet(facet, project):
