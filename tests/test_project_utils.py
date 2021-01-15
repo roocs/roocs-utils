@@ -3,14 +3,15 @@ import xarray as xr
 
 from roocs_utils.project_utils import get_project_base_dir
 from roocs_utils.project_utils import get_project_name
+from conftest import CMIP5_TAS, CMIP6_SICONC
 
 @pytest.mark.xfail(reason = "second assertion can not work without the c3s mapping re-write")
-def test_get_project_name(cmip5_tas, cmip6_siconc):
+def test_get_project_name(load_test_data):
     dset = "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
     project = get_project_name(dset)
     assert project == "cmip5"
 
-    dset = cmip5_tas
+    dset = CMIP5_TAS
     project = get_project_name(dset)
     assert project == "cmip5"
 
@@ -19,7 +20,7 @@ def test_get_project_name(cmip5_tas, cmip6_siconc):
     assert project == "cmip6"
 
     ds = xr.open_mfdataset(
-        cmip5_tas,
+        CMIP5_TAS,
         use_cftime=True,
         combine="by_coords",
     )
@@ -27,7 +28,7 @@ def test_get_project_name(cmip5_tas, cmip6_siconc):
     assert project == "cmip5"
 
     ds = xr.open_mfdataset(
-        cmip6_siconc,
+        CMIP6_SICONC,
         use_cftime=True,
         combine="by_coords",
     )
