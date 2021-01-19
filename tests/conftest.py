@@ -28,16 +28,20 @@ C3S_CMIP5_TAS = os.path.join(
 
 @pytest.fixture
 def load_test_data():
+    """
+    This fixture ensures that the required test data repository
+    has been cloned to the cache directory within the home directory.
+    """
     tmp_repo = '/tmp/.mini-esgf-data'
     test_data_dir = os.path.join(tmp_repo, 'test_data')
+
     repo_url = 'https://github.com/roocs/mini-esgf-data'
-    target = '/root/.mini-esgf-data/master'
+    target = os.path.join(MINI_ESGF_CACHE_DIR, 'master')
 
     if not os.path.isdir(target):
+
         os.makedirs(target) 
         os.system(f'git clone {repo_url} {tmp_repo}')
 
         shutil.move(test_data_dir, target)
         shutil.rmtree(tmp_repo)  
-
-    print(f'[INFO] Cloned test_data repo to: {target}')
