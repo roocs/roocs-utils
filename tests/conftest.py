@@ -4,6 +4,7 @@ import pytest
 import shutil
 
 MINI_ESGF_CACHE_DIR = Path.home() / ".mini-esgf-data"
+TEST_DATA_REPO_URL = 'https://github.com/roocs/mini-esgf-data'
 
 CMIP5_TAS = os.path.join(
     MINI_ESGF_CACHE_DIR,
@@ -34,14 +35,12 @@ def load_test_data():
     """
     tmp_repo = '/tmp/.mini-esgf-data'
     test_data_dir = os.path.join(tmp_repo, 'test_data')
-
-    repo_url = 'https://github.com/roocs/mini-esgf-data'
     target = os.path.join(MINI_ESGF_CACHE_DIR, 'master')
 
     if not os.path.isdir(target):
 
         os.makedirs(target) 
-        os.system(f'git clone {repo_url} {tmp_repo}')
+        os.system(f'git clone {TEST_DATA_REPO_URL} {tmp_repo}')
 
         shutil.move(test_data_dir, target)
         shutil.rmtree(tmp_repo)  
