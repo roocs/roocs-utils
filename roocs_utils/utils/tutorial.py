@@ -102,10 +102,10 @@ def get_file(
     Union[Path, List[Path]]
     """
     md5manifest = cache_dir / branch / "md5.manifest"
-    if use_md5_manifest:
-        if not os.path.isfile(md5manifest):
-            url = "/".join((github_url, "raw", branch, "md5.manifest"))
-            _download_file(url, md5manifest)
+    # if use_md5_manifest:
+    #     if not os.path.isfile(md5manifest):
+    #         url = "/".join((github_url, "raw", branch, "md5.manifest"))
+    #         _download_file(url, md5manifest)
 
     if isinstance(name, str):
         name = [name]
@@ -116,14 +116,14 @@ def get_file(
         suffix = fullname.suffix
         md5 = None
 
-        if use_md5_manifest:
-            with open(md5manifest) as reader:
-                for line in reader:
-                    if str(fullname) in line:
-                        md5, path = line.strip().split()
-                        break
-                else:
-                    raise Exception(f'Could not find md5 for {fullname} in {md5manifest}')
+        # if use_md5_manifest:
+        #     with open(md5manifest) as reader:
+        #         for line in reader:
+        #             if str(fullname) in line:
+        #                 md5, path = line.strip().split()
+        #                 break
+        #         else:
+        #             raise Exception(f'Could not find md5 for {fullname} in {md5manifest}')
 
         files.append(
             _get(
