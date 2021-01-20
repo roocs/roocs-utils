@@ -1,8 +1,196 @@
+import glob
 import os
 
 import xarray as xr
 
 from roocs_utils import CONFIG
+from roocs_utils.exceptions import InvalidProject
+from roocs_utils.inventory import logging
+
+LOGGER = logging.getLogger(__file__)
+
+
+class DatasetMapper:
+    def __init__(self, dset, project=None, force=False):
+        """
+        Class to map to data path, dataset ID and files from any dataset input.
+
+        | dset must be a string and can be input as:
+        | A dataset ID: e.g. "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
+        | A file path: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/tas_Amon_HadGEM2-ES_rcp85_r1i1p1_200512-203011.nc"
+        | A path to a group of files: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc" or "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas"
+
+
+        When force=True, if the project can not be identified, any attempt to use the base_dir of a project
+        to resolve the data path will be ignored. Any of data_path, ds_id and files that can be set, will be set.
+        """
+        self._project = project
+        self.dset = dset
+
+        self._base_dir = None
+        self._ds_id = None
+        self._data_path = None
+        self._files = []
+
+        self._parse(force)
+
+    @staticmethod
+    def _get_base_dirs_dict():
+
+        projects = [_.split(":")[1] for _ in CONFIG.keys() if _.startswith("project:")]
+        base_dirs = {
+            project: CONFIG[f"project:{project}"]["base_dir"] for project in projects
+        }
+        return base_dirs
+
+    def _is_ds_id(self):
+        return self.dset.count(".") > 1
+
+    def _deduce_project(self):
+
+        if isinstance(self.dset, str):
+            if self.dset.startswith("/"):
+                # by default this returns c3s-cmip6 not cmip6 (as they have the same base_dir)
+                base_dirs_dict = self._get_base_dirs_dict()
+                for project, base_dir in base_dirs_dict.items():
+                    if (
+                        self.dset.startswith(base_dir)
+                        and CONFIG[f"project:{project}"].get("is_default_for_path")
+                        is True
+                    ):
+                        return project
+
+            elif self._is_ds_id():
+                return self.dset.split(".")[0].lower()
+
+            # this will not return c3s project names
+            elif self.dset.endswith(".nc") or os.path.isfile(self.dset):
+                dset = xr.open_mfdataset(
+                    self.dset, use_cftime=True, combine="by_coords"
+                )
+                return get_project_from_ds(dset)
+
+        else:
+            raise InvalidProject(
+                f"The format of {self.dset} is not known and the project name could not "
+                f"be found."
+            )
+
+    def _parse(self, force):
+        # set project and base_dir
+        if not self._project:
+            try:
+                self._project = self._deduce_project()
+                self._base_dir = get_project_base_dir(self._project)
+            except InvalidProject:
+                LOGGER.info(f"The project could not be identified")
+                if not force:
+                    raise InvalidProject(
+                        f"The project could not be identified and force was set to false"
+                    )
+
+        # if a file, group of files or directory to files - find files
+        if self.dset.startswith("/") or self.dset.endswith(".nc"):
+            if self.dset.endswith(".nc"):
+                if self.dset.endswith("*.nc"):
+                    self._files = sorted(glob.glob(self.dset))
+                else:
+                    self._files.append(self.dset)
+                # remove file extension to create data_path
+                self.dset = "/".join(self.dset.split("/")[:-1])
+
+            self._data_path = self.dset
+
+            # if base_dir identified, insert into data_path
+            if self._base_dir:
+                self._ds_id = ".".join(
+                    self.dset.replace(self._base_dir, self._project)
+                    .strip("/")
+                    .split("/")
+                )
+
+        # test if dataset id
+        elif self._is_ds_id():
+            self._ds_id = self.dset
+            self._data_path = os.path.join(
+                self._base_dir, "/".join(self.dset.split(".")[1:])
+            )
+
+        # use to data_path to find files if not set already
+        if len(self._files) < 1:
+            self._files = sorted(glob.glob(os.path.join(self._data_path, "*.nc")))
+
+    @property
+    def raw(self):
+        return self.dset
+
+    @property
+    def data_path(self):
+        return self._data_path
+
+    @property
+    def ds_id(self):
+        return self._ds_id
+
+    @property
+    def base_dir(self):
+        return self._base_dir
+
+    @property
+    def files(self):
+        return self._files
+
+    @property
+    def project(self):
+        return self._project
+
+
+def derive_dset(dset):
+    return DatasetMapper(dset).data_path
+
+
+def datapath_to_dsid(datapath):
+    return DatasetMapper(datapath).ds_id
+
+
+def dsid_to_datapath(dsid):
+    return DatasetMapper(dsid).data_path
+
+
+def dset_to_filepaths(dset, force=False):
+    mapper = DatasetMapper(dset, force=force)
+    return mapper.files
+
+
+def switch_dset(dset):
+    """
+    Switches between ds_path and ds_id.
+
+    :param project: top-level project
+    :param ds: either dataset path or dataset ID (DSID)
+    :return: either dataset path or dataset ID (DSID) - switched from the input.
+    """
+    if dset.startswith("/"):
+        return datapath_to_dsid(dset)
+    else:
+        return dsid_to_datapath(dset)
+
+
+def get_project_from_ds(ds):
+
+    for project in [_.split(":")[1] for _ in CONFIG.keys() if _.startswith("project:")]:
+        key = map_facet("project", project)
+        if ds.attrs.get(key, "").lower() == project:
+            return project
+
+
+def get_project_name(dset):
+
+    if type(dset) in (xr.core.dataarray.DataArray, xr.core.dataset.Dataset):
+        return get_project_from_ds(dset)  # will not return c3s dataset
+
+    else:
+        return DatasetMapper(dset).project
 
 
 def map_facet(facet, project):
@@ -15,54 +203,8 @@ def get_facet(facet_name, facets, project):
     return facets[map_facet(facet_name, project)]
 
 
-# move this to config?
-project_name_attributes = {
-    "cmip5": "project_id",
-    "cmip6": "mip_era",
-    "cordex": "project_id",
-    "c3s-cmip5": "project_id",
-    "c3s-cmip6": "NOT DEFINED YET",
-    "c3s-cordex": "project_id",
-}
-
-
-def get_project_from_ds(ds):
-    for key, value in project_name_attributes.items():
-        if ds.attrs.get(value, "").lower() == key:
-            project_name = key
-            return project_name
-
-
-def get_base_dirs_dict():
-    projects = [_.split(":")[1] for _ in CONFIG.keys() if _.startswith("project:")]
-    base_dirs = {
-        project: CONFIG[f"project:{project}"]["base_dir"] for project in projects
-    }
-    return base_dirs
-
-
-def get_project_name(dset):
-    if type(dset) in (xr.core.dataarray.DataArray, xr.core.dataset.Dataset):
-        return get_project_from_ds(dset)
-    elif dset[0] == "/":
-        base_dirs_dict = get_base_dirs_dict()
-        for project, base_dir in base_dirs_dict.items():
-            if dset.startswith(base_dir):
-                return project
-    elif dset.count(".") > 6:
-        return dset.split(".")[0].lower()
-    elif dset.endswith(".nc") or os.path.isfile(dset):
-        dset = xr.open_mfdataset(dset, use_cftime=True, combine="by_coords")
-        return get_project_from_ds(dset)
-    else:
-        raise Exception(
-            f"The format of {dset} is not known and the project name could not"
-            f"be found."
-        )
-
-
 def get_project_base_dir(project):
     try:
         return CONFIG[f"project:{project}"]["base_dir"]
     except KeyError:
-        raise Exception("The project supplied is not known.")
+        raise InvalidProject("The project supplied is not known.")

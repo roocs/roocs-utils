@@ -58,6 +58,15 @@ def _to_float(i):
     return float(i)
 
 
+def _to_boolean(i):
+    if i != "False" and i != "True":
+        raise Exception(
+            f"{i} is not valid for boolean field - you must use either True or False"
+        )
+    else:
+        return eval(i)
+
+
 def _chain_config_types(conf, keys):
     return chain(*[conf.get("config_data_types", key).split() for key in keys])
 
@@ -76,6 +85,9 @@ def _get_mappers(conf):
 
     for key in _chain_config_types(conf, ["floats", "extra_floats"]):
         mappers[key] = _to_float
+
+    for key in _chain_config_types(conf, ["boolean", "extra_booleans"]):
+        mappers[key] = _to_boolean
 
     return mappers
 

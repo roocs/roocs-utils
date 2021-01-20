@@ -2,7 +2,8 @@ import cf_xarray
 import pytest
 import xarray as xr
 
-from conftest import CMIP5_TAS, C3S_CMIP5_TAS
+from tests.conftest import C3S_CMIP5_TAS
+from tests.conftest import CMIP5_TAS
 
 
 def test_get_standard_names(load_test_data):

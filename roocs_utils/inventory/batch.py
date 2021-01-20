@@ -10,12 +10,11 @@ LOGGER = logging.getLogger(__file__)
 
 
 class BatchManager(object):
-
     def __init__(self, project):
         self._project = project
-        self._proj_conf = CONFIG[f'project:{self._project}']
+        self._proj_conf = CONFIG[f"project:{self._project}"]
 
-        self._batch_dir = os.path.join(self._proj_conf["inventory_dir"], 'batches')
+        self._batch_dir = os.path.join(self._proj_conf["inventory_dir"], "batches")
         create_dir(self._batch_dir)
 
     def get_batch_files(self):

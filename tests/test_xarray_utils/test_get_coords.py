@@ -4,7 +4,11 @@ import pytest
 import xarray as xr
 
 from roocs_utils.xarray_utils.xarray_utils import get_coord_type
-from conftest import CMIP5_TAS, C3S_CMIP5_TAS, CMIP5_ZOSTOGA, CMIP6_SICONC
+from tests.conftest import C3S_CMIP5_TAS
+from tests.conftest import CMIP5_TAS
+from tests.conftest import CMIP5_ZOSTOGA
+from tests.conftest import CMIP6_SICONC
+
 
 text_coord_path = "/badc/cmip6/data/CMIP6/ScenarioMIP/IPSL/IPSL-CM6A-LR/ssp245/r1i1p1f1/Lmon/landCoverFrac/gr/v20190119/*.nc"
 
