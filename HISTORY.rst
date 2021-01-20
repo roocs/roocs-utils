@@ -10,16 +10,15 @@ Breaking Changes
 * oyaml>=0.9 - new dependency for inventory
 * Interface to inventory maker changed. Detailed instructions for use added in README.
 
-
 New Features
 ^^^^^^^^^^^^
 * Added ``use_inventory`` option to ``roocs.ini`` config and allow data to be used without checking an inventory.
-* ``DatasetMapper`` class added to ``roocs_utils.project_utils`` to resolve all paths and dataset ids in the same way.
+* ``DatasetMapper`` class and wrapper functions added to ``roocs_utils.project_utils`` and ``roocs_utils.xarray_utils.xarray_utils`` to resolve all paths and dataset ids in the same way.
 
 Other Changes
 ^^^^^^^^^^^^^
 * Removed submodule for test data. Test data is now cloned from git and cached.
-* Adjusted file name template. Underscore removed
+* Adjusted file name template. Underscore removed before ````
 
 
 v0.1.5 (2020-11-23)
