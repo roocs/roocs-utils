@@ -8,7 +8,9 @@ import oyaml
 import xarray as xr
 
 from roocs_utils import CONFIG
+from roocs_utils.project_utils import DatasetMapper
 from roocs_utils.xarray_utils.xarray_utils import get_coord_type
+from roocs_utils.xarray_utils.xarray_utils import open_xr_dataset
 
 
 def get_time_info(fpaths, var_id):
@@ -23,13 +25,13 @@ def get_time_info(fpaths, var_id):
             all_times.extend(list(times))
             ds.close()
         except AttributeError:
-            return 0, None
+            return 0, "undefined"
 
     return len(all_times), all_times[0].isoformat() + " " + all_times[-1].isoformat()
 
 
 def get_coord_info(fpaths):
-    ds = xr.open_mfdataset(fpaths, use_cftime=True, combine="by_coords")
+    ds = open_xr_dataset(fpaths)
 
     d = OrderedDict()
 
@@ -53,7 +55,7 @@ def get_coord_info(fpaths):
 def get_size_data(fpaths):
     files = len(fpaths)
 
-    ds = xr.open_mfdataset(fpaths, use_cftime=True, combine="by_coords")
+    ds = open_xr_dataset(fpaths)
 
     size = ds.nbytes
     size_gb = round(size / 1e9, 2)
@@ -62,13 +64,12 @@ def get_size_data(fpaths):
 
 
 def get_var_metadata(fpaths, var_id):
-
     time_length, time_string = get_time_info(fpaths, var_id)
 
     f1 = fpaths[0]
     print(f"[INFO] Reading {f1}")
 
-    ds = xr.open_dataset(f1, use_cftime=True)
+    ds = open_xr_dataset(f1)
     dims = ds[var_id].dims
 
     shape_annotated = []
@@ -92,9 +93,9 @@ def get_var_metadata(fpaths, var_id):
     return dims, shape, time_string
 
 
-def build_dict(ds_id, proj_dict, base_dir):
+def build_dict(ds_id, proj_dict):
 
-    fpaths = glob.glob(base_dir + "/" + ds_id.replace(".", "/") + "/*.nc")
+    fpaths = DatasetMapper(ds_id).files
 
     comps = ds_id.split(".")
 
@@ -109,7 +110,7 @@ def build_dict(ds_id, proj_dict, base_dir):
     fnames = [fpath.split("/")[-1] for fpath in fpaths]
 
     d = OrderedDict()
-    d["path"] = ds_id.replace(".", "/")
+    d["path"] = "/".join(ds_id.split(".")[1:])
     d["ds_id"] = ds_id
     d["var_id"] = var_id
     d["array_dims"] = dims
@@ -126,8 +127,7 @@ def build_dict(ds_id, proj_dict, base_dir):
 
 def create_inventory(project, ds_id):
     proj_dict = CONFIG[f"project:{project}"]
-    base_dir = proj_dict["base_dir"]
-    d = build_dict(ds_id, proj_dict, base_dir)
+    d = build_dict(ds_id, proj_dict)
     return d
 
 
