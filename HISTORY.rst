@@ -1,7 +1,7 @@
 Version History
 ===============
 
-v0.2.0 (2020-12-16)
+v0.2.0 (2021-01-20)
 -------------------
 
 Breaking Changes
@@ -9,6 +9,17 @@ Breaking Changes
 * cf_xarray>=0.3.1 now required due to differing level identification of coordinates between versions.
 * oyaml>=0.9 - new dependency for inventory
 * Interface to inventory maker changed. Detailed instructions for use added in README.
+
+
+New Features
+^^^^^^^^^^^^
+* Added ``use_inventory`` option to ``roocs.ini`` config and allow data to be used without checking an inventory.
+* ``DatasetMapper`` class added to ``roocs_utils.project_utils`` to resolve all paths and dataset ids in the same way.
+
+Other Changes
+^^^^^^^^^^^^^
+* Removed submodule for test data. Test data is now cloned from git and cached.
+* Adjusted file name template. Underscore removed
 
 
 v0.1.5 (2020-11-23)
