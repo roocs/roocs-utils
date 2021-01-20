@@ -9,7 +9,6 @@ LOGGER = logging.getLogger(__file__)
 
 
 class PickleStore:
-    
     def __init__(self, content_file):
         self._content_file = content_file
         self._lock = FileLock(f"{content_file}.lock")
