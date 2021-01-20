@@ -32,12 +32,6 @@ roocs-utils can be downloaded from the `Github repo`_.
     $ git clone git://github.com/roocs/roocs-utils
     $ cd roocs-utils
 
-Get the submodules with ESGF test data:
-
-.. code-block:: console
-
-   $ git submodule update --init --recursive
-
 
 Create Conda environment named `roocs_utils`:
 
