@@ -112,9 +112,16 @@ class DatasetMapper:
         # test if dataset id
         elif self._is_ds_id():
             self._ds_id = self.dset
-            self._data_path = os.path.join(
-                self._base_dir, "/".join(self.dset.split(".")[1:])
-            )
+            mappings = CONFIG[f"project:{self.project}"].get("fixed_path_mappings", {})
+            if self._ds_id in mappings:
+                data_path = mappings[self._ds_id]
+                self._data_path = os.path.join(
+                    self._base_dir, data_path
+                )
+            else:
+                self._data_path = os.path.join(
+                    self._base_dir, "/".join(self.dset.split(".")[1:])
+                )
 
         # use to data_path to find files if not set already
         if len(self._files) < 1:

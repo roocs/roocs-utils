@@ -12,6 +12,12 @@ def write_roocs_cfg():
     cfg_templ = """
     [project:c3s-cmip5]
     base_dir = {{ base_dir }}/master/test_data/gws/nopw/j04/cp4cds1_vol1/data/c3s-cmip5
+
+    [project:proj_test]
+    base_dir = /projects/test/proj
+    fixed_path_mappings =
+        proj_test.my.first.test:first/file.txt
+        proj_test.my.second.test:second/*.txt
     """
     cfg = Template(cfg_templ).render(base_dir=MINI_ESGF_CACHE_DIR)
     with open(ROOCS_CFG, "w") as fp:

@@ -99,6 +99,16 @@ class TestDatasetMapper:
             "/siconc_SImon_CESM2_historical_r1i1p1f1_gn_185001-201412.nc"
         ]
 
+    def test_fixed_path_mappings(self):
+        dsm = DatasetMapper('proj_test.my.first.test')
+        assert dsm._data_path == '/projects/test/proj/first/file.txt'
+
+        dsm = DatasetMapper('proj_test.my.second.test')
+        assert dsm._data_path == '/projects/test/proj/second/*.txt'
+
+        dsm = DatasetMapper('proj_test.my.unknown')
+        assert dsm._data_path == '/projects/test/proj/my/unknown'
+
 
 @pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
 def test_get_filepaths():
