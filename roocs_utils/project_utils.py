@@ -49,6 +49,7 @@ class DatasetMapper:
     def _deduce_project(self):
 
         if isinstance(self.dset, str):
+
             if self.dset.startswith("/"):
                 # by default this returns c3s-cmip6 not cmip6 (as they have the same base_dir)
                 base_dirs_dict = self._get_base_dirs_dict()
@@ -91,20 +92,26 @@ class DatasetMapper:
 
         # if a file, group of files or directory to files - find files
         if self.dset.startswith("/") or self.dset.endswith(".nc"):
+            # if we have a set of files
+            if self.dset.endswith("}"):
+                dset = self.dset.split("/{")[0]
+
+                files = self.dset.split("/{")[1]
+
             if self.dset.endswith(".nc"):
                 if self.dset.endswith("*.nc"):
                     self._files = sorted(glob.glob(self.dset))
                 else:
                     self._files.append(self.dset)
                 # remove file extension to create data_path
-                self.dset = "/".join(self.dset.split("/")[:-1])
+                dset = "/".join(self.dset.split("/")[:-1])
 
-            self._data_path = self.dset
+            self._data_path = dset
 
             # if base_dir identified, insert into data_path
             if self._base_dir:
                 self._ds_id = ".".join(
-                    self.dset.replace(self._base_dir, self._project)
+                    self._data_path.replace(self._base_dir, self._project)
                     .strip("/")
                     .split("/")
                 )
