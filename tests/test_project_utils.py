@@ -213,7 +213,7 @@ def test_unknown_fpath_no_force():
 def test_dataset_mapper_glob():
     dset = (
         "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/"
-        "{tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc,tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc}"
+        "{tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc;tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc}"
     )
     dm = DatasetMapper(dset)
 
