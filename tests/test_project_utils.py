@@ -49,6 +49,14 @@ def test_get_project_name(load_test_data):
     project = get_project_name(dset)
     assert project == "c3s-cmip6"
 
+    dset = (
+        "https://data.mips.copernicus-climate.eu/thredds/fileServer/esg_c3s-cmip6"
+        "/CMIP/IPSL/IPSL-CM6A-LR/historical/r1i1p1f1/Amon/rlds/gr/v20180803"
+        "/rlds_Amon_IPSL-CM6A-LR_historical_r1i1p1f1_gr_185001-201412.nc"
+    )
+    project = get_project_name(dset)
+    assert project == "c3s-cmip6"
+
 
 def test_get_project_name_badc():
     dset = "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
@@ -209,8 +217,36 @@ def test_dataset_mapper_glob():
     )
     dm = DatasetMapper(dset)
 
-    print(dm.files)
-    print(dm.data_path)
-    print(dm.ds_id)
+    assert dm.files == [
+        "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest"
+        "/tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc",
+        "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest"
+        "/tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc",
+    ]
+    assert (
+        dm.data_path
+        == "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest"
+    )
+    assert dm.ds_id == "c3s-cmip6.CMIP.MIROC.MIROC6.amip.r1i1p1f1.day.tas.gn.latest"
 
-    print(sorted(glob.glob(dset)))
+
+def test_url_map_dataset():
+    dset = (
+        "https://data.mips.copernicus-climate.eu/thredds/fileServer/esg_c3s-cmip6"
+        "/CMIP/IPSL/IPSL-CM6A-LR/historical/r1i1p1f1/Amon/rlds/gr/v20180803"
+        "/rlds_Amon_IPSL-CM6A-LR_historical_r1i1p1f1_gr_185001-201412.nc"
+    )
+
+    dm = DatasetMapper(dset)
+    assert dm.files == [
+        "/badc/cmip6/data/CMIP6/CMIP/IPSL/IPSL-CM6A-LR/historical/r1i1p1f1"
+        "/Amon/rlds/gr/v20180803/rlds_Amon_IPSL-CM6A-LR_historical_r1i1p1f1_gr_185001-201412.nc"
+    ]
+    assert (
+        dm.data_path
+        == "/badc/cmip6/data/CMIP6/CMIP/IPSL/IPSL-CM6A-LR/historical/r1i1p1f1/Amon/rlds/gr/v20180803"
+    )
+    assert (
+        dm.ds_id
+        == "c3s-cmip6.CMIP.IPSL.IPSL-CM6A-LR.historical.r1i1p1f1.Amon.rlds.gr.v20180803"
+    )
