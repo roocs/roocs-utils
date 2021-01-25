@@ -121,7 +121,7 @@ class DatasetMapper:
             if self.dset.endswith("}"):
                 self._data_path = self.dset.split("/{")[0]
 
-                files = self.dset.split("/{")[1].strip("}").split(",")
+                files = self.dset.split("/{")[1].strip("}").split(";")
                 self._files = [os.path.join(self._data_path, f) for f in files]
 
             if self.dset.endswith(".nc"):
@@ -178,6 +178,10 @@ class DatasetMapper:
 
 def derive_dset(dset):
     return DatasetMapper(dset).data_path
+
+
+def derive_ds_id(dset):
+    return DatasetMapper(dset).ds_id
 
 
 def datapath_to_dsid(datapath):
