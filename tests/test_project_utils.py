@@ -101,10 +101,12 @@ class TestDatasetMapper:
 
     def test_fixed_path_mappings(self):
         dsm = DatasetMapper('proj_test.my.first.test')
-        assert dsm._data_path == '/projects/test/proj/first/file.txt'
-
+        assert dsm._data_path == '/projects/test/proj/first/test/something.nc'
+        assert dsm.files == [] # because these do not exist when globbed
+ 
         dsm = DatasetMapper('proj_test.my.second.test')
-        assert dsm._data_path == '/projects/test/proj/second/*.txt'
+        assert dsm._data_path == '/projects/test/proj/second/test/data_*.txt'
+        assert dsm.files == [] # because these do not exist when globbed
 
         dsm = DatasetMapper('proj_test.my.unknown')
         assert dsm._data_path == '/projects/test/proj/my/unknown'
