@@ -13,6 +13,8 @@ from roocs_utils.project_utils import dset_to_filepaths
 from roocs_utils.project_utils import get_project_base_dir
 from roocs_utils.project_utils import get_project_name
 from roocs_utils.project_utils import switch_dset
+from roocs_utils.project_utils import url_to_file_path
+from roocs_utils.utils.file_utils import FileMapper
 
 
 def test_get_project_name(load_test_data):
@@ -49,14 +51,6 @@ def test_get_project_name(load_test_data):
     project = get_project_name(dset)
     assert project == "c3s-cmip6"
 
-    dset = (
-        "https://data.mips.copernicus-climate.eu/thredds/fileServer/esg_c3s-cmip6"
-        "/CMIP/IPSL/IPSL-CM6A-LR/historical/r1i1p1f1/Amon/rlds/gr/v20180803"
-        "/rlds_Amon_IPSL-CM6A-LR_historical_r1i1p1f1_gr_185001-201412.nc"
-    )
-    project = get_project_name(dset)
-    assert project == "c3s-cmip6"
-
 
 def test_get_project_name_badc():
     dset = "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
@@ -73,7 +67,7 @@ def test_get_project_base_dir():
 
     with pytest.raises(Exception) as exc:
         get_project_base_dir("test")
-        assert exc.value == "The project supplied is not known."
+    assert str(exc.value) == "The project supplied is not known."
 
 
 class TestDatasetMapper:
@@ -210,11 +204,14 @@ def test_unknown_fpath_no_force():
     )
 
 
-def test_dataset_mapper_glob():
-    dset = (
+def test_FileMapper():
+    file_paths = [
         "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/"
-        "{tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc;tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc}"
-    )
+        "tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc",
+        "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/"
+        "tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc",
+    ]
+    dset = FileMapper(file_paths)
     dm = DatasetMapper(dset)
 
     assert dm.files == [
@@ -230,23 +227,15 @@ def test_dataset_mapper_glob():
     assert dm.ds_id == "c3s-cmip6.CMIP.MIROC.MIROC6.amip.r1i1p1f1.day.tas.gn.latest"
 
 
-def test_url_map_dataset():
-    dset = (
-        "https://data.mips.copernicus-climate.eu/thredds/fileServer/esg_c3s-cmip6"
-        "/CMIP/IPSL/IPSL-CM6A-LR/historical/r1i1p1f1/Amon/rlds/gr/v20180803"
-        "/rlds_Amon_IPSL-CM6A-LR_historical_r1i1p1f1_gr_185001-201412.nc"
+def test_url_to_file_path():
+    url = (
+        "https://data.mips.copernicus-climate.eu/thredds/fileServer/esg_c3s-cmip6/CMIP/E3SM-Project/E3SM-1-1"
+        "/historical/r1i1p1f1/Amon/rlus/gr/v20191211/rlus_Amon_E3SM-1-1_historical_r1i1p1f1_gr_200001-200912.nc"
     )
+    fpath = url_to_file_path(url)
 
-    dm = DatasetMapper(dset)
-    assert dm.files == [
-        "/badc/cmip6/data/CMIP6/CMIP/IPSL/IPSL-CM6A-LR/historical/r1i1p1f1"
-        "/Amon/rlds/gr/v20180803/rlds_Amon_IPSL-CM6A-LR_historical_r1i1p1f1_gr_185001-201412.nc"
-    ]
     assert (
-        dm.data_path
-        == "/badc/cmip6/data/CMIP6/CMIP/IPSL/IPSL-CM6A-LR/historical/r1i1p1f1/Amon/rlds/gr/v20180803"
-    )
-    assert (
-        dm.ds_id
-        == "c3s-cmip6.CMIP.IPSL.IPSL-CM6A-LR.historical.r1i1p1f1.Amon.rlds.gr.v20180803"
+        fpath == "/badc/cmip6/data/CMIP6/CMIP/E3SM-Project/E3SM-1-1"
+        "/historical/r1i1p1f1/Amon/rlus/gr/v20191211"
+        "/rlus_Amon_E3SM-1-1_historical_r1i1p1f1_gr_200001-200912.nc"
     )

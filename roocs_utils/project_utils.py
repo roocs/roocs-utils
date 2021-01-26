@@ -6,6 +6,7 @@ import xarray as xr
 from roocs_utils import CONFIG
 from roocs_utils.exceptions import InvalidProject
 from roocs_utils.inventory import logging
+from roocs_utils.utils.file_utils import FileMapper
 
 LOGGER = logging.getLogger(__file__)
 
@@ -18,7 +19,7 @@ class DatasetMapper:
         | dset must be a string and can be input as:
         | A dataset ID: e.g. "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
         | A file path: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/tas_Amon_HadGEM2-ES_rcp85_r1i1p1_200512-203011.nc"
-        | A path to a group of files: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc" or "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/{tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc,tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc}"
+        | A path to a group of files: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc" or "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/{tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc;tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc}"
         | A directory e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas"
 
 
@@ -45,59 +46,47 @@ class DatasetMapper:
         return base_dirs
 
     @staticmethod
-    def _get_download_dirs_dict():
+    def _is_ds_id(dset):
+        return dset.count(".") > 1
 
-        projects = get_projects()
-        download_dirs = {
-            project: CONFIG[f"project:{project}"].get("data_node_root")
-            for project in projects
-            if CONFIG[f"project:{project}"].get("data_node_root")
-        }
-        return download_dirs
-
-    def _is_ds_id(self):
-        return self.dset.count(".") > 1
-
-    def _deduce_project(self):
-
-        if isinstance(self.dset, str):
-            # if urls
-            if "https" in self.dset:
-                download_dirs_dict = self._get_download_dirs_dict()
-                for project, download_dir in download_dirs_dict.items():
-                    if download_dir in self.dset:
-                        return project
-
-            elif self.dset.startswith("/"):
+    def _deduce_project(self, dset):
+        if isinstance(dset, str):
+            if dset.startswith("/"):
                 # by default this returns c3s-cmip6 not cmip6 (as they have the same base_dir)
                 base_dirs_dict = self._get_base_dirs_dict()
                 for project, base_dir in base_dirs_dict.items():
                     if (
-                        self.dset.startswith(base_dir)
+                        dset.startswith(base_dir)
                         and CONFIG[f"project:{project}"].get("is_default_for_path")
                         is True
                     ):
                         return project
 
-            elif self._is_ds_id():
-                return self.dset.split(".")[0].lower()
+            elif self._is_ds_id(dset):
+                return dset.split(".")[0].lower()
 
             # this will not return c3s project names
-            elif self.dset.endswith(".nc") or os.path.isfile(self.dset):
-                dset = xr.open_dataset(self.dset, use_cftime=True)
+            elif dset.endswith(".nc") or os.path.isfile(dset):
+                dset = xr.open_dataset(dset, use_cftime=True)
                 return get_project_from_ds(dset)
 
         else:
             raise InvalidProject(
-                f"The format of {self.dset} is not known and the project name could not "
+                f"The format of {dset} is not known and the project name could not "
                 f"be found."
             )
 
     def _parse(self, force):
+        # if instance of FileMapper
+        if isinstance(self.dset, FileMapper):
+            dset = self.dset.dirpath
+        else:
+            dset = self.dset
+
         # set project and base_dir
         if not self._project:
             try:
-                self._project = self._deduce_project()
+                self._project = self._deduce_project(dset)
                 self._base_dir = get_project_base_dir(self._project)
             except InvalidProject:
                 LOGGER.info(f"The project could not be identified")
@@ -106,31 +95,21 @@ class DatasetMapper:
                         f"The project could not be identified and force was set to false"
                     )
 
-        # resolve to paths on file system (would continue through next if clause and set ds_id, data_path and files)
-        if "https" in self.dset:
-            download_dir = CONFIG.get(f"project:{self._project}", {}).get(
-                "data_node_root"
-            )
-            self.dset = os.path.join(
-                self._base_dir, self.dset.partition(download_dir)[2]
-            )
-
         # if a file, group of files or directory to files - find files
-        if self.dset.startswith("/") or self.dset.endswith(".nc"):
-            # if we have a set of files
-            if self.dset.endswith("}"):
-                self._data_path = self.dset.split("/{")[0]
+        if dset.startswith("/") or dset.endswith(".nc"):
 
-                files = self.dset.split("/{")[1].strip("}").split(";")
-                self._files = [os.path.join(self._data_path, f) for f in files]
+            # if instance of FileMapper
+            if isinstance(self.dset, FileMapper):
+                self._files = self.dset.file_paths
+                self._data_path = self.dset.dirpath
 
-            if self.dset.endswith(".nc"):
-                if self.dset.endswith("*.nc"):
-                    self._files = sorted(glob.glob(self.dset))
+            if dset.endswith(".nc"):
+                if dset.endswith("*.nc"):
+                    self._files = sorted(glob.glob(dset))
                 else:
-                    self._files.append(self.dset)
+                    self._files.append(dset)
                 # remove file extension to create data_path
-                self._data_path = "/".join(self.dset.split("/")[:-1])
+                self._data_path = "/".join(dset.split("/")[:-1])
 
             # if base_dir identified, insert into data_path
             if self._base_dir:
@@ -141,10 +120,11 @@ class DatasetMapper:
                 )
 
         # test if dataset id
-        elif self._is_ds_id():
-            self._ds_id = self.dset
+        elif self._is_ds_id(dset):
+
+            self._ds_id = dset
             self._data_path = os.path.join(
-                self._base_dir, "/".join(self.dset.split(".")[1:])
+                self._base_dir, "/".join(dset.split(".")[1:])
             )
 
         # use to data_path to find files if not set already
@@ -246,3 +226,40 @@ def get_project_base_dir(project):
         return CONFIG[f"project:{project}"]["base_dir"]
     except KeyError:
         raise InvalidProject("The project supplied is not known.")
+
+
+def get_data_node_dirs_dict():
+    projects = get_projects()
+    data_node_dirs = {
+        project: CONFIG[f"project:{project}"].get("data_node_root")
+        for project in projects
+        if CONFIG[f"project:{project}"].get("data_node_root")
+    }
+    return data_node_dirs
+
+
+def get_project_from_data_node_root(url):
+    # identify project from data node root
+    data_node_dict = get_data_node_dirs_dict()
+    project = None
+
+    for proj, data_node_root in data_node_dict.items():
+        if data_node_root in url:
+            project = proj
+
+    if not project:
+        raise InvalidProject(
+            f"The project could not be identified from the URL "
+            f"{url} so it could not be mapped to a file path."
+        )
+    return project
+
+
+def url_to_file_path(url):
+    project = get_project_from_data_node_root(url)
+
+    data_node_root = CONFIG.get(f"project:{project}", {}).get("data_node_root")
+    base_dir = CONFIG.get(f"project:{project}", {}).get("base_dir")
+    file_path = os.path.join(base_dir, url.partition(data_node_root)[2])
+
+    return file_path

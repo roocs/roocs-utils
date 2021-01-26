@@ -3,6 +3,7 @@ from pydoc import locate
 
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.exceptions import MissingParameterValue
+from roocs_utils.utils.file_utils import FileMapper
 
 
 class _BaseParameter(object):
@@ -25,8 +26,12 @@ class _BaseParameter(object):
         return self.input
 
     def _parse(self):
+
         if isinstance(self.input, self.__class__):
             return self.input._parse()
+
+        elif isinstance(self.input, FileMapper):
+            return self.input
 
         else:
             return getattr(self, self.parse_method)()

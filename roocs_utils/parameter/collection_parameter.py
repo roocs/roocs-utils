@@ -1,6 +1,7 @@
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.exceptions import MissingParameterValue
 from roocs_utils.parameter.base_parameter import _BaseParameter
+from roocs_utils.utils.file_utils import FileMapper
 
 
 class CollectionParameter(_BaseParameter):
@@ -24,6 +25,9 @@ class CollectionParameter(_BaseParameter):
         self._parse_ids()
 
     def _parse_ids(self):
+        if isinstance(self._result, FileMapper):
+            return [self._result]
+
         for value in self._result:
             if not isinstance(value, str):
                 raise InvalidParameterValue("Each id in a collection must be a string")
