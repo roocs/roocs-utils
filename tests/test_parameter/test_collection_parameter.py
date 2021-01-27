@@ -39,7 +39,10 @@ def test_validate_error_id():
 
     with pytest.raises(InvalidParameterValue) as exc:
         CollectionParameter(collection)
-    assert str(exc.value) == "Each id in a collection must be a string"
+    assert (
+        str(exc.value) == "Each id in a collection must be a string or "
+        "an instance of <class 'roocs_utils.utils.file_utils.FileMapper'>"
+    )
 
 
 def test_string():

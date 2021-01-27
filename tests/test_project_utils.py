@@ -1,3 +1,4 @@
+import glob
 import os
 
 import pytest
@@ -12,6 +13,8 @@ from roocs_utils.project_utils import dset_to_filepaths
 from roocs_utils.project_utils import get_project_base_dir
 from roocs_utils.project_utils import get_project_name
 from roocs_utils.project_utils import switch_dset
+from roocs_utils.project_utils import url_to_file_path
+from roocs_utils.utils.file_utils import FileMapper
 
 
 def test_get_project_name(load_test_data):
@@ -64,7 +67,7 @@ def test_get_project_base_dir():
 
     with pytest.raises(Exception) as exc:
         get_project_base_dir("test")
-        assert exc.value == "The project supplied is not known."
+    assert str(exc.value) == "The project supplied is not known."
 
 
 class TestDatasetMapper:
@@ -221,4 +224,41 @@ def test_unknown_project_no_force():
     assert (
         str(exc.value)
         == "The project could not be identified and force was set to false"
+
+
+@pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
+def test_FileMapper():
+    file_paths = [
+        "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/"
+        "tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc",
+        "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/"
+        "tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc",
+    ]
+    dset = FileMapper(file_paths)
+    dm = DatasetMapper(dset)
+
+    assert dm.files == [
+        "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest"
+        "/tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc",
+        "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest"
+        "/tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc",
+    ]
+    assert (
+        dm.data_path
+        == "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest"
+    )
+    assert dm.ds_id == "c3s-cmip6.CMIP.MIROC.MIROC6.amip.r1i1p1f1.day.tas.gn.latest"
+
+
+def test_url_to_file_path():
+    url = (
+        "https://data.mips.copernicus-climate.eu/thredds/fileServer/esg_c3s-cmip6/CMIP/E3SM-Project/E3SM-1-1"
+        "/historical/r1i1p1f1/Amon/rlus/gr/v20191211/rlus_Amon_E3SM-1-1_historical_r1i1p1f1_gr_200001-200912.nc"
+    )
+    fpath = url_to_file_path(url)
+
+    assert (
+        fpath == "/badc/cmip6/data/CMIP6/CMIP/E3SM-Project/E3SM-1-1"
+        "/historical/r1i1p1f1/Amon/rlus/gr/v20191211"
+        "/rlus_Amon_E3SM-1-1_historical_r1i1p1f1_gr_200001-200912.nc"
     )
