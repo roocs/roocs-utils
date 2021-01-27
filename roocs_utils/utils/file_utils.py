@@ -25,7 +25,6 @@ class FileMapper:
         self.file_paths = [
             os.path.join(self.dirpath, fname) for fname in self.file_list
         ]
-
         # check all files exist on file system
         if not all(os.path.isfile(file) for file in self.file_paths):
             raise FileNotFoundError("Some files could not be found.")

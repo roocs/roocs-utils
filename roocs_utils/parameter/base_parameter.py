@@ -30,9 +30,6 @@ class _BaseParameter(object):
         if isinstance(self.input, self.__class__):
             return self.input._parse()
 
-        elif isinstance(self.input, FileMapper):
-            return self.input
-
         else:
             return getattr(self, self.parse_method)()
 
@@ -73,6 +70,9 @@ class _BaseParameter(object):
         # check str or bytes
         elif isinstance(self.input, (str, bytes)):
             sequence = [x.strip() for x in self.input.split(",")]
+
+        elif isinstance(self.input, FileMapper):
+            return [self.input]
 
         elif isinstance(self.input, Sequence):
             sequence = self.input
