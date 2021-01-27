@@ -27,7 +27,7 @@ class CollectionParameter(_BaseParameter):
 
     def _parse_items(self):
         for value in self._result:
-            if not isinstance(value, str or FileMapper):
+            if not (isinstance(value, str) or isinstance(value, FileMapper)):
                 raise InvalidParameterValue(
                     f"Each id in a collection must be a string or an instance of {FileMapper}"
                 )
