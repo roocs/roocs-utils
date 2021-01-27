@@ -7,7 +7,7 @@ import cftime
 import numpy as np
 import xarray as xr
 
-from ..project_utils import dset_to_filepaths
+from roocs_utils.project_utils import dset_to_filepaths
 
 known_coord_types = ["time", "level", "latitude", "longitude"]
 
