@@ -204,6 +204,7 @@ def test_unknown_fpath_no_force():
     )
 
 
+@pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
 def test_FileMapper():
     file_paths = [
         "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/"
