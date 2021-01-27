@@ -211,3 +211,14 @@ def test_unknown_fpath_no_force():
         str(exc.value)
         == "The project could not be identified and force was set to false"
     )
+
+
+def test_unknown_project_no_force():
+    dset = "unknown_project.data1.data2.data3.data4"
+
+    with pytest.raises(InvalidProject) as exc:
+        DatasetMapper(dset)
+    assert (
+        str(exc.value)
+        == "The project could not be identified and force was set to false"
+    )

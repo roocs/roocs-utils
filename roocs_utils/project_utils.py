@@ -114,7 +114,7 @@ class DatasetMapper:
         elif self._is_ds_id():
             self._ds_id = self.dset
 
-            mappings = CONFIG[f"project:{self.project}"].get("fixed_path_mappings", {})
+            mappings = CONFIG.get(f"project:{self.project}", {}).get("fixed_path_mappings", {})
 
             # If the dataset uses a fixed path mapping (from the config file) then use it
             if self._ds_id in mappings:
