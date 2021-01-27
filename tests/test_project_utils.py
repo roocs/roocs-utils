@@ -224,6 +224,7 @@ def test_unknown_project_no_force():
     assert (
         str(exc.value)
         == "The project could not be identified and force was set to false"
+    )
 
 
 @pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
