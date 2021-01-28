@@ -108,6 +108,7 @@ class DatasetMapper:
                     self._files = sorted(glob.glob(dset))
                 else:
                     self._files.append(dset)
+
                 # remove file extension to create data_path
                 self._data_path = "/".join(dset.split("/")[:-1])
 
@@ -121,11 +122,25 @@ class DatasetMapper:
 
         # test if dataset id
         elif self._is_ds_id(dset):
-
             self._ds_id = dset
-            self._data_path = os.path.join(
-                self._base_dir, "/".join(dset.split(".")[1:])
-            )
+
+            mappings = CONFIG.get(f"project:{self.project}", {}).get("fixed_path_mappings", {})
+
+            # If the dataset uses a fixed path mapping (from the config file) then use it
+            if self._ds_id in mappings:
+                data_path = mappings[self._ds_id]
+                self._data_path = os.path.join(
+                    self._base_dir, data_path
+                )
+
+                # Use pattern of fixed file mapping as glob pattern 
+                self._files = sorted(glob.glob(self._data_path))
+
+            # Default mapping is done by converting '.' characters to '/' separators in path
+            else:
+                self._data_path = os.path.join(
+                    self._base_dir, "/".join(dset.split(".")[1:])
+                )
 
         # use to data_path to find files if not set already
         if len(self._files) < 1:

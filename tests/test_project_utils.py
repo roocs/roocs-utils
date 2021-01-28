@@ -102,6 +102,18 @@ class TestDatasetMapper:
             "/siconc_SImon_CESM2_historical_r1i1p1f1_gn_185001-201412.nc"
         ]
 
+    def test_fixed_path_mappings(self):
+        dsm = DatasetMapper('proj_test.my.first.test')
+        assert dsm._data_path == '/projects/test/proj/first/test/something.nc'
+        assert dsm.files == [] # because these do not exist when globbed
+ 
+        dsm = DatasetMapper('proj_test.my.second.test')
+        assert dsm._data_path == '/projects/test/proj/second/test/data_*.txt'
+        assert dsm.files == [] # because these do not exist when globbed
+
+        dsm = DatasetMapper('proj_test.my.unknown')
+        assert dsm._data_path == '/projects/test/proj/my/unknown'
+
 
 @pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
 def test_get_filepaths():
@@ -195,6 +207,17 @@ def test_unknown_fpath_force():
 
 def test_unknown_fpath_no_force():
     dset = "/tmp/tmpxi6d78ng/subset_tttaum9d/rlds_Amon_IPSL-CM6A-LR_historical_r1i1p1f1_gr_19850116-20141216.nc"
+
+    with pytest.raises(InvalidProject) as exc:
+        DatasetMapper(dset)
+    assert (
+        str(exc.value)
+        == "The project could not be identified and force was set to false"
+    )
+
+
+def test_unknown_project_no_force():
+    dset = "unknown_project.data1.data2.data3.data4"
 
     with pytest.raises(InvalidProject) as exc:
         DatasetMapper(dset)
