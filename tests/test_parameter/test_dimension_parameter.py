@@ -77,3 +77,10 @@ def test_class_instance():
     parameter = DimensionParameter(dims)
     new_parameter = DimensionParameter(parameter)
     assert new_parameter.tuple == ("time",)
+
+
+def test_not_a_string():
+    dims = (0, "latitude")
+    with pytest.raises(InvalidParameterValue) as exc:
+        DimensionParameter(dims)
+    assert str(exc.value) == "Each dimension must be a string."
