@@ -3,6 +3,7 @@ from pydoc import locate
 
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.exceptions import MissingParameterValue
+from roocs_utils.utils.file_utils import FileMapper
 
 
 class _BaseParameter(object):
@@ -25,6 +26,7 @@ class _BaseParameter(object):
         return self.input
 
     def _parse(self):
+
         if isinstance(self.input, self.__class__):
             return self.input._parse()
 
@@ -68,6 +70,9 @@ class _BaseParameter(object):
         # check str or bytes
         elif isinstance(self.input, (str, bytes)):
             sequence = [x.strip() for x in self.input.split(",")]
+
+        elif isinstance(self.input, FileMapper):
+            return [self.input]
 
         elif isinstance(self.input, Sequence):
             sequence = self.input
