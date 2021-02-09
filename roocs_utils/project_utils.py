@@ -19,7 +19,7 @@ class DatasetMapper:
         | dset must be a string and can be input as:
         | A dataset ID: e.g. "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
         | A file path: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/tas_Amon_HadGEM2-ES_rcp85_r1i1p1_200512-203011.nc"
-        | A path to a group of files: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc" or "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/{tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc;tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc}"
+        | A path to a group of files: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
         | A directory e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas"
         | An instance of the FileMapper class (that represents a set of files within a single directory)
 
@@ -124,16 +124,16 @@ class DatasetMapper:
         elif self._is_ds_id(dset):
             self._ds_id = dset
 
-            mappings = CONFIG.get(f"project:{self.project}", {}).get("fixed_path_mappings", {})
+            mappings = CONFIG.get(f"project:{self.project}", {}).get(
+                "fixed_path_mappings", {}
+            )
 
             # If the dataset uses a fixed path mapping (from the config file) then use it
             if self._ds_id in mappings:
                 data_path = mappings[self._ds_id]
-                self._data_path = os.path.join(
-                    self._base_dir, data_path
-                )
+                self._data_path = os.path.join(self._base_dir, data_path)
 
-                # Use pattern of fixed file mapping as glob pattern 
+                # Use pattern of fixed file mapping as glob pattern
                 self._files = sorted(glob.glob(self._data_path))
 
             # Default mapping is done by converting '.' characters to '/' separators in path
