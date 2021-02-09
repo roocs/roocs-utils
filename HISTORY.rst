@@ -1,7 +1,7 @@
 Version History
 ===============
 
-v0.2.0 (2021-01-20)
+v0.2.0 (2021-02-11)
 -------------------
 
 Breaking Changes
@@ -9,16 +9,19 @@ Breaking Changes
 * cf_xarray>=0.3.1 now required due to differing level identification of coordinates between versions.
 * oyaml>=0.9 - new dependency for inventory
 * Interface to inventory maker changed. Detailed instructions for use added in README.
+* Adjusted file name template. Underscore removed before ``__derive__time_range``
 
 New Features
 ^^^^^^^^^^^^
 * Added ``use_inventory`` option to ``roocs.ini`` config and allow data to be used without checking an inventory.
 * ``DatasetMapper`` class and wrapper functions added to ``roocs_utils.project_utils`` and ``roocs_utils.xarray_utils.xarray_utils`` to resolve all paths and dataset ids in the same way.
+* ``FileMapper`` added in ``roocs_utils.utils.file_utils`` to resolve resolve multiple files with the same directory to their directory path.
+* Fixed path mapping support added in ``DatasetMapper``
 
 Other Changes
 ^^^^^^^^^^^^^
 * Removed submodule for test data. Test data is now cloned from git and cached.
-* Adjusted file name template. Underscore removed before ````
+* ``CollectionParamter`` accepts an instance of ``FileMapper`` or a sequence of ``FileMapper`` objects
 
 
 v0.1.5 (2020-11-23)
