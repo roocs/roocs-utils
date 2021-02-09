@@ -17,12 +17,13 @@ New Features
 * ``DatasetMapper`` class and wrapper functions added to ``roocs_utils.project_utils`` and ``roocs_utils.xarray_utils.xarray_utils`` to resolve all paths and dataset ids in the same way.
 * ``FileMapper`` added in ``roocs_utils.utils.file_utils`` to resolve resolve multiple files with the same directory to their directory path.
 * Fixed path mapping support added in ``DatasetMapper``
+* Added ``DimensionParameter`` to be used with the average operation.
 
 Other Changes
 ^^^^^^^^^^^^^
 * Removed submodule for test data. Test data is now cloned from git and cached.
 * ``CollectionParamter`` accepts an instance of ``FileMapper`` or a sequence of ``FileMapper`` objects
-
+* Adjusted file name template to include an ``extra`` option before the file extension.
 
 v0.1.5 (2020-11-23)
 -------------------
