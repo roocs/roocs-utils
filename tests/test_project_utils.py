@@ -103,16 +103,16 @@ class TestDatasetMapper:
         ]
 
     def test_fixed_path_mappings(self):
-        dsm = DatasetMapper('proj_test.my.first.test')
-        assert dsm._data_path == '/projects/test/proj/first/test/something.nc'
-        assert dsm.files == [] # because these do not exist when globbed
- 
-        dsm = DatasetMapper('proj_test.my.second.test')
-        assert dsm._data_path == '/projects/test/proj/second/test/data_*.txt'
-        assert dsm.files == [] # because these do not exist when globbed
+        dsm = DatasetMapper("proj_test.my.first.test")
+        assert dsm._data_path == "/projects/test/proj/first/test/something.nc"
+        assert dsm.files == []  # because these do not exist when globbed
 
-        dsm = DatasetMapper('proj_test.my.unknown')
-        assert dsm._data_path == '/projects/test/proj/my/unknown'
+        dsm = DatasetMapper("proj_test.my.second.test")
+        assert dsm._data_path == "/projects/test/proj/second/test/data_*.txt"
+        assert dsm.files == []  # because these do not exist when globbed
+
+        dsm = DatasetMapper("proj_test.my.unknown")
+        assert dsm._data_path == "/projects/test/proj/my/unknown"
 
 
 @pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
