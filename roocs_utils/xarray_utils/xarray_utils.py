@@ -153,10 +153,10 @@ def get_coord_type(coord):
 
 def convert_coord_to_axis(coord):
     """
-    Converts coordinate type to its axis
+    Converts coordinate type to its single character axis identifier (tzyx).
 
     :param coord: (str) The coordinate to convert.
-    :return: (str) The axis of the coordinate
+    :return: (str) The single character axis identifier of the coordinate (tzyx).
     """
 
     axis_dict = {"time": "t", "longitude": "x", "latitude": "y", "level": "z"}
