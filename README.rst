@@ -5,13 +5,9 @@ roocs-utils
    :target: https://pypi.python.org/pypi/roocs_utils
    :alt: Pypi
 
-
-
-.. image:: https://img.shields.io/travis/roocs/roocs-utils.svg
-   :target: https://travis-ci.com/roocs/roocs-utils
-   :alt: Travis
-
-
+.. image:: https://github.com/roocs/roocs-utils/workflows/build/badge.svg
+    :target: https://github.com/roocs/roocs-utils/actions
+    :alt: Build Status
 
 .. image:: https://readthedocs.org/projects/roocs-utils/badge/?version=latest
    :target: https://roocs-utils.readthedocs.io/en/latest/?badge=latest
