@@ -14,11 +14,11 @@ from roocs_utils.xarray_utils.xarray_utils import open_xr_dataset
 
 
 def get_time_info(fpaths, var_id):
-
     all_times = []
     for fpath in sorted(fpaths):
 
         try:
+
             ds = xr.open_dataset(fpath, use_cftime=True)
             times = ds[var_id].time.values
 
@@ -94,8 +94,10 @@ def get_var_metadata(fpaths, var_id):
 
 
 def build_dict(ds_id, proj_dict):
-
     fpaths = DatasetMapper(ds_id).files
+
+    if len(fpaths) < 1:
+        raise FileNotFoundError("No files were found for this dataset")
 
     comps = ds_id.split(".")
 
