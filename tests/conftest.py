@@ -5,11 +5,10 @@ from pathlib import Path
 
 import pytest
 
-from tests._common import write_roocs_cfg
+from tests._common import write_roocs_cfg, MINI_ESGF_CACHE_DIR
 
 write_roocs_cfg()
 
-MINI_ESGF_CACHE_DIR = Path.home() / ".mini-esgf-data"
 TEST_DATA_REPO_URL = "https://github.com/roocs/mini-esgf-data"
 
 CMIP5_TAS = os.path.join(
