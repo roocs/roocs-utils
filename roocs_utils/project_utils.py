@@ -218,7 +218,6 @@ def get_project_from_ds(ds):
 
 
 def get_project_name(dset):
-
     if type(dset) in (xr.core.dataarray.DataArray, xr.core.dataset.Dataset):
         return get_project_from_ds(dset)  # will not return c3s dataset
 
