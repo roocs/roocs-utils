@@ -151,6 +151,18 @@ def get_coord_type(coord):
     return None
 
 
+def convert_coord_to_axis(coord):
+    """
+    Converts coordinate type to its single character axis identifier (tzyx).
+
+    :param coord: (str) The coordinate to convert.
+    :return: (str) The single character axis identifier of the coordinate (tzyx).
+    """
+
+    axis_dict = {"time": "t", "longitude": "x", "latitude": "y", "level": "z"}
+    return axis_dict.get(coord, None)
+
+
 def get_coord_by_type(ds, coord_type, ignore_aux_coords=True):
     """
     Returns the xarray Dataset or DataArray coordinate of the specified type.
