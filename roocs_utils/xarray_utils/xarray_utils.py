@@ -174,6 +174,7 @@ def get_coord_by_type(ds, coord_type, ignore_aux_coords=True):
     :return: Xarray Dataset coordinate (ds.coords[coord_id])
     """
     "Can take a Dataset or DataArray"
+
     if coord_type not in known_coord_types:
         raise Exception(f"Coordinate type not known: {coord_type}")
 
