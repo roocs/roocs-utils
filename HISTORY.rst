@@ -1,7 +1,7 @@
 Version History
 ===============
 
-v0.2.0 (2021-02-11)
+v0.2.0 (2021-02-22)
 -------------------
 
 Breaking Changes
@@ -10,6 +10,7 @@ Breaking Changes
 * oyaml>=0.9 - new dependency for inventory
 * Interface to inventory maker changed. Detailed instructions for use added in README.
 * Adjusted file name template. Underscore removed before ``__derive__time_range``
+* New dev dependency: GitPython==3.1.12
 
 New Features
 ^^^^^^^^^^^^
@@ -21,9 +22,10 @@ New Features
 
 Other Changes
 ^^^^^^^^^^^^^
-* Removed submodule for test data. Test data is now cloned from git and cached.
+* Removed submodule for test data. Test data is now cloned from git using GitPython and cached
 * ``CollectionParamter`` accepts an instance of ``FileMapper`` or a sequence of ``FileMapper`` objects
 * Adjusted file name template to include an ``extra`` option before the file extension.
+* Swapped from travis CI to GitHub actions
 
 v0.1.5 (2020-11-23)
 -------------------
