@@ -1,6 +1,14 @@
 Version History
 ===============
 
+v0.2.1 (2021-02-19)
+-------------------
+
+Bug Fixes
+^^^^^^^^^
+
+* clean up imports ... remove pandas dependency.
+
 v0.2.0 (2021-02-18)
 -------------------
 
