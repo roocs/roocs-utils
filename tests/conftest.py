@@ -5,11 +5,10 @@ from pathlib import Path
 
 import pytest
 
-from tests._common import write_roocs_cfg
+from tests._common import write_roocs_cfg, MINI_ESGF_CACHE_DIR
 
 write_roocs_cfg()
 
-MINI_ESGF_CACHE_DIR = Path.home() / ".mini-esgf-data"
 TEST_DATA_REPO_URL = "https://github.com/roocs/mini-esgf-data"
 
 CMIP5_TAS = os.path.join(
@@ -49,7 +48,7 @@ def load_test_data():
         repo = Repo.clone_from(TEST_DATA_REPO_URL, target)
         repo.git.checkout(branch)
 
-    if not os.environ.get("ROOCS_AUTO_UPDATE_TEST_DATA", True) == "FALSE":
+    elif os.environ.get("ROOCS_AUTO_UPDATE_TEST_DATA", "true").lower() != "false":
         repo = Repo(target)
         repo.git.checkout(branch)
         repo.remotes[0].pull()
