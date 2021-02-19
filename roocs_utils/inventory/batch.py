@@ -1,7 +1,5 @@
 import os
 
-import pandas as pd
-
 from roocs_utils import CONFIG
 from roocs_utils.inventory import logging
 from roocs_utils.inventory.utils import create_dir
