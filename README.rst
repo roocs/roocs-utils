@@ -105,8 +105,8 @@ writes the inventory file ``c3s-cmip6-inventory-files.yml`` and includes the fil
 
 .. code-block::
 
-    - path: CMIP6/ScenarioMIP/CCCma/CanESM5/ssp370/r1i1p1f1/Amon/rsutcs/gn/v20190429
-      ds_id: CMIP6.ScenarioMIP.CCCma.CanESM5.ssp370.r1i1p1f1.Amon.rsutcs.gn.v20190429
+    - path: ScenarioMIP/CCCma/CanESM5/ssp370/r1i1p1f1/Amon/rsutcs/gn/v20190429
+      ds_id: c3s-cmip6.ScenarioMIP.CCCma.CanESM5.ssp370.r1i1p1f1.Amon.rsutcs.gn.v20190429
       var_id: rsutcs
       array_dims: time lat lon
       array_shape: 1032 64 128
@@ -117,7 +117,7 @@ writes the inventory file ``c3s-cmip6-inventory-files.yml`` and includes the fil
       size_gb: 0.03
       file_count: 1
       facets:
-        mip_era: CMIP6
+        mip_era: c3s-cmip6
         activity_id: ScenarioMIP
         institution_id: CCCma
         source_id: CanESM5
@@ -141,8 +141,8 @@ writes the inventory file ``c3s-cmip6-inventory.yml`` and does not include file 
 
 .. code-block::
 
-    - path: CMIP6/ScenarioMIP/CCCma/CanESM5/ssp370/r1i1p1f1/Amon/rsutcs/gn/v20190429
-      ds_id: CMIP6.ScenarioMIP.CCCma.CanESM5.ssp370.r1i1p1f1.Amon.rsutcs.gn.v20190429
+    - path: ScenarioMIP/CCCma/CanESM5/ssp370/r1i1p1f1/Amon/rsutcs/gn/v20190429
+      ds_id: c3s-cmip6.ScenarioMIP.CCCma.CanESM5.ssp370.r1i1p1f1.Amon.rsutcs.gn.v20190429
       var_id: rsutcs
       array_dims: time lat lon
       array_shape: 1032 64 128
@@ -153,7 +153,7 @@ writes the inventory file ``c3s-cmip6-inventory.yml`` and does not include file 
       size_gb: 0.03
       file_count: 1
       facets:
-        mip_era: CMIP6
+        mip_era: c3s-cmip6
         activity_id: ScenarioMIP
         institution_id: CCCma
         source_id: CanESM5
