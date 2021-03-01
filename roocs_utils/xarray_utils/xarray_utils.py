@@ -59,6 +59,7 @@ def is_latitude(coord):
     :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
     :return: (bool) True if the coordinate is latitude.
     """
+
     if "latitude" in coord.cf and coord.cf["latitude"].name == coord.name:
         return True
 
