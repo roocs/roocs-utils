@@ -27,7 +27,12 @@ def get_time_info(fpaths, var_id):
         except AttributeError:
             return 0, "undefined"
 
-    return len(all_times), all_times[0].isoformat() + " " + all_times[-1].isoformat()
+    return (
+        len(all_times),
+        all_times[0].isoformat(timespec="seconds")
+        + " "
+        + all_times[-1].isoformat(timespec="seconds"),
+    )
 
 
 def get_coord_info(fpaths):
