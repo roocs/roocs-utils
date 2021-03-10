@@ -48,9 +48,19 @@ def get_coord_info(fpaths):
         if type == "time" or type is None:
             continue
 
-        data = coord.values
+        mn, mx = float(coord.min()), float(coord.max())
 
-        mn, mx = data.min(), data.max()
+        if type == "longitude":
+            if mn < -360 or mx > 360:
+                raise Exception(
+                    f"Longitude is not within expected bounds. The minimum and maximum are {mn}, {mx}"
+                )
+
+        if type == "latitude":
+            if mn < -90 or mx > 90:
+                raise Exception(
+                    f"Latitude is not within expected bounds. The minimum and maximum are {mn}, {mx}"
+                )
 
         d[f"{type}"] = f"{mn:.2f} {mx:.2f}"
 
