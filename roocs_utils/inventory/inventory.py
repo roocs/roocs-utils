@@ -4,6 +4,7 @@ import sys
 import time
 from collections import OrderedDict
 
+import numpy as np
 import oyaml
 import xarray as xr
 
@@ -48,7 +49,12 @@ def get_coord_info(fpaths):
         if type == "time" or type is None:
             continue
 
-        mn, mx = float(coord.min()), float(coord.max())
+        data = coord.values
+
+        mn, mx = data.min(), data.max()
+
+        if np.isnan(mn) or np.isnan(mx):
+            mn, mx = float(coord.min()), float(coord.max())
 
         if type == "longitude":
             if mn < -360 or mx > 360:
