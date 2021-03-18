@@ -7,17 +7,17 @@ There are many configuartion options that can be adjusted to change the behaviou
 The configuration file used can always be found under ``<package>/etc/roocs.ini`` where package is a package in roocs e.g. roocs-utils.
 
 Any section of the configuration files can be overwritten by creating a new INI file with the desired sections and values and then setting the environment variable ``ROOCS_CONFIG`` as the file path to the new INI file.
-e.g. ``export ROOCS_CONFIG="path/to/config.ini"``
+e.g. ``ROOCS_CONFIG="path/to/config.ini"``
 
-The configuration setting used are listed and explained below. Explanations will be provided as comments in the code blocks if needed.
-Examples are provided so this will not necesarily match up to what is used in each packages.
+The configuration settings used are listed and explained below. Explanations will be provided as comments in the code blocks if needed.
+Examples are provided so these settings will not necesarily match up with what is used in each of the packages.
 
 Specifying types
 ################
 
-It is possible to specify the type of the entries in the configuration file. For example if you want a value to be a list when the file is parsed.
+It is possible to specify the type of the entries in the configuration file, for example if you want a value to be a list when the file is parsed.
 
-This is managed through a ``[config_data_types]`` section at the top of a config INI file which has the following options::
+This is managed through a ``[config_data_types]`` section at the top of the INI file which has the following options::
 
     [config_data_types]
     # use only in roocs-utils
@@ -46,7 +46,7 @@ e.g. for cmip5 the heading is ``[project:cmip5]``::
     project_name = cmip5
     # base directory for data file paths
     base_dir = /badc/cmip5/data/cmip5
-    # if a dataset id is identified as this project, is this the default base directory to use
+    # if a dataset id is identified as coming from this project, should these be the default settings used (as opposed to usig the c3s-cmip5 settings by default)
     is_default_for_path = True
     # template for the output file name - used in ``clisops.utils.file_namers``
     file_name_template = {__derive__var_id}_{frequency}_{model_id}_{experiment_id}_r{realization}i{initialization_method}p{physics_version}{__derive__time_range}{extra}.{__derive__extension}
@@ -60,13 +60,14 @@ e.g. for cmip5 the heading is ``[project:cmip5]``::
         physics_version:X
     # the order of facets in the file paths of datasets for this project
     facet_rule = activity product institute model experiment frequency realm mip_table ensemble_member version variable
-    # what facets will be identifed as in the project - not currently used
+    # what particular facets will be identifed as in this project - not currently used
     mappings =
         project:project_id
     # whether to use an inventory or not for this project
     use_inventory = False
 
-For projects where an inventory is used there are extra inventory related settings. These are::
+For projects where an inventory is used, there are extra settings which relate to the creation of the inventory.
+These are::
 
     inventory_version = 0.1
     # directory to store inventory and names for pickle files used in generation of inventory
@@ -78,13 +79,14 @@ For projects where an inventory is used there are extra inventory related settin
     full_inventory_file = %(inventory_dir)s/%(project_name)s-inventory-files.yml
     # name for inventory that doesn't include files
     c3s_inventory_file = %(inventory_dir)s/%(project_name)s-inventory.yml
+
     # where original files can be downloaded
     data_node_root = https://data.mips.copernicus-climate.eu/thredds/fileServer/esg_c3s-cmip6/
 
 Further settings for the inventory workflow are::
 
     [log]
-    # directory for logging outputs from slurm when generating inventory
+    # directory for logging outputs from LOTUS when generating inventory
     log_base_dir = /gws/smf/j04/cp4cds1/c3s_34e/inventory/log
 
     [workflow]
@@ -93,7 +95,7 @@ Further settings for the inventory workflow are::
     max_duration = 04:00:00
     # job queue on LOTUS
     job_queue = short-serial
-    # number of datasets to process in one batch - fewer batches is better as it prevents "Exception: Could not obtain file lock
+    # number of datasets to process in one batch - fewer batches is better as it prevents "Exception: Could not obtain file lock" error
     n_per_batch = 750
 
 
@@ -132,7 +134,7 @@ These are settings that are specific to clisops::
     # maximum file size of output files. Files are split if this is exceeded
     file_size_limit = 1GB
     # staging directory to output files to before they are moved to the requested output directory
-    # if unset, the files are output straight to the output directory
+    # if unset, the files are output straight to the requested output directory
     output_staging_dir = /gws/smf/j04/cp4cds1/c3s_34e/rook_prod_cache
 
 
@@ -183,7 +185,7 @@ These are settings that are specific to dachar::
 
     [dachar:checks]
     # checks to run when analysing a sample of datasets
-    # commone checks are run on all samples
+    # common checks are run on all samples
     common = coord_checks.RankCheck coord_checks.MissingCoordCheck
     # it is possible to specify checks that will be run on datasets from specific projects
     cmip5 =
@@ -194,7 +196,7 @@ These are settings that are specific to dachar::
     [dachar:settings]
     # elasticsearch api token that allows write access to indexes
     elastic_api_token =
-    # how many directories to join by to create the name of a new directory when outputting to a file path
+    # how many directories levels to join by to create the name of a new directory when outputting results of scans
     # see ``dachar.utils.switch_ds.get_grouped_ds_id``
     dir_grouping_level = 4
     # threshold at which an anomaly in a sample of datasets will be identified for a fix - not currently used
