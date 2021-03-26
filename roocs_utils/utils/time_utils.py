@@ -23,19 +23,37 @@ class AnyCalendarDateTime:
     Has the ability to add and subtract a day from the input based on MAX_DAY, MIN_DAY, MAX_MONTH and MIN_MONTH
     """
 
-    # MAX_DAY: the maximum number of days in any month in any of the calendars supported by cftime
-    MAX_DAY = 31
-    MIN_DAY = 1
-    MAX_MONTH = 12
-    MIN_MONTH = 1
+    MONTH_RANGE = range(1, 13)
+    # 31 is the maximum number of days in any month in any of the calendars supported by cftime
+    DAY_RANGE = range(1, 32)
+    HOUR_RANGE = range(0, 24)
+    MINUTE_RANGE = range(0, 60)
+    SECOND_RANGE = range(0, 60)
 
     def __init__(self, year, month, day, hour, minute, second):
+
         self.year = year
+
         self.month = month
+        self.validate_input(self.month, "month", self.MONTH_RANGE)
+
         self.day = day
+        self.validate_input(self.day, "day", self.DAY_RANGE)
+
         self.hour = hour
+        self.validate_input(self.hour, "hour", self.HOUR_RANGE)
+
         self.minute = minute
+        self.validate_input(self.minute, "minute", self.MINUTE_RANGE)
+
         self.second = second
+        self.validate_input(self.second, "second", self.SECOND_RANGE)
+
+    def validate_input(self, input, name, range):
+        if input not in range:
+            raise ValueError(
+                f"Invalid input {input} for {name}. Expected value between {range[0]} and {range[-1]}."
+            )
 
     def __repr__(self):
         return self.value
@@ -53,13 +71,13 @@ class AnyCalendarDateTime:
         """
         self.day += 1
 
-        if self.day > self.MAX_DAY:
+        if self.day > self.DAY_RANGE[-1]:
             self.month += 1
             self.day = 1
 
-        if self.month > self.MAX_MONTH:
+        if self.month > self.MONTH_RANGE[-1]:
             self.year += 1
-            self.month = self.MIN_MONTH
+            self.month = self.MONTH_RANGE[0]
 
     def sub_day(self, n=1):
         """
@@ -67,13 +85,13 @@ class AnyCalendarDateTime:
         """
         self.day -= 1
 
-        if self.day < self.MIN_DAY:
+        if self.day < self.DAY_RANGE[0]:
             self.month -= 1
-            self.day = self.MAX_DAY
+            self.day = self.DAY_RANGE[-1]
 
-        if self.month < self.MIN_MONTH:
+        if self.month < self.MONTH_RANGE[0]:
             self.year -= 1
-            self.month = self.MAX_MONTH
+            self.month = self.MONTH_RANGE[-1]
 
 
 def str_to_AnyCalendarDateTime(dt):
