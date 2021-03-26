@@ -44,9 +44,9 @@ def get_coord_info(fpaths):
     for coord_id in sorted(ds.coords):
 
         coord = ds.coords[coord_id]
-        type = get_coord_type(coord)
+        coord_type = get_coord_type(coord)
 
-        if type == "time" or type is None:
+        if coord_type == "time" or coord_type is None:
             continue
 
         data = coord.values
@@ -56,19 +56,19 @@ def get_coord_info(fpaths):
         if np.isnan(mn) or np.isnan(mx):
             mn, mx = float(coord.min()), float(coord.max())
 
-        if type == "longitude":
+        if coord_type == "longitude":
             if mn < -360 or mx > 360:
                 raise Exception(
                     f"Longitude is not within expected bounds. The minimum and maximum are {mn}, {mx}"
                 )
 
-        if type == "latitude":
+        if coord_type == "latitude":
             if mn < -90 or mx > 90:
                 raise Exception(
                     f"Latitude is not within expected bounds. The minimum and maximum are {mn}, {mx}"
                 )
 
-        d[f"{type}"] = f"{mn:.2f} {mx:.2f}"
+        d[f"{coord_type}"] = f"{mn:.2f} {mx:.2f}"
 
     return d
 
