@@ -1,12 +1,16 @@
 Version History
 ===============
 
+v0.3.0 (Unreleased)
+-------------------
+New Features
+^^^^^^^^^^^^
+* Added ``AnyCalendarDateTime`` and ``str_to_AnyCalendarDateTime`` to ``utils.time_utils`` to aid in handling date strings that may not exist in all calendar types.
+
 v0.2.1 (2021-02-19)
 -------------------
-
 Bug Fixes
 ^^^^^^^^^
-
 * clean up imports ... remove pandas dependency.
 
 v0.2.0 (2021-02-18)
