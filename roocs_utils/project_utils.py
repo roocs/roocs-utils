@@ -12,20 +12,22 @@ LOGGER = logging.getLogger(__file__)
 
 
 class DatasetMapper:
+    """
+    Class to map to data path, dataset ID and files from any dataset input.
+
+    | dset must be a string and can be input as:
+    | A dataset ID: e.g. "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
+    | A file path: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/tas_Amon_HadGEM2-ES_rcp85_r1i1p1_200512-203011.nc"
+    | A path to a group of files: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
+    | A directory e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas"
+    | An instance of the FileMapper class (that represents a set of files within a single directory)
+
+    When force=True, if the project can not be identified, any attempt to use the base_dir of a project
+    to resolve the data path will be ignored. Any of data_path, ds_id and files that can be set, will be set.
+    """
+
     def __init__(self, dset, project=None, force=False):
-        """
-        Class to map to data path, dataset ID and files from any dataset input.
 
-        | dset must be a string and can be input as:
-        | A dataset ID: e.g. "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
-        | A file path: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/tas_Amon_HadGEM2-ES_rcp85_r1i1p1_200512-203011.nc"
-        | A path to a group of files: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
-        | A directory e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas"
-        | An instance of the FileMapper class (that represents a set of files within a single directory)
-
-        When force=True, if the project can not be identified, any attempt to use the base_dir of a project
-        to resolve the data path will be ignored. Any of data_path, ds_id and files that can be set, will be set.
-        """
         self._project = project
         self.dset = dset
 
@@ -148,57 +150,93 @@ class DatasetMapper:
 
     @property
     def raw(self):
+        """ Raw dataset input. """
         return self.dset
 
     @property
     def data_path(self):
+        """ Dataset input converted to a data path. """
         return self._data_path
 
     @property
     def ds_id(self):
+        """ Dataset input converted to a ds id. """
         return self._ds_id
 
     @property
     def base_dir(self):
+        """ The base directory of the input dataset. """
         return self._base_dir
 
     @property
     def files(self):
+        """ The files found from the input dataset. """
         return self._files
 
     @property
     def project(self):
+        """ The project of the dataset input. """
         return self._project
 
 
 def derive_dset(dset):
+    """
+    Derives the dataset path of the provided dset.
+
+    :param dset: dset input of type described by DatasetMapper.
+    :return: dataset path of input dataset.
+    """
     return DatasetMapper(dset).data_path
 
 
 def derive_ds_id(dset):
+    """
+    Derives the dataset id of the provided dset.
+
+    :param dset: dset input of type described by DatasetMapper.
+    :return: ds id of input dataset.
+    """
     return DatasetMapper(dset).ds_id
 
 
 def datapath_to_dsid(datapath):
+    """
+    Switches from dataset path to ds id.
+
+    :param datapath: dataset path.
+    :return: dataset id of input dataset path.
+    """
     return DatasetMapper(datapath).ds_id
 
 
 def dsid_to_datapath(dsid):
+    """
+    Switches from ds id to dataset path.
+
+    :param dsid: dataset id.
+    :return: dataset path of input dataset id.
+    """
     return DatasetMapper(dsid).data_path
 
 
 def dset_to_filepaths(dset, force=False):
+    """
+    Gets filepaths deduced from input dset.
+
+    :param dset: dset input of type described by DatasetMapper.
+    :param force: When True and if the project of the input dset cannot be identified, DatasetMapper will attempt to find the files anyway. Default is False.
+    :return: File paths deduced from input dataset.
+    """
     mapper = DatasetMapper(dset, force=force)
     return mapper.files
 
 
 def switch_dset(dset):
     """
-    Switches between ds_path and ds_id.
+    Switches between dataset path and ds id.
 
-    :param project: top-level project
-    :param ds: either dataset path or dataset ID (DSID)
-    :return: either dataset path or dataset ID (DSID) - switched from the input.
+    :param dset: either dataset path or dataset ID.
+    :return: either dataset path or dataset ID - switched from the input.
     """
     if dset.startswith("/"):
         return datapath_to_dsid(dset)
@@ -207,10 +245,17 @@ def switch_dset(dset):
 
 
 def get_projects():
+    """ Gets all the projects available in the config. """
     return [_.split(":")[1] for _ in CONFIG.keys() if _.startswith("project:")]
 
 
 def get_project_from_ds(ds):
+    """
+    Gets the project from an xarray Dataset/DataArray.
+
+    :param ds: xarray Dataset/DataArray.
+    :return: The project derived from the input dataset.
+    """
     for project in get_projects():
         key = map_facet("project", project)
         if ds.attrs.get(key, "").lower() == project:
@@ -218,6 +263,12 @@ def get_project_from_ds(ds):
 
 
 def get_project_name(dset):
+    """
+    Gets the project from an input dset.
+
+    :param dset: dset input of type described by DatasetMapper.
+    :return: The project derived from the input dataset.
+    """
     if type(dset) in (xr.core.dataarray.DataArray, xr.core.dataset.Dataset):
         return get_project_from_ds(dset)  # will not return c3s dataset
 
@@ -226,16 +277,19 @@ def get_project_name(dset):
 
 
 def map_facet(facet, project):
+    """ Return mapped facet value from config or facet name if not found. """
     # Return mapped value or the same facet name
     proj_mappings = CONFIG[f"project:{project}"]["mappings"]
     return proj_mappings.get(facet, facet)
 
 
 def get_facet(facet_name, facets, project):
+    """ Get facet from project config"""
     return facets[map_facet(facet_name, project)]
 
 
 def get_project_base_dir(project):
+    """ Get the base directory of a project from the config. """
     try:
         return CONFIG[f"project:{project}"]["base_dir"]
     except KeyError:
@@ -243,6 +297,7 @@ def get_project_base_dir(project):
 
 
 def get_data_node_dirs_dict():
+    """ Get a dictionary of the data node roots used for retreiving original files. """
     projects = get_projects()
     data_node_dirs = {
         project: CONFIG[f"project:{project}"].get("data_node_root")
@@ -253,7 +308,7 @@ def get_data_node_dirs_dict():
 
 
 def get_project_from_data_node_root(url):
-    # identify project from data node root
+    """ Identify the project from data node root by identifyng the data node root in the input url. """
     data_node_dict = get_data_node_dirs_dict()
     project = None
 
@@ -270,6 +325,7 @@ def get_project_from_data_node_root(url):
 
 
 def url_to_file_path(url):
+    """ Convert input url of an original file to a file path """
     project = get_project_from_data_node_root(url)
 
     data_node_root = CONFIG.get(f"project:{project}", {}).get("data_node_root")
