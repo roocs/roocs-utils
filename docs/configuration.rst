@@ -153,6 +153,12 @@ Rook also has project sections. For each project the settings in rook are as bel
     # where the inventory for the project can be found
     inventory_url = https://raw.githubusercontent.com/cp4cds/c3s_34g_manifests/master/inventories/c3s-cmip6/c3s-cmip6_files_latest.yml
 
+There is also the catalog section::
+
+    [catalog]
+    # provides the url for the intake catalog
+    intake_catalog_url = https://raw.githubusercontent.com/cp4cds/c3s_34g_manifests/master/intake/catalogs/c3s.yaml
+
 
 dachar
 ######

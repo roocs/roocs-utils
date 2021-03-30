@@ -1,11 +1,13 @@
 Version History
 ===============
 
-v0.3.0 (Unreleased)
+v0.3.0 (2021-03-30)
 -------------------
 New Features
 ^^^^^^^^^^^^
 * Added ``AnyCalendarDateTime`` and ``str_to_AnyCalendarDateTime`` to ``utils.time_utils`` to aid in handling date strings that may not exist in all calendar types.
+* Inventory maker will check latitude and longitude of the dataset it is scanning are within acceptable bounds and raise an exception if they are not.
+
 
 v0.2.1 (2021-02-19)
 -------------------
