@@ -5,6 +5,23 @@ from roocs_utils.exceptions import InvalidProject
 
 
 class FileMapper:
+    """
+    Class to represent a set of files that exist in the same directory as one object.
+
+    Args:
+        file_list: the list of files to represent. If dirpath not providedm these should be full file paths.
+        dirpath: The directory path where the files exist. Default is None.
+
+    If dirpath is not provided it will be deduced from the file paths provided in file_list.
+
+    Attributes:
+        file_list: list of file names of the files represented.
+        file_paths: list of full file paths of the files represented.
+        dirpath: The directory path where the files exist. Either deduced or provided.
+
+
+    """
+
     def __init__(self, file_list, dirpath=None):
         self.dirpath = dirpath
         self.file_list = file_list
@@ -31,6 +48,12 @@ class FileMapper:
 
 
 def is_file_list(coll):
+    """
+    Checks whether a collection is a list of files.
+
+    :param coll (list): collection to check.
+    :return: True if collection is a list of files, else returns False.
+    """
     # check if collection is a list of files
     if not isinstance(coll, list):
         raise Exception(f"Expected collection as a list, have received {type(coll)}")

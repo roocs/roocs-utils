@@ -13,3 +13,12 @@ class InvalidProject(Exception):
 class InconsistencyError(Exception):
     """Raised when there is some inconsistency which prevents files
     being scanned."""
+
+
+class InvalidCollection(Exception):
+    def __init__(self):
+        self.message = (
+            "Some or all of the requested collection are not in the list "
+            "of available data."
+        )
+        super().__init__(self.message)

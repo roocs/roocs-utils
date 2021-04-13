@@ -141,24 +141,17 @@ These are settings that are specific to clisops::
 daops
 #####
 
-There are currently no settings in daops but these would be set in the same way as the clisops settings. e.g. with ``[daops:section]`` headings.
+daops also has project sections. For each project the settings in daops are as below::
+
+    [project:c3s-cmip6]
+    # provides the url for the intake catalog with details of datasets
+    intake_catalog_url = https://raw.githubusercontent.com/cp4cds/c3s_34g_manifests/master/intake/catalogs/c3s.yaml
 
 
 rook
 ####
 
-Rook also has project sections. For each project the settings in rook are as below::
-
-    [project:c3s-cmip6]
-    # where the inventory for the project can be found
-    inventory_url = https://raw.githubusercontent.com/cp4cds/c3s_34g_manifests/master/inventories/c3s-cmip6/c3s-cmip6_files_latest.yml
-
-There is also the catalog section::
-
-    [catalog]
-    # provides the url for the intake catalog
-    intake_catalog_url = https://raw.githubusercontent.com/cp4cds/c3s_34g_manifests/master/intake/catalogs/c3s.yaml
-
+There are currently no settings in rook but these would be set in the same way as the clisops and daops settings. e.g. with ``[rook:section]`` headings.
 
 dachar
 ######
