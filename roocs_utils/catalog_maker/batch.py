@@ -1,8 +1,8 @@
 import os
 
 from roocs_utils import CONFIG
-from roocs_utils.inventory import logging
-from roocs_utils.inventory.utils import create_dir
+from roocs_utils.catalog_maker import logging
+from roocs_utils.catalog_maker.utils import create_dir
 
 LOGGER = logging.getLogger(__file__)
 
@@ -12,7 +12,7 @@ class BatchManager(object):
         self._project = project
         self._proj_conf = CONFIG[f"project:{self._project}"]
 
-        self._batch_dir = os.path.join(self._proj_conf["inventory_dir"], "batches")
+        self._batch_dir = os.path.join(self._proj_conf["catalog_dir"], "batches")
         create_dir(self._batch_dir)
 
     def get_batch_files(self):

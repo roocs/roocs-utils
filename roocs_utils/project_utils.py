@@ -4,8 +4,8 @@ import os
 import xarray as xr
 
 from roocs_utils import CONFIG
+from roocs_utils.catalog_maker import logging
 from roocs_utils.exceptions import InvalidProject
-from roocs_utils.inventory import logging
 from roocs_utils.utils.file_utils import FileMapper
 
 LOGGER = logging.getLogger(__file__)

@@ -3,30 +3,31 @@ import os
 import sys
 import time
 from collections import OrderedDict
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
 import xarray as xr
+import yaml
 
 from roocs_utils import CONFIG
+from roocs_utils.catalog_maker.utils import create_dir
 from roocs_utils.project_utils import DatasetMapper
 from roocs_utils.xarray_utils.xarray_utils import get_coord_type
 from roocs_utils.xarray_utils.xarray_utils import open_xr_dataset
 
 
-def get_time_info(fpaths, var_id):
+def get_time_info(fpath, var_id):
     all_times = []
-    for fpath in sorted(fpaths):
+    try:
 
-        try:
+        ds = xr.open_dataset(fpath, use_cftime=True)
+        times = ds[var_id].time.values
 
-            ds = xr.open_dataset(fpath, use_cftime=True)
-            times = ds[var_id].time.values
-
-            all_times.extend(list(times))
-            ds.close()
-        except AttributeError:
-            return 0, "undefined"
+        all_times.extend(list(times))
+        ds.close()
+    except AttributeError:
+        return 0, "undefined"
 
     return (
         len(all_times),
@@ -72,24 +73,31 @@ def get_coord_info(fpaths):
     return d
 
 
-def get_size_data(fpaths):
-    files = len(fpaths)
-
-    ds = open_xr_dataset(fpaths)
+def get_size_data(fpath):
+    ds = open_xr_dataset(fpath)
 
     size = ds.nbytes
     size_gb = round(size / 1e9, 2)
 
-    return size, size_gb, files
+    return size, size_gb
 
 
-def get_var_metadata(fpaths, var_id):
-    time_length, time_string = get_time_info(fpaths, var_id)
+def get_files(ds_id):
+    fpaths = DatasetMapper(ds_id).files
 
-    f1 = fpaths[0]
-    print(f"[INFO] Reading {f1}")
+    if len(fpaths) < 1:
+        raise FileNotFoundError("No files were found for this dataset")
 
-    ds = open_xr_dataset(f1)
+    return fpaths
+
+
+def get_var_metadata(fpath, var_id):
+    time_length, start_time, end_time = get_time_info(fpath, var_id)
+    time_string = start_time + " " + end_time
+
+    print(f"[INFO] Reading {fpath}")
+
+    ds = open_xr_dataset(fpath)
     dims = ds[var_id].dims
 
     shape_annotated = []
@@ -99,7 +107,7 @@ def get_var_metadata(fpaths, var_id):
         length = ds[var_id].shape[i]
 
         if dim.startswith("time"):
-            item = str(time_length)
+            item = str(time_string)
         else:
             item = str(length)
 
@@ -110,14 +118,10 @@ def get_var_metadata(fpaths, var_id):
 
     ds.close()
 
-    return dims, shape, time_string
+    return dims, shape, start_time, end_time
 
 
-def build_dicts(ds_id, proj_dict):
-    fpaths = DatasetMapper(ds_id).files
-
-    if len(fpaths) < 1:
-        raise FileNotFoundError("No files were found for this dataset")
+def build_dict(ds_id, fpath, proj_dict):
 
     comps = ds_id.split(".")
 
@@ -126,62 +130,34 @@ def build_dicts(ds_id, proj_dict):
 
     var_id = facets.get("variable") or facets.get("variable_id")
 
-    dims, shape, start_time, end_time = get_var_metadata(fpaths, var_id)
-    size, size_gb, files = get_size_data(fpaths)
-    coord_d = get_coord_info(fpaths)
-    fnames = [fpath.split("/")[-1] for fpath in fpaths]
-    dicts = []
+    size, size_gb = get_size_data(fpath)
+    dims, shape, start_time, end_time = get_var_metadata(fpath, var_id)
+    coord_d = get_coord_info(fpath)
 
-    for fpath in fpaths:
+    d = OrderedDict()
 
-        d = OrderedDict()
+    d["ds_id"] = ds_id
+    d["path"] = "/".join(ds_id.split(".")[1:]) + fpath.split("/")[-1]
 
-        d["ds_id"] = ds_id
-        d["facets"] = facets
+    d["size"] = size
+    d["size_gb"] = size_gb
 
-        d["start_time"] = start_time
-        d["end_time"] = end_time
-        d.update(coord_d)
-        d["var_id"] = var_id
-        d["array_dims"] = dims
-        d["array_shape"] = shape
-        d["size"] = size
-        d["size_gb"] = size_gb
-        d["file_count"] = files
-        d["path"] = fpath
+    d.update(facets)
 
-        dicts.append(d)
+    d["start_time"] = start_time
+    d["end_time"] = end_time
+    d.update(coord_d)
 
-    return dicts
-
-
-def create_inventory(project, ds_id):
-    proj_dict = CONFIG[f"project:{project}"]
-    d = build_dicts(ds_id, proj_dict)
     return d
 
 
-def to_yaml(content, project, version):
+def create_inventory(project, ds_id, fpath):
     proj_dict = CONFIG[f"project:{project}"]
-    base_dir = proj_dict["base_dir"]
-    header = [{"project": project, "base_dir": base_dir}]
-
-    if version == "c3s":
-        inv_path = CONFIG[f"project:{project}"]["c3s_inventory_file"]
-    else:
-        inv_path = CONFIG[f"project:{project}"]["full_inventory_file"]
-
-    if not os.path.isfile(inv_path):
-        with open(inv_path, "w") as f:
-            oyaml.dump(header, f)
-
-    sdump = oyaml.dump(content, default_flow_style=False)
-
-    with open(inv_path, "a") as f:
-        f.write(sdump.replace("- path", "\n- path"))
+    d = build_dict(ds_id, fpath, proj_dict)
+    return d
 
 
-def write_catalog(df, project, last_updated, compress):
+def write_catalog(df, project, last_updated, cat_dir, compress):
     version_stamp = last_updated.strftime("v%Y%m%d")
     cat_name = f"{project}_{version_stamp}.csv"
     if compress:
@@ -189,28 +165,48 @@ def write_catalog(df, project, last_updated, compress):
         compression = "gzip"
     else:
         compression = None
-    cat_path = here / "catalogs" / cat_name
+    cat_path = os.path.join(cat_dir, cat_name)
     df.to_csv(cat_path, index=False, compression=compression)
     return cat_path
 
 
-def update_catalog(project, path, origin, last_updated):
-    cat_path = here / "catalogs" / "c3s.yaml"
-    with open(cat_path) as fin:
-        cat = yaml.load(fin, Loader=yaml.SafeLoader)
-        cat["sources"][project]["args"]["urlpath"] = "{{ CATALOG_DIR }}/" + path.name
-        timestamp = last_updated.strftime("%Y-%m-%dT%H:%M:%SZ")
-        cat["sources"][project]["metadata"]["last_updated"] = timestamp
-        cat["sources"][project]["metadata"]["origin_urlpath"] = origin
-        with open(cat_path, "w") as fout:
-            yaml.dump(cat, fout)
-    return cat_path
+def update_catalog(project, path, last_updated, cat_dir):
+    cat_name = f"{project}.yml"
+    cat_path = os.path.join(cat_dir, cat_name)
+
+    try:
+        with open(cat_path) as fin:
+            cat = yaml.load(fin, Loader=yaml.SafeLoader)
+            cat["sources"][project]["args"][
+                "urlpath"
+            ] = "{{ CATALOG_DIR }}/" + os.path.basename(path)
+            timestamp = last_updated.strftime("%Y-%m-%dT%H:%M:%SZ")
+            cat["sources"][project]["metadata"]["last_updated"] = timestamp
+            with open(cat_path, "w") as fout:
+                yaml.dump(cat, fout)
+        return cat_path
+    except FileNotFoundError:
+        raise Exception(
+            f"Yaml catalog descriptor does not exist yet, create file {cat_path} based on "
+            "the template described in the readme."
+        )
 
 
 def to_csv(content, project):
     # create the dataframe
+
     df = pd.DataFrame(content)
     # write catalog
+    cat_dir = CONFIG[f"project:{project}"]["catalog_dir"]
+    create_dir(cat_dir)
+
     last_updated = datetime.now().utcnow()
-    cat_path = write_catalog(df, project, last_updated, compress=True)
+    cat_path = write_catalog(
+        df,
+        project,
+        last_updated,
+        cat_dir,
+        compress=False,
+    )
     print(f"Catalog written {cat_path}")
+    return cat_path, last_updated

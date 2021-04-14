@@ -5,9 +5,9 @@ import uuid
 import xarray as xr
 
 from roocs_utils import CONFIG
-from roocs_utils.inventory.pickle_store import PickleStore
+from roocs_utils.catalog_maker.pickle_store import PickleStore
 
-known_pickles = ["inventory", "error"]
+known_pickles = ["catalog", "error"]
 
 
 def get_var_id(dataset_id, project):

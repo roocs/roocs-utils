@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Console script for roocs_utils.inventory package."""
+"""Console script for roocs_utils.catalog_maker package."""
 import argparse
 import os
 import shutil
 import sys
 
 from roocs_utils import CONFIG
-from roocs_utils.inventory import logging
-from roocs_utils.inventory.batch import BatchManager
-from roocs_utils.inventory.inventory import to_csv
-from roocs_utils.inventory.inventory import update_catalog
-from roocs_utils.inventory.task import TaskManager
-from roocs_utils.inventory.utils import get_pickle_store
+from roocs_utils.catalog_maker import logging
+from roocs_utils.catalog_maker.batch import BatchManager
+from roocs_utils.catalog_maker.inventory import to_csv
+from roocs_utils.catalog_maker.inventory import update_catalog
+from roocs_utils.catalog_maker.task import TaskManager
+from roocs_utils.catalog_maker.utils import get_pickle_store
 
 LOGGER = logging.getLogger(__file__)
 
@@ -216,7 +216,7 @@ def parse_args_list(args):
 
 def list_main(args):
     project, count_only = parse_args_list(args)
-    pstore = get_pickle_store("inventory", project)
+    pstore = get_pickle_store("catalog", project)
     records = pstore.read().items()
 
     if not count_only:
@@ -245,16 +245,18 @@ def parse_args_write(args):
 
 def write_main(args):
     project = parse_args_write(args)
-    pstore = get_pickle_store("inventory", project)
+    pstore = get_pickle_store("catalog", project)
     records = pstore.read().items()
     entries = []
 
-    for dataset_id, content in records:
+    for fpath, content in records:
+
         entries.append(content)
 
-    to_csv(entries, project)
+    path, last_updated = to_csv(entries, project)
 
-    cat_path = update_catalog(project, path, origin, last_updated)
+    cat_dir = CONFIG[f"project:{project}"]["catalog_dir"]
+    cat_path = update_catalog(project, path, last_updated, cat_dir)
     print(f"Intake Catalog updated: {cat_path}")
 
 

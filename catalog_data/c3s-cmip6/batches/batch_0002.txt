@@ -1,0 +1,5 @@
+CMIP6.CMIP.E3SM-Project.E3SM-1-1.historical.r1i1p1f1.Amon.rlds.gr.v20191211
+CMIP6.CMIP.E3SM-Project.E3SM-1-1.historical.r1i1p1f1.Amon.rlus.gr.v20191211
+CMIP6.CMIP.E3SM-Project.E3SM-1-1.historical.r1i1p1f1.Amon.rlutcs.gr.v20191211
+CMIP6.CMIP.E3SM-Project.E3SM-1-1.historical.r1i1p1f1.Amon.rlut.gr.v20191211
+CMIP6.CMIP.E3SM-Project.E3SM-1-1.historical.r1i1p1f1.Amon.rsds.gr.v20191211
