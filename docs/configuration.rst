@@ -63,30 +63,25 @@ e.g. for cmip5 the heading is ``[project:cmip5]``::
     # what particular facets will be identifed as in this project - not currently used
     mappings =
         project:project_id
-    # whether to use an inventory or not for this project
-    use_inventory = False
+    # whether to use an intake catalog or not for this project
+    use_catalog = False
 
-For projects where an inventory is used, there are extra settings which relate to the creation of the inventory.
+For projects where a catalog is used, there are extra settings which relate to the creation of the catalog.
 These are::
 
-    inventory_version = 0.1
-    # directory to store inventory and names for pickle files used in generation of inventory
-    inventory_dir = ./data/%(project_name)s/%(inventory_version)s
-    datasets_file = %(inventory_dir)s/%(project_name)s-datasets.txt
-    error_pickle =  %(inventory_dir)s/%(project_name)s-errors.pickle
-    inventory_pickle =  %(inventory_dir)s/%(project_name)s-inventory.pickle
-    # name for inventory that includes files
-    full_inventory_file = %(inventory_dir)s/%(project_name)s-inventory-files.yml
-    # name for inventory that doesn't include files
-    c3s_inventory_file = %(inventory_dir)s/%(project_name)s-inventory.yml
+    # directory to store catalog and names for pickle files and datsset list used in generation of catalog
+    catalog_dir = ./catalog_data/%(project_name)s/
+    datasets_file = %(catalog_dir)s/%(project_name)s-datasets.txt
+    error_pickle =  %(catalog_dir)s/%(project_name)s-errors.pickle
+    catalog_pickle =  %(catalog_dir)s/%(project_name)s-catalog.pickle
 
     # where original files can be downloaded
     data_node_root = https://data.mips.copernicus-climate.eu/thredds/fileServer/esg_c3s-cmip6/
 
-Further settings for the inventory workflow are::
+Further settings for the intake catalog workflow are::
 
     [log]
-    # directory for logging outputs from LOTUS when generating inventory
+    # directory for logging outputs from LOTUS when generating catalog entries
     log_base_dir = /gws/smf/j04/cp4cds1/c3s_34e/inventory/log
 
     [workflow]
