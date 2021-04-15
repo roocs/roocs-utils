@@ -206,7 +206,7 @@ def to_csv(content, project):
         project,
         last_updated,
         cat_dir,
-        compress=False,
+        compress=True,
     )
     print(f"Catalog written {cat_path}")
     return cat_path, last_updated
