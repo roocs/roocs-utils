@@ -6,8 +6,8 @@ import xarray as xr
 
 from roocs_utils import CONFIG
 from roocs_utils.catalog_maker import logging
-from roocs_utils.catalog_maker.inventory import create_inventory
-from roocs_utils.catalog_maker.inventory import get_files
+from roocs_utils.catalog_maker.catalog import create_catalog
+from roocs_utils.catalog_maker.catalog import get_files
 from roocs_utils.catalog_maker.utils import get_pickle_store
 from roocs_utils.catalog_maker.utils import get_var_id
 
@@ -20,7 +20,7 @@ class Scanner(object):
         self._project = project
 
         self._config = CONFIG[f"project:{project}"]
-        self._inventory_pickle = get_pickle_store("catalog", self._project)
+        self._catalog_pickle = get_pickle_store("catalog", self._project)
         self._error_pickle = get_pickle_store("error", self._project)
 
     def _id_to_directory(self, dataset_id):
@@ -34,14 +34,14 @@ class Scanner(object):
             # Clear out error state if previously recorded
             self._error_pickle.clear(fpath)
 
-            if self._inventory_pickle.contains(fpath):
-                LOGGER.info(f"Already converted to inventory: {fpath}")
+            if self._catalog_pickle.contains(fpath):
+                LOGGER.info(f"Already converted to catalog: {fpath}")
                 return
 
             LOGGER.info(f"Scanning file: {fpath}")
 
             try:
-                content = create_inventory(self._project, dataset_id, fpath)
+                content = create_catalog(self._project, dataset_id, fpath)
 
             except Exception:
                 msg = f"Failed to extract content for: {fpath}"
@@ -56,7 +56,7 @@ class Scanner(object):
                 self._wrap_exception(fpath, msg)
 
     def _finalise(self, fpath, content):
-        self._inventory_pickle.add(fpath, content)
+        self._catalog_pickle.add(fpath, content)
         LOGGER.info(f"Wrote pickle entries for: {fpath}")
 
     def _wrap_exception(self, fpath, msg):

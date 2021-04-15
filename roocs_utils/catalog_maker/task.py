@@ -35,7 +35,7 @@ class ConversionTask(object):
     def _run_lotus(self):
         LOGGER.info(f"Submitting to Lotus: {self._batch_number}")
         cmd = (
-            f"./roocs_utils/inventory/cli.py "
+            f"./roocs_utils/catalog_maker/cli.py "
             f"run -b {self._batch_number}  -p {self._project} -r local"
         )
 

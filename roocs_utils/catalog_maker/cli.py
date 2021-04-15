@@ -9,8 +9,8 @@ import sys
 from roocs_utils import CONFIG
 from roocs_utils.catalog_maker import logging
 from roocs_utils.catalog_maker.batch import BatchManager
-from roocs_utils.catalog_maker.inventory import to_csv
-from roocs_utils.catalog_maker.inventory import update_catalog
+from roocs_utils.catalog_maker.catalog import to_csv
+from roocs_utils.catalog_maker.catalog import update_catalog
 from roocs_utils.catalog_maker.task import TaskManager
 from roocs_utils.catalog_maker.utils import get_pickle_store
 
@@ -233,7 +233,7 @@ def _get_arg_parser_write(parser):
         "--project",
         type=str,
         required=True,
-        help="Project to write inventory for.",
+        help="Project to write catalog for.",
     )
 
     return parser
@@ -276,7 +276,7 @@ def show_errors_main(args):
 
 
 def main():
-    """Console script for roocs_utils.inventory package"""
+    """Console script for roocs_utils.catalog_maker package"""
     main_parser = argparse.ArgumentParser()
     main_parser.set_defaults(func=lambda args: main_parser.print_help())
     subparsers = main_parser.add_subparsers()

@@ -151,7 +151,7 @@ def build_dict(ds_id, fpath, proj_dict):
     return d
 
 
-def create_inventory(project, ds_id, fpath):
+def create_catalog(project, ds_id, fpath):
     proj_dict = CONFIG[f"project:{project}"]
     d = build_dict(ds_id, fpath, proj_dict)
     return d
