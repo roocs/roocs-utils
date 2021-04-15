@@ -1,3 +1,0 @@
-c3s-cmip6.ScenarioMIP.MRI.MRI-ESM2-0.ssp370.r1i1p1f1.Amon.ta.gn.v20190308
-c3s-cmip6.CMIP.NUIST.NESM3.historical.r1i1p1f1.Amon.tauv.gn.v20190630
-c3s-cmip6.ScenarioMIP.CNRM-CERFACS.CNRM-CM6-1-HR.ssp245.r1i1p1f2.Amon.tasmin.gr.v20191202
