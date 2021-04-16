@@ -58,7 +58,7 @@ class BatchManager(object):
         for count, dataset_id in enumerate(self._datasets):
             current_batch.append(dataset_id)
 
-            if count > 0 and count % n_per_batch == 0:
+            if count >= 0 and count % n_per_batch == 0:
                 self._write_batch(batch_count, current_batch)
 
                 # Update variables

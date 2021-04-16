@@ -28,6 +28,8 @@ class Scanner(object):
         return os.path.join(archive_dir, dataset_id.replace(".", "/"))
 
     def scan(self, dataset_id):
+        LOGGER.info(f"Reading {dataset_id}")
+
         fpaths = get_files(dataset_id)
 
         for fpath in fpaths:

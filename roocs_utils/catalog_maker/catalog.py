@@ -17,28 +17,24 @@ from roocs_utils.xarray_utils.xarray_utils import get_coord_type
 from roocs_utils.xarray_utils.xarray_utils import open_xr_dataset
 
 
-def get_time_info(fpath, var_id):
+def get_time_info(ds, var_id):
     all_times = []
     try:
 
-        ds = xr.open_dataset(fpath, use_cftime=True)
         times = ds[var_id].time.values
 
         all_times.extend(list(times))
         ds.close()
     except AttributeError:
-        return 0, "undefined"
+        return "undefined", "undefined"
 
     return (
-        len(all_times),
         all_times[0].isoformat(timespec="seconds"),
         all_times[-1].isoformat(timespec="seconds"),
     )
 
 
-def get_coord_info(fpaths):
-    ds = open_xr_dataset(fpaths)
-
+def get_coord_info(ds):
     d = OrderedDict()
 
     for coord_id in sorted(ds.coords):
@@ -73,8 +69,7 @@ def get_coord_info(fpaths):
     return d
 
 
-def get_size_data(fpath):
-    ds = open_xr_dataset(fpath)
+def get_size_data(ds):
 
     size = ds.nbytes
     size_gb = round(size / 1e9, 2)
@@ -91,48 +86,18 @@ def get_files(ds_id):
     return fpaths
 
 
-def get_var_metadata(fpath, var_id):
-    time_length, start_time, end_time = get_time_info(fpath, var_id)
-    time_string = start_time + " " + end_time
-
-    print(f"[INFO] Reading {fpath}")
-
-    ds = open_xr_dataset(fpath)
-    dims = ds[var_id].dims
-
-    shape_annotated = []
-
-    for i in range(len(dims)):
-        dim = dims[i]
-        length = ds[var_id].shape[i]
-
-        if dim.startswith("time"):
-            item = str(time_string)
-        else:
-            item = str(length)
-
-        shape_annotated.append(item)
-
-    dims = " ".join(list(dims))
-    shape = " ".join(list(shape_annotated))
-
-    ds.close()
-
-    return dims, shape, start_time, end_time
-
-
 def build_dict(ds_id, fpath, proj_dict):
-
     comps = ds_id.split(".")
+    ds = open_xr_dataset(fpath)
 
     facet_rule = proj_dict["facet_rule"]
     facets = dict([_ for _ in zip(facet_rule, comps)])
 
     var_id = facets.get("variable") or facets.get("variable_id")
 
-    size, size_gb = get_size_data(fpath)
-    dims, shape, start_time, end_time = get_var_metadata(fpath, var_id)
-    coord_d = get_coord_info(fpath)
+    size, size_gb = get_size_data(ds)
+    start_time, end_time = get_time_info(ds, var_id)
+    coord_d = get_coord_info(ds)
 
     d = OrderedDict()
 
@@ -174,22 +139,35 @@ def update_catalog(project, path, last_updated, cat_dir):
     cat_name = f"{project}.yml"
     cat_path = os.path.join(cat_dir, cat_name)
 
-    try:
-        with open(cat_path) as fin:
-            cat = yaml.load(fin, Loader=yaml.SafeLoader)
-            cat["sources"][project]["args"][
-                "urlpath"
-            ] = "{{ CATALOG_DIR }}/" + os.path.basename(path)
-            timestamp = last_updated.strftime("%Y-%m-%dT%H:%M:%SZ")
-            cat["sources"][project]["metadata"]["last_updated"] = timestamp
-            with open(cat_path, "w") as fout:
-                yaml.dump(cat, fout)
-        return cat_path
-    except FileNotFoundError:
-        raise Exception(
-            f"Yaml catalog descriptor does not exist yet, create file {cat_path} based on "
-            "the template described in the readme."
-        )
+    if not os.path.exists(cat_path):
+
+        # dict to create yaml
+        d = {
+            "sources": {
+                "c3s-cmip6": {
+                    "description": f"{project} datasets",
+                    "driver": "intake.source.csv.CSVSource",
+                    "cache": {"argkey": "urlpath", "type": "file"},
+                    "args": {"urlpath": ""},
+                    "metadata": {"last_updated": ""},
+                }
+            }
+        }
+
+        with open(cat_path, "w") as yaml_file:
+            yaml.dump(d, yaml_file, default_flow_style=False)
+
+    with open(cat_path) as fin:
+        cat = yaml.load(fin, Loader=yaml.SafeLoader)
+        cat["sources"][project]["args"][
+            "urlpath"
+        ] = "{{ CATALOG_DIR }}/" + os.path.basename(path)
+        timestamp = last_updated.strftime("%Y-%m-%dT%H:%M:%SZ")
+        cat["sources"][project]["metadata"]["last_updated"] = timestamp
+        with open(cat_path, "w") as fout:
+            yaml.dump(cat, fout)
+
+    return cat_path
 
 
 def to_csv(content, project):

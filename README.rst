@@ -92,8 +92,17 @@ To just get a count of how many files have been scanned:
 Writing to CSV
 ==============
 
-Before writing the entries to csv, a yaml file must be created in the directory specified by ``catalog_dir`` in ``roocs_utils/etc/roocs.ini``.
-It must have the name {project}.yml e.g. c3s-cmip6.yml and must contain:
+The final command is to write the entries to a csv file.
+
+.. code-block::
+
+    $ python roocs_utils/catalog_maker/cli.py write -p c3s-cmip6
+
+The csv file will be generated in the ``catalog_dir`` specified in ``roocs_utils/etc/roocs.ini`` and will have the name "{project}_{version_stamp}.csv".
+e.g. c3s-cmip6_v20210414.csv
+
+A yaml will also be created in the same directory.
+It will have the name {project}.yml e.g. c3s-cmip6.yml and will contain:
 
 .. code-block::
 
@@ -109,16 +118,7 @@ It must have the name {project}.yml e.g. c3s-cmip6.yml and must contain:
         metadata:
           last_updated:
 
-``urlpath`` and ``last_updated`` will be updated when the csv file is written.
-
-The final command is to write the entries to a csv file.
-
-.. code-block::
-
-    $ python roocs_utils/catalog_maker/cli.py write -p c3s-cmip6 -v files
-
-The csv file will be generated in the ``catalog_dir`` specified in ``roocs_utils/etc/roocs.ini`` and will have the name "{project}_{version_stamp}.csv".
-e.g. c3s-cmip6_v20210414.csv
+``urlpath`` and ``last_updated`` will be updated very time the csv file is written.
 
 Credits
 =======
