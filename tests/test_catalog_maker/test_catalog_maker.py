@@ -28,20 +28,20 @@ class TestCatalogMaker:
     def setup_class(cls):
         cls.tmpdir = tempfile.mkdtemp()
         cls.project = "c3s-cmip6"
-        cls.catalog_dir = f"{cls.tmpdir}/catalog_data/c3s-cmip6"
+        cls.catalog_dir = f"{cls.tmpdir}/catalog/c3s-cmip6"
         CONFIG["project:c3s-cmip6"][
             "base_dir"
         ] = f"{MINI_ESGF_CACHE_DIR}/master/test_data/badc/cmip6/data/CMIP6"
         CONFIG["project:c3s-cmip6"]["catalog_dir"] = cls.catalog_dir
         CONFIG["project:c3s-cmip6"][
             "datasets_file"
-        ] = f"{here}/catalog_data/c3s-cmip6/c3s-cmip6-datasets.txt"
+        ] = f"{here}/catalog/c3s-cmip6/c3s-cmip6-datasets.txt"
         CONFIG["project:c3s-cmip6"][
             "error_pickle"
-        ] = f"{cls.tmpdir}/catalog_data/c3s-cmip6/c3s-cmip6-errors.pickle"
+        ] = f"{cls.tmpdir}/catalog/c3s-cmip6/c3s-cmip6-errors.pickle"
         CONFIG["project:c3s-cmip6"][
             "catalog_pickle"
-        ] = f"{cls.tmpdir}/catalog_data/c3s-cmip6/c3s-cmip6-catalog.pickle"
+        ] = f"{cls.tmpdir}/catalog/c3s-cmip6/c3s-cmip6-catalog.pickle"
         CONFIG["workflow"]["n_per_batch"] = 1
 
     def test_create_batches(self, load_test_data):
