@@ -5,7 +5,7 @@ v0.4.0 (unreleased)
 -------------------
 Breaking Changes
 ^^^^^^^^^^^^^^^^
-* ``pandas``>=1.2.4 now a dependency.
+* ``pandas`` now a dependency.
 * Inventory maker now removed and replaced by intake catalog maker which writes a csv file with the dataset entries and a yaml description file.
 * In ``etc/roocs.ini`` the option ``use_inventory`` has been replaced by ``use_catalog`` and the inventory maker options have been replaced with equivalent catalog options. However, the option to include file paths or not no longer exists.
 
