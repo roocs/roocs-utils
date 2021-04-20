@@ -69,4 +69,4 @@ class BatchManager(object):
         if current_batch:
             self._write_batch(batch_count, current_batch)
 
-        LOGGER.info(f"Wrote {batch_count} batch files.")
+        LOGGER.info(f"Wrote {batch_count - 1} batch files.")

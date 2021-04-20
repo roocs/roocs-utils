@@ -69,9 +69,14 @@ e.g. for cmip5 the heading is ``[project:cmip5]``::
 For projects where a catalog is used, there are extra settings which relate to the creation of the catalog.
 These are::
 
-    # directory to store catalog and names for pickle files and datsset list used in generation of catalog
-    catalog_dir = ./catalog_data/%(project_name)s/
+    # directory to store catalog, pickle files and dataset list used in generation of catalog
+    # if catalog_dir is the same for different projects, the yaml file in this directory will be updated for each project, rather than a new one made
+    catalog_dir = ./catalog_data
+    # Where the csv file will be generated
+    csv_dir = %(catalog_dir)s/%(project_name)s/
+    # Where the user will provide a dataset list which will be used to generate the catalog
     datasets_file = %(catalog_dir)s/%(project_name)s-datasets.txt
+    # pickle files used for catalog generation will be created here
     error_pickle =  %(catalog_dir)s/%(project_name)s-errors.pickle
     catalog_pickle =  %(catalog_dir)s/%(project_name)s-catalog.pickle
 

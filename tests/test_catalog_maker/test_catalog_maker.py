@@ -28,11 +28,12 @@ class TestCatalogMaker:
     def setup_class(cls):
         cls.tmpdir = tempfile.mkdtemp()
         cls.project = "c3s-cmip6"
-        cls.catalog_dir = f"{cls.tmpdir}/catalog/c3s-cmip6"
+        cls.catalog_dir = f"{cls.tmpdir}/catalog/"
         CONFIG["project:c3s-cmip6"][
             "base_dir"
         ] = f"{MINI_ESGF_CACHE_DIR}/master/test_data/badc/cmip6/data/CMIP6"
         CONFIG["project:c3s-cmip6"]["catalog_dir"] = cls.catalog_dir
+        CONFIG["project:c3s-cmip6"]["csv_dir"] = f"{cls.tmpdir}/catalog/c3s-cmip6/"
         CONFIG["project:c3s-cmip6"][
             "datasets_file"
         ] = f"{here}/catalog/c3s-cmip6/c3s-cmip6-datasets.txt"
@@ -99,6 +100,9 @@ class TestCatalogMaker:
 
         for dataset_id, content in records:
 
+            print(dataset_id)
+            print(content)
+
             assert (
                 dataset_id
                 == f"{MINI_ESGF_CACHE_DIR}/master/test_data/badc/cmip6/data/CMIP6/CMIP/INM/INM-CM5-0/historical/r1i1p1f1/Amon/rlds/gr1/v20190610/rlds_Amon_INM-CM5-0_historical_r1i1p1f1_gr1_185001-194912.nc"
@@ -111,7 +115,7 @@ class TestCatalogMaker:
                     ),
                     (
                         "path",
-                        "CMIP/INM/INM-CM5-0/historical/r1i1p1f1/Amon/rlds/gr1/v20190610rlds_Amon_INM-CM5-0_historical_r1i1p1f1_gr1_185001-194912.nc",
+                        "CMIP/INM/INM-CM5-0/historical/r1i1p1f1/Amon/rlds/gr1/v20190610/rlds_Amon_INM-CM5-0_historical_r1i1p1f1_gr1_185001-194912.nc",
                     ),
                     ("size", 48096),
                     ("size_gb", 0.0),
@@ -127,8 +131,8 @@ class TestCatalogMaker:
                     ("version", "v20190610"),
                     ("start_time", "1850-01-16T12:00:00"),
                     ("end_time", "1949-12-16T12:00:00"),
-                    ("latitude", "-89.25 60.75"),
-                    ("longitude", "0.00 200.00"),
+                    ("bbox", "0.00, -89.25, 200.00, 60.75"),
+                    ("level", " "),
                 ]
             )
             break
@@ -148,12 +152,14 @@ class TestCatalogMaker:
         update_catalog(self.project, path, last_updated, self.catalog_dir)
 
         # check it writes csv and yaml files where it should
-        yaml = Path(f"{self.catalog_dir}/{self.project}.yml")
+        yaml = Path(f"{self.catalog_dir}/c3s.yml")
         assert yaml.is_file()
 
         last_updated = datetime.now().utcnow()
         version_stamp = last_updated.strftime("v%Y%m%d")
-        csv = Path(f"{self.catalog_dir}/{self.project}_{version_stamp}.csv.gz")
+        csv = Path(
+            f"{self.catalog_dir}/{self.project}/{self.project}_{version_stamp}.csv.gz"
+        )
         assert csv.is_file()
 
         #  open csv and check contents
