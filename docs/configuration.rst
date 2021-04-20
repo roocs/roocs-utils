@@ -141,9 +141,9 @@ These are settings that are specific to clisops::
 daops
 #####
 
-daops also has project sections. For each project the settings in daops are as below::
+daops provides settings for using the intake catalog::
 
-    [project:c3s-cmip6]
+    [catalog]
     # provides the url for the intake catalog with details of datasets
     intake_catalog_url = https://raw.githubusercontent.com/cp4cds/c3s_34g_manifests/master/intake/catalogs/c3s.yaml
 
