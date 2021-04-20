@@ -100,9 +100,6 @@ class TestCatalogMaker:
 
         for dataset_id, content in records:
 
-            print(dataset_id)
-            print(content)
-
             assert (
                 dataset_id
                 == f"{MINI_ESGF_CACHE_DIR}/master/test_data/badc/cmip6/data/CMIP6/CMIP/INM/INM-CM5-0/historical/r1i1p1f1/Amon/rlds/gr1/v20190610/rlds_Amon_INM-CM5-0_historical_r1i1p1f1_gr1_185001-194912.nc"
@@ -117,8 +114,7 @@ class TestCatalogMaker:
                         "path",
                         "CMIP/INM/INM-CM5-0/historical/r1i1p1f1/Amon/rlds/gr1/v20190610/rlds_Amon_INM-CM5-0_historical_r1i1p1f1_gr1_185001-194912.nc",
                     ),
-                    ("size", 48096),
-                    ("size_gb", 0.0),
+                    ("size", 251449),
                     ("mip_era", "c3s-cmip6"),
                     ("activity_id", "CMIP"),
                     ("institution_id", "INM"),

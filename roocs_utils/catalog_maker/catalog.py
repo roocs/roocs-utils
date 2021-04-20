@@ -79,9 +79,10 @@ def get_level_info(ds):
     return level
 
 
-def get_size_data(ds):
+def get_size_data(fpath):
 
-    size = ds.nbytes
+    # get file size
+    size = os.path.getsize(fpath)
     size_gb = round(size / 1e9, 2)
 
     return size, size_gb
@@ -105,7 +106,7 @@ def build_dict(ds_id, fpath, proj_dict):
 
     var_id = facets.get("variable") or facets.get("variable_id")
 
-    size, size_gb = get_size_data(ds)
+    size, size_gb = get_size_data(fpath)
     start_time, end_time = get_time_info(ds, var_id)
     bbox = get_bbox(ds)
     level = get_level_info(ds)
@@ -116,7 +117,7 @@ def build_dict(ds_id, fpath, proj_dict):
     d["path"] = "/".join(ds_id.split(".")[1:]) + "/" + fpath.split("/")[-1]
 
     d["size"] = size
-    d["size_gb"] = size_gb
+    # d["size_gb"] = size_gb
 
     d.update(facets)
 
