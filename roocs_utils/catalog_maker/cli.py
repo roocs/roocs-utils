@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Console script for roocs_utils.inventory package."""
+"""Console script for roocs_utils.catalog_maker package."""
 import argparse
 import os
 import shutil
 import sys
 
 from roocs_utils import CONFIG
-from roocs_utils.inventory import logging
-from roocs_utils.inventory.batch import BatchManager
-from roocs_utils.inventory.inventory import to_yaml
-from roocs_utils.inventory.task import TaskManager
-from roocs_utils.inventory.utils import get_pickle_store
+from roocs_utils.catalog_maker import logging
+from roocs_utils.catalog_maker.batch import BatchManager
+from roocs_utils.catalog_maker.catalog import to_csv
+from roocs_utils.catalog_maker.catalog import update_catalog
+from roocs_utils.catalog_maker.task import TaskManager
+from roocs_utils.catalog_maker.utils import get_pickle_store
 
 LOGGER = logging.getLogger(__file__)
 
@@ -215,7 +216,7 @@ def parse_args_list(args):
 
 def list_main(args):
     project, count_only = parse_args_list(args)
-    pstore = get_pickle_store("inventory", project)
+    pstore = get_pickle_store("catalog", project)
     records = pstore.read().items()
 
     if not count_only:
@@ -232,43 +233,31 @@ def _get_arg_parser_write(parser):
         "--project",
         type=str,
         required=True,
-        help="Project to write inventory for.",
-    )
-
-    parser.add_argument(
-        "-v",
-        "--version",
-        default="files",
-        help="Version of inventory to write, either 'files' (default - with file names) "
-        "or 'c3s' (without file names).",
+        help="Project to write catalog for.",
     )
 
     return parser
 
 
 def parse_args_write(args):
-    return args.project, args.version
+    return args.project
 
 
 def write_main(args):
-    project, version = parse_args_write(args)
-    pstore = get_pickle_store("inventory", project)
+    project = parse_args_write(args)
+    pstore = get_pickle_store("catalog", project)
     records = pstore.read().items()
+    entries = []
 
-    if version == "c3s":
-        inv_file = CONFIG[f"project:{project}"]["c3s_inventory_file"]
+    for fpath, content in records:
 
-        for dataset_id, content in records:
-            del content["files"]
-            to_yaml([content], project, version)
+        entries.append(content)
 
-    else:
-        inv_file = CONFIG[f"project:{project}"]["full_inventory_file"]
+    path, last_updated = to_csv(entries, project)
 
-        for dataset_id, content in records:
-            to_yaml([content], project, version)
-
-    print(f"Inventory written: {inv_file}")
+    cat_dir = CONFIG[f"project:{project}"]["catalog_dir"]
+    cat_path = update_catalog(project, path, last_updated, cat_dir)
+    print(f"Intake Catalog updated: {cat_path}")
 
 
 def show_errors_main(args):
@@ -287,7 +276,7 @@ def show_errors_main(args):
 
 
 def main():
-    """Console script for roocs_utils.inventory package"""
+    """Console script for roocs_utils.catalog_maker package"""
     main_parser = argparse.ArgumentParser()
     main_parser.set_defaults(func=lambda args: main_parser.print_help())
     subparsers = main_parser.add_subparsers()

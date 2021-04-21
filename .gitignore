@@ -101,6 +101,6 @@ ENV/
 # mypy
 .mypy_cache/
 
-# inventory data
-data/
+# catalog data
+catalog_data/
 log/

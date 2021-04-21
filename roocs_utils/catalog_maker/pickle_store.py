@@ -2,8 +2,8 @@ import os
 import pickle
 import time
 
-from roocs_utils.inventory import logging
-from roocs_utils.inventory.file_lock import FileLock
+from roocs_utils.catalog_maker import logging
+from roocs_utils.catalog_maker.file_lock import FileLock
 
 LOGGER = logging.getLogger(__file__)
 
