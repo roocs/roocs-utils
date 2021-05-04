@@ -36,7 +36,7 @@ class CollectionParameter(_BaseParameter):
 
     @property
     def tuple(self):
-        """ Returns a tuple of the collection items """
+        """Returns a tuple of the collection items"""
         return self._parse_items()
 
     def __str__(self):

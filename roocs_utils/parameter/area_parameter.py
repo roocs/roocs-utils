@@ -47,11 +47,11 @@ class AreaParameter(_BaseParameter):
 
     @property
     def tuple(self):
-        """ Returns a tuple of the area values """
+        """Returns a tuple of the area values"""
         return self._parse_values()
 
     def asdict(self):
-        """ Returns a dictionary of the area values """
+        """Returns a dictionary of the area values"""
         if self.tuple is not None:
             return {
                 "lon_bnds": (self.tuple[0], self.tuple[2]),

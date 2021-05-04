@@ -50,11 +50,11 @@ class LevelParameter(_BaseParameter):
 
     @property
     def tuple(self):
-        """ Returns a tuple of the level values """
+        """Returns a tuple of the level values"""
         return self._parse_levels()
 
     def asdict(self):
-        """ Returns a dictionary of the level values """
+        """Returns a dictionary of the level values"""
         return {"first_level": self.tuple[0], "last_level": self.tuple[1]}
 
     def __str__(self):
