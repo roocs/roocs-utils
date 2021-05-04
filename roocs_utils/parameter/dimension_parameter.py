@@ -40,11 +40,11 @@ class DimensionParameter(_BaseParameter):
 
     @property
     def tuple(self):
-        """ Returns a tuple of the dimensions """
+        """Returns a tuple of the dimensions"""
         return self._parse_dims()
 
     def asdict(self):
-        """ Returns a dictionary of the dimensions """
+        """Returns a dictionary of the dimensions"""
         if self.tuple is not None:
             return {"dims": self.tuple}
 

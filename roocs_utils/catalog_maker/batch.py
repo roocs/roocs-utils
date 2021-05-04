@@ -12,7 +12,9 @@ class BatchManager(object):
         self._project = project
         self._proj_conf = CONFIG[f"project:{self._project}"]
 
-        self._batch_dir = os.path.join(self._proj_conf["catalog_dir"], "batches")
+        self._batch_dir = os.path.join(
+            self._proj_conf["catalog_dir"], self._project, "batches"
+        )
         create_dir(self._batch_dir)
 
     def get_batch_files(self):
@@ -56,9 +58,10 @@ class BatchManager(object):
         batch_count = 1
 
         for count, dataset_id in enumerate(self._datasets):
+            count += 1
             current_batch.append(dataset_id)
 
-            if count >= 0 and count % n_per_batch == 0:
+            if count > 0 and count % n_per_batch == 0:
                 self._write_batch(batch_count, current_batch)
 
                 # Update variables
@@ -69,4 +72,4 @@ class BatchManager(object):
         if current_batch:
             self._write_batch(batch_count, current_batch)
 
-        LOGGER.info(f"Wrote {batch_count - 1} batch files.")
+        LOGGER.info(f"Wrote {batch_count} batch files.")

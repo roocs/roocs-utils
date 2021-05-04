@@ -7,7 +7,7 @@ class MissingParameterValue(Exception):
 
 
 class InvalidProject(Exception):
-    """ Raised when the project is unknown to roocs.ini """
+    """Raised when the project is unknown to roocs.ini"""
 
 
 class InconsistencyError(Exception):

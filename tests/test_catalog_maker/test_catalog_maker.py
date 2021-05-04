@@ -50,9 +50,9 @@ class TestCatalogMaker:
         bm = BatchManager(self.project)
         bm.create_batches()
 
-        batch1 = Path(f"{self.catalog_dir}/batches/batch_0001.txt")
-        batch2 = Path(f"{self.catalog_dir}/batches/batch_0002.txt")
-        batch3 = Path(f"{self.catalog_dir}/batches/batch_0003.txt")
+        batch1 = Path(f"{self.catalog_dir}/{self.project}/batches/batch_0001.txt")
+        batch2 = Path(f"{self.catalog_dir}/{self.project}/batches/batch_0002.txt")
+        batch3 = Path(f"{self.catalog_dir}/{self.project}/batches/batch_0003.txt")
 
         batches = [batch1, batch2, batch3]
 

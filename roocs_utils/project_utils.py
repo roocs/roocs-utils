@@ -150,32 +150,32 @@ class DatasetMapper:
 
     @property
     def raw(self):
-        """ Raw dataset input. """
+        """Raw dataset input."""
         return self.dset
 
     @property
     def data_path(self):
-        """ Dataset input converted to a data path. """
+        """Dataset input converted to a data path."""
         return self._data_path
 
     @property
     def ds_id(self):
-        """ Dataset input converted to a ds id. """
+        """Dataset input converted to a ds id."""
         return self._ds_id
 
     @property
     def base_dir(self):
-        """ The base directory of the input dataset. """
+        """The base directory of the input dataset."""
         return self._base_dir
 
     @property
     def files(self):
-        """ The files found from the input dataset. """
+        """The files found from the input dataset."""
         return self._files
 
     @property
     def project(self):
-        """ The project of the dataset input. """
+        """The project of the dataset input."""
         return self._project
 
 
@@ -245,7 +245,7 @@ def switch_dset(dset):
 
 
 def get_projects():
-    """ Gets all the projects available in the config. """
+    """Gets all the projects available in the config."""
     return [_.split(":")[1] for _ in CONFIG.keys() if _.startswith("project:")]
 
 
@@ -277,19 +277,19 @@ def get_project_name(dset):
 
 
 def map_facet(facet, project):
-    """ Return mapped facet value from config or facet name if not found. """
+    """Return mapped facet value from config or facet name if not found."""
     # Return mapped value or the same facet name
     proj_mappings = CONFIG[f"project:{project}"]["mappings"]
     return proj_mappings.get(facet, facet)
 
 
 def get_facet(facet_name, facets, project):
-    """ Get facet from project config"""
+    """Get facet from project config"""
     return facets[map_facet(facet_name, project)]
 
 
 def get_project_base_dir(project):
-    """ Get the base directory of a project from the config. """
+    """Get the base directory of a project from the config."""
     try:
         return CONFIG[f"project:{project}"]["base_dir"]
     except KeyError:
@@ -297,7 +297,7 @@ def get_project_base_dir(project):
 
 
 def get_data_node_dirs_dict():
-    """ Get a dictionary of the data node roots used for retreiving original files. """
+    """Get a dictionary of the data node roots used for retreiving original files."""
     projects = get_projects()
     data_node_dirs = {
         project: CONFIG[f"project:{project}"].get("data_node_root")
@@ -308,7 +308,7 @@ def get_data_node_dirs_dict():
 
 
 def get_project_from_data_node_root(url):
-    """ Identify the project from data node root by identifyng the data node root in the input url. """
+    """Identify the project from data node root by identifyng the data node root in the input url."""
     data_node_dict = get_data_node_dirs_dict()
     project = None
 
@@ -325,7 +325,7 @@ def get_project_from_data_node_root(url):
 
 
 def url_to_file_path(url):
-    """ Convert input url of an original file to a file path """
+    """Convert input url of an original file to a file path"""
     project = get_project_from_data_node_root(url)
 
     data_node_root = CONFIG.get(f"project:{project}", {}).get("data_node_root")
