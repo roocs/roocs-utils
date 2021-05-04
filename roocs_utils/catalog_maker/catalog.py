@@ -69,7 +69,7 @@ def get_bbox(ds):
 def get_level_info(ds):
     coord = get_coord_by_type(ds, "level", ignore_aux_coords=False)
 
-    if coord:
+    if coord is not None:
         level_min, level_max = get_coord_info(coord)
         level = f"{level_min:.2f} {level_max:.2f}"
 

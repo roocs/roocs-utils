@@ -219,11 +219,16 @@ def list_main(args):
     pstore = get_pickle_store("catalog", project)
     records = pstore.read().items()
 
-    if not count_only:
-        for dataset_id, content in records:
-            print(f"Record: {dataset_id}, {content}")
+    datasets = set()
 
-    print(f"\nTotal records: {len(records)}")
+    for fpath, content in records:
+        if not count_only:
+            print(f"Record: {fpath}, {content}")
+
+        datasets.add(content["ds_id"])
+
+    print(f"\nTotal files scanned: {len(records)}")
+    print(f"\nTotal datasets scanned: {len(datasets)}")
 
 
 def _get_arg_parser_write(parser):
