@@ -25,12 +25,6 @@ _long_description = open(os.path.join(here, "README.rst")).read()
 
 requirements = [line.strip() for line in open("requirements.txt")]
 
-catalog_reqs = [
-    "pandas",
-    "psycopg2>=2.8.6",
-    "abcunit-backend @ git+https://github.com/cedadev/abcunit-backend.git",
-]
-
 setup_requirements = [
     "pytest-runner",
 ]
@@ -99,7 +93,7 @@ setup(
     setup_requires=setup_requirements,
     test_suite="tests",
     tests_require=test_requirements,
-    extras_require={"docs": docs_requirements, "catalog": catalog_reqs},
+    extras_require={"docs": docs_requirements},
     package_data={"roocs_utils": ["etc/roocs.ini"]},
     url="https://github.com/roocs/roocs_utils",
     version=__version__,
