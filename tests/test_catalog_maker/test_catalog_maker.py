@@ -188,10 +188,10 @@ class TestCatalogMaker:
 
         assert rh.count_failures() == 0
 
-    @classmethod
     @pytest.mark.skipif(
         os.environ.get("ABCUNIT_DB_SETTINGS") is None, reason="database backend not set"
     )
+    @classmethod
     def teardown_class(cls):
         rh = DataBaseHandler(table_name="c3s_cmip6_test_catalog_results")
         rh._delete_table()
