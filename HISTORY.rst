@@ -5,9 +5,11 @@ v0.4.0 (unreleased)
 -------------------
 Breaking Changes
 ^^^^^^^^^^^^^^^^
-* ``pandas`` now a dependency.
 * Inventory maker now removed and replaced by intake catalog maker which writes a csv file with the dataset entries and a yaml description file.
 * In ``etc/roocs.ini`` the option ``use_inventory`` has been replaced by ``use_catalog`` and the inventory maker options have been replaced with equivalent catalog options. However, the option to include file paths or not no longer exists.
+* The catalog maker now uses a database backend and creates a csv file so there are 3 new dependencies for the catalog maker: pandas, psycopg2 and abcunit-backend @ git+https://github.com/cedadev/abcunit-backend.git.
+These can be installed using ``pip install -e ".[catalog]"``.
+This means a databse backend must be specified and the paths for the pickle files in ``etc/roocsini`` are no longer necessary. For more information see the README.
 
 Other Changes
 ^^^^^^^^^^^^^

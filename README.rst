@@ -31,12 +31,21 @@ Features
 1. Data Catalog
 ^^^^^^^^^^^^^^^
 
-The module ``roocs_utils.inventory`` provides tools for writing data catalogs of the known
-data holdings in a csv format, described by a YAML file.
+The module ``roocs_utils.catalog_maker`` provides tools for writing data catalogs of the known data holdings in a csv format, described by a YAML file.
 
 For each project in ``roocs_utils/etc/roocs.ini`` there are options to set the file paths for the inputs and outputs of this catalog maker.
-A list of datasets to include needs to be provided. The path to this list for each project can be set in ``roocs_utils/etc/roocs.ini``
+A list of datasets to include needs to be provided. The path to this list for each project can be set in ``roocs_utils/etc/roocs.ini``. The datasets in this list must be what you want in the `ds_id` column of the csv file.
 
+The data catalog is created using a databse backend to store the results of the scans, from which the csv and YAML files will be created.
+For this a posgresql database is required. Once you have a database, you need to export an environemnt variable called $ABCUNIT_DB_SETTINGS:
+
+Note to use the catalog maker, you will need to install the extra requirements via pip: ``pip install -e ".[catalog]"``
+
+.. code-block::
+
+    $ export ABCUNIT_DB_SETTINGS="dbname=<name> user=<user> host=<host> password=<pwd>"
+
+The table created will be named after the porject you are creating a catalog for in the format <project_name>_catalog_results e.g. c3s_cmip6_catalog_results
 
 Creating batches
 ================
@@ -66,7 +75,7 @@ or running all batches on lotus:
 
     $ python roocs_utils/catalog_maker/cli.py run -p c3s-cmip6 -r lotus
 
-This creates a pickle file containing an ordered dictionary of the entry for each file in each dataset. It also creates a pickle file for any errors.
+This creates a table in the database containing an ordered dictionary of the entry for each file in each dataset if successful, or the error traceback if there is an Exception raised.
 
 Viewing entries and errors
 ==========================
@@ -77,17 +86,35 @@ To view the records:
 
     $ python roocs_utils/catalog_maker/cli.py list -p c3s-cmip6
 
-and to see any errors:
+With many entries, this may take a while.
 
-.. code-block::
-
-    $ python roocs_utils/catalog_maker/cli.py show-errors -p c3s-cmip6
 
 To just get a count of how many files have been scanned:
 
 .. code-block::
 
     $ python roocs_utils/catalog_maker/cli.py list -p c3s-cmip6 -c
+
+
+To see any errors:
+
+.. code-block::
+
+    $ python roocs_utils/catalog_maker/cli.py show-errors -p c3s-cmip6
+
+
+To see just a count of errors:
+
+.. code-block::
+
+    $ python roocs_utils/catalog_maker/cli.py show-errors -p c3s-cmip6 -c
+
+
+Each count will show how many files and how many datasets have been successful/failed.
+
+The list count will also show the total numbers of datasets/files in the database - including errors.
+The error count will show whether there are any datasets that have files which have succeeded and failed i.e. that are partially scanned.
+
 
 Writing to CSV
 ==============
@@ -119,6 +146,15 @@ It will have the name ``c3s.yml`` and will contain the below for each project sc
           last_updated:
 
 ``urlpath`` and ``last_updated`` for a project will be updated very time the csv file is written for the project.
+
+Deleting the table of results
+=============================
+
+In order to delete all entries in the table of results
+
+.. code-block::
+
+    $ python roocs_utils/catalog_maker/cli.py clean -p c3s-cmip6
 
 Credits
 =======

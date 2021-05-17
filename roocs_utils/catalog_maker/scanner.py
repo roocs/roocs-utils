@@ -8,7 +8,7 @@ from roocs_utils import CONFIG
 from roocs_utils.catalog_maker import logging
 from roocs_utils.catalog_maker.catalog import create_catalog
 from roocs_utils.catalog_maker.catalog import get_files
-from roocs_utils.catalog_maker.utils import get_pickle_store
+from roocs_utils.catalog_maker.database import DataBaseHandler
 from roocs_utils.catalog_maker.utils import get_var_id
 
 LOGGER = logging.getLogger(__file__)
@@ -20,8 +20,12 @@ class Scanner(object):
         self._project = project
 
         self._config = CONFIG[f"project:{project}"]
-        self._catalog_pickle = get_pickle_store("catalog", self._project)
-        self._error_pickle = get_pickle_store("error", self._project)
+
+        # scan - error with scanning file/datset
+        # write - error when writing to catalog
+        self.rh = DataBaseHandler(
+            table_name=f"{project.replace('-', '_')}_catalog_results"
+        )
 
     def _id_to_directory(self, dataset_id):
         archive_dir = self._config["archive_dir"]
@@ -33,12 +37,15 @@ class Scanner(object):
         fpaths = get_files(dataset_id)
 
         for fpath in fpaths:
-            # Clear out error state if previously recorded
-            self._error_pickle.clear(fpath)
 
-            if self._catalog_pickle.contains(fpath):
+            if self.rh.ran_successfully(fpath):
                 LOGGER.info(f"Already converted to catalog: {fpath}")
-                return
+                continue
+
+            elif self.rh.get_result_status(fpath):
+                # delete failure from db
+                LOGGER.info(f"Clearing from database: {fpath}")
+                self.rh.delete_result(fpath)
 
             LOGGER.info(f"Scanning file: {fpath}")
 
@@ -47,7 +54,8 @@ class Scanner(object):
 
             except Exception:
                 msg = f"Failed to extract content for: {fpath}"
-                return self._wrap_exception(fpath, msg)
+                self._wrap_exception(fpath, msg, "scan")
+                continue
 
             try:
                 self._finalise(fpath, content)
@@ -55,14 +63,14 @@ class Scanner(object):
 
             except Exception:
                 msg = f"Finalisation failed for: {fpath}"
-                self._wrap_exception(fpath, msg)
+                self._wrap_exception(fpath, msg, "write")
+                continue
 
     def _finalise(self, fpath, content):
-        self._catalog_pickle.add(fpath, content)
-        LOGGER.info(f"Wrote pickle entries for: {fpath}")
+        self.rh.insert_success(fpath, content)
+        LOGGER.info(f"Wrote entry for: {fpath}")
 
-    def _wrap_exception(self, fpath, msg):
-        tb = traceback.format_exc()
-        error = f"{msg}:\n{tb}"
-        self._error_pickle.add(fpath, error)
+    def _wrap_exception(self, fpath, msg, error_type):
+        error = f"{msg}:\n{traceback.format_exc()}"
+        self.rh.insert_failure(fpath, error_type, error)
         LOGGER.error(f"FAILED TO COMPLETE FOR: {fpath}\n{error}")

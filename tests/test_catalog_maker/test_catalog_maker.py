@@ -13,8 +13,8 @@ from roocs_utils import CONFIG
 from roocs_utils.catalog_maker.batch import BatchManager
 from roocs_utils.catalog_maker.catalog import to_csv
 from roocs_utils.catalog_maker.catalog import update_catalog
+from roocs_utils.catalog_maker.database import DataBaseHandler
 from roocs_utils.catalog_maker.task import TaskManager
-from roocs_utils.catalog_maker.utils import get_pickle_store
 
 here = Path(os.path.dirname(__file__))
 MINI_ESGF_CACHE_DIR = Path.home() / ".mini-esgf-data"
@@ -27,26 +27,22 @@ class TestCatalogMaker:
     @classmethod
     def setup_class(cls):
         cls.tmpdir = tempfile.mkdtemp()
-        cls.project = "c3s-cmip6"
+        cls.project = "c3s-cmip6-test"
         cls.catalog_dir = f"{cls.tmpdir}/catalog/"
+
         CONFIG["project:c3s-cmip6"][
             "base_dir"
         ] = f"{MINI_ESGF_CACHE_DIR}/master/test_data/badc/cmip6/data/CMIP6"
-        CONFIG["project:c3s-cmip6"]["catalog_dir"] = cls.catalog_dir
-        CONFIG["project:c3s-cmip6"]["csv_dir"] = f"{cls.tmpdir}/catalog/c3s-cmip6/"
-        CONFIG["project:c3s-cmip6"][
+        CONFIG["project:c3s-cmip6-test"]["catalog_dir"] = cls.catalog_dir
+        CONFIG["project:c3s-cmip6-test"][
+            "csv_dir"
+        ] = f"{cls.tmpdir}/catalog/c3s-cmip6-test/"
+        CONFIG["project:c3s-cmip6-test"][
             "datasets_file"
-        ] = f"{here}/catalog/c3s-cmip6/c3s-cmip6-datasets.txt"
-        CONFIG["project:c3s-cmip6"][
-            "error_pickle"
-        ] = f"{cls.tmpdir}/catalog/c3s-cmip6/c3s-cmip6-errors.pickle"
-        CONFIG["project:c3s-cmip6"][
-            "catalog_pickle"
-        ] = f"{cls.tmpdir}/catalog/c3s-cmip6/c3s-cmip6-catalog.pickle"
+        ] = f"{here}/catalog/c3s-cmip6-test/c3s-cmip6-datasets.txt"
         CONFIG["workflow"]["n_per_batch"] = 1
 
     def test_create_batches(self, load_test_data):
-        project = "c3s-cmip6"
         bm = BatchManager(self.project)
         bm.create_batches()
 
@@ -69,42 +65,51 @@ class TestCatalogMaker:
 
             assert line_count == CONFIG["workflow"]["n_per_batch"]
 
+    @pytest.mark.skipif(
+        os.environ.get("ABCUNIT_DB_SETTINGS") is None, reason="database backend not set"
+    )
     def test_run(self, load_test_data):
+        rh = DataBaseHandler(table_name="c3s_cmip6_test_catalog_results")
 
         tm = TaskManager(self.project, batches=[1], run_mode="local")
         tm.run_tasks()
 
-        # check the pickle stores have been created
-        catalog_pstore = get_pickle_store("catalog", self.project)
-        error_pstore = get_pickle_store("error", self.project)
+        # check the results have been stored
+        assert (
+            "c3s-cmip6.CMIP.INM.INM-CM5-0.historical.r1i1p1f1.Amon.rlds.gr1.v20190610"
+            in rh.get_successful_datasets()
+        )
 
-        assert isinstance(catalog_pstore.read(), dict)
-        assert isinstance(error_pstore.read(), dict)
-
+    @pytest.mark.skipif(
+        os.environ.get("ABCUNIT_DB_SETTINGS") is None, reason="database backend not set"
+    )
     def test_run_time_invariant(self, load_test_data):
+        rh = DataBaseHandler(table_name="c3s_cmip6_test_catalog_results")
 
         tm = TaskManager(self.project, batches=[3], run_mode="local")
         tm.run_tasks()
 
-        # check the pickle stores have been created
-        catalog_pstore = get_pickle_store("catalog", self.project)
-        error_pstore = get_pickle_store("error", self.project)
+        # check the results have been stored
+        assert (
+            "c3s-cmip6.ScenarioMIP.MPI-M.MPI-ESM1-2-LR.ssp370.r1i1p1f1.fx.mrsofc.gn.v20190815"
+            in rh.get_successful_datasets()
+        )
 
-        assert isinstance(catalog_pstore.read(), dict)
-        assert isinstance(error_pstore.read(), dict)
-
+    @pytest.mark.skipif(
+        os.environ.get("ABCUNIT_DB_SETTINGS") is None, reason="database backend not set"
+    )
     def test_list(self):
+        rh = DataBaseHandler(table_name="c3s_cmip6_test_catalog_results")
 
-        pstore = get_pickle_store("catalog", self.project)
-        records = pstore.read().items()
-
-        for dataset_id, content in records:
+        fpaths = rh.get_successful_runs()
+        for fpath in fpaths:
+            content = rh.get_content(fpath)
 
             assert (
-                dataset_id
+                fpath
                 == f"{MINI_ESGF_CACHE_DIR}/master/test_data/badc/cmip6/data/CMIP6/CMIP/INM/INM-CM5-0/historical/r1i1p1f1/Amon/rlds/gr1/v20190610/rlds_Amon_INM-CM5-0_historical_r1i1p1f1_gr1_185001-194912.nc"
             )
-            assert content == OrderedDict(
+            assert content == dict(
                 [
                     (
                         "ds_id",
@@ -133,16 +138,16 @@ class TestCatalogMaker:
             )
             break
 
-        assert len(records) == 3
+        assert len(fpaths) == 3
 
+    @pytest.mark.skipif(
+        os.environ.get("ABCUNIT_DB_SETTINGS") is None, reason="database backend not set"
+    )
     def test_write(self):
-        # write yaml and csv
-        pstore = get_pickle_store("catalog", self.project)
-        records = pstore.read().items()
-        entries = []
+        rh = DataBaseHandler(table_name="c3s_cmip6_test_catalog_results")
 
-        for fpath, content in records:
-            entries.append(content)
+        # write yaml and csv
+        entries = rh.get_all_content()
 
         path, last_updated = to_csv(entries, self.project)
         update_catalog(self.project, path, last_updated, self.catalog_dir)
@@ -175,9 +180,15 @@ class TestCatalogMaker:
 
         assert df["start_time"][2] == "0001-01-01T00:00:00"
 
+    @pytest.mark.skipif(
+        os.environ.get("ABCUNIT_DB_SETTINGS") is None, reason="database backend not set"
+    )
     def test_show_errors(self):
-        error_pstore = get_pickle_store("error", self.project)
+        rh = DataBaseHandler(table_name="c3s_cmip6_test_catalog_results")
 
-        errors = error_pstore.read().items()
+        assert rh.count_failures() == 0
 
-        assert len(errors) == 0
+    @classmethod
+    def teardown_class(cls):
+        rh = DataBaseHandler(table_name="c3s_cmip6_test_catalog_results")
+        rh._delete_table()
