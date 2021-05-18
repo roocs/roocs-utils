@@ -95,7 +95,7 @@ setup(
     tests_require=test_requirements,
     extras_require={"docs": docs_requirements},
     package_data={"roocs_utils": ["etc/roocs.ini"]},
-    url="https://github.com/roocs/roocs_utils",
+    url="https://github.com/roocs/roocs-utils",
     version=__version__,
     zip_safe=False,
 )
