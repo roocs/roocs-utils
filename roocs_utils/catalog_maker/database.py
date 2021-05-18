@@ -1,8 +1,15 @@
 import os
 
-import psycopg2
-from abcunit_backend.base_handler import BaseHandler
-from psycopg2.extras import Json
+try:
+    from abcunit_backend.base_handler import BaseHandler
+except ImportError:
+    raise
+
+try:
+    import psycopg2
+    from psycopg2.extras import Json
+except ImportError:
+    raise
 
 from roocs_utils.project_utils import derive_ds_id
 
