@@ -149,7 +149,7 @@ def write_catalog(df, project, last_updated, csv_dir, compress):
 
 
 def update_catalog(project, path, last_updated, cat_dir):
-    cat_name = "c3s.yml"
+    cat_name = "c3s.yaml"
     cat_path = os.path.join(cat_dir, cat_name)
 
     # dict to create yaml
