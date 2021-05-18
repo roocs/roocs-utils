@@ -36,16 +36,16 @@ The module ``roocs_utils.catalog_maker`` provides tools for writing data catalog
 For each project in ``roocs_utils/etc/roocs.ini`` there are options to set the file paths for the inputs and outputs of this catalog maker.
 A list of datasets to include needs to be provided. The path to this list for each project can be set in ``roocs_utils/etc/roocs.ini``. The datasets in this list must be what you want in the `ds_id` column of the csv file.
 
-The data catalog is created using a databse backend to store the results of the scans, from which the csv and YAML files will be created.
-For this a posgresql database is required. Once you have a database, you need to export an environemnt variable called $ABCUNIT_DB_SETTINGS:
-
-Note when using the catalog maker, the dependency abcunit-backend @ git+https://github.com/cedadev/abcunit-backend.git is required. If using a conda environment this must be pip installed manually.
+The data catalog is created using a database backend to store the results of the scans, from which the csv and YAML files will be created.
+For this, a posgresql database is required. Once you have a database, you need to export an environment variable called $ABCUNIT_DB_SETTINGS:
 
 .. code-block::
 
     $ export ABCUNIT_DB_SETTINGS="dbname=<name> user=<user> host=<host> password=<pwd>"
 
 The table created will be named after the porject you are creating a catalog for in the format <project_name>_catalog_results e.g. c3s_cmip6_catalog_results
+
+Note when using the catalog maker, the dependency abcunit-backend @ git+https://github.com/cedadev/abcunit-backend.git is required. If using a conda environment this must be pip installed manually.
 
 Creating batches
 ================
