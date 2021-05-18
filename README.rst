@@ -45,7 +45,7 @@ For this, a posgresql database is required. Once you have a database, you need t
 
 The table created will be named after the porject you are creating a catalog for in the format <project_name>_catalog_results e.g. c3s_cmip6_catalog_results
 
-Note when using the catalog maker, the dependency abcunit-backend is required. If using a conda environment this must be pip installed manually:
+Note when using the catalog maker, the dependencies abcunit-backend and psycopg2 are required. These must be pip installed manually.
 
 .. code-block::
 
