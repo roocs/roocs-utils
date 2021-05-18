@@ -1,6 +1,12 @@
 Version History
 ===============
 
+v0.4.1 (2021-05-18)
+-------------------
+Breaking Changes
+^^^^^^^^^^^^^^^^
+* Remove abcunit-backend dependency from requirements.txt, this must now be manually installed in order to use the catalog maker.
+
 v0.4.0 (2021-05-18)
 -------------------
 Breaking Changes
