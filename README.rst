@@ -39,7 +39,7 @@ A list of datasets to include needs to be provided. The path to this list for ea
 The data catalog is created using a databse backend to store the results of the scans, from which the csv and YAML files will be created.
 For this a posgresql database is required. Once you have a database, you need to export an environemnt variable called $ABCUNIT_DB_SETTINGS:
 
-Note to use the catalog maker, you will need to install the extra requirements via pip: ``pip install roocs-utils[catalog]``
+Note when using the catalog maker, the dependency abcunit-backend @ git+https://github.com/cedadev/abcunit-backend.git is required. If using a conda environment this must be pip installed manually.
 
 .. code-block::
 
