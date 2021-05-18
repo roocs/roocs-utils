@@ -5,9 +5,6 @@ import uuid
 import xarray as xr
 
 from roocs_utils import CONFIG
-from roocs_utils.catalog_maker.pickle_store import PickleStore
-
-known_pickles = ["catalog", "error"]
 
 
 def get_var_id(dataset_id, project):
@@ -18,22 +15,6 @@ def get_var_id(dataset_id, project):
 def create_dir(dr):
     if not os.path.isdir(dr):
         os.makedirs(dr)
-
-
-def get_pickle_store(store_type, project):
-    """
-    Return a pickle store of type: `store_type`.
-    Pickle store types can be any listed in: `known_pickles`
-
-    Args:
-        store_type ([string]): pickle type
-        project ([string]): project
-    """
-    if store_type not in known_pickles:
-        raise KeyError(f"Pickle store type not known: {store_type}")
-
-    _config = CONFIG[f"project:{project}"]
-    return PickleStore(_config[f"{store_type}_pickle"])
 
 
 def to_dataset_id(path, project):

@@ -11,8 +11,9 @@ from roocs_utils.catalog_maker import logging
 from roocs_utils.catalog_maker.batch import BatchManager
 from roocs_utils.catalog_maker.catalog import to_csv
 from roocs_utils.catalog_maker.catalog import update_catalog
+from roocs_utils.catalog_maker.database import DataBaseHandler
 from roocs_utils.catalog_maker.task import TaskManager
-from roocs_utils.catalog_maker.utils import get_pickle_store
+from roocs_utils.project_utils import derive_ds_id
 
 LOGGER = logging.getLogger(__file__)
 
@@ -127,67 +128,23 @@ def _get_arg_parser_clean(parser):
         "--project",
         type=str,
         required=True,
-        help="Project to clean out directories for.",
-    )
-
-    parser.add_argument(
-        "-D",
-        "--delete-objects",
-        action="store_true",
-        help="Delete all the objects in the Object Store - DANGER!!!",
-    )
-
-    parser.add_argument(
-        "-b",
-        "--buckets",
-        default=[],
-        nargs="*",
-        help="Identifiers of buckets TO DELETE!",
+        help="Project to clean out records for.",
     )
 
     return parser
 
 
 def parse_args_clean(args):
-    return args.project, args.delete_objects, args.buckets
+    return args.project
 
 
 def clean_main(args):
-    project, delete_objects, buckets_to_delete = parse_args_clean(args)
+    project = parse_args_clean(args)
 
-    if delete_objects:
-        resp = input("DO YOU REALLY WANT TO DELETE THE BUCKETS? [Y/N] ")
-        if resp != "Y":
-            print("Exiting.")
-            sys.exit()
+    rh = DataBaseHandler(table_name=f"{project.replace('-', '_')}_catalog_results")
+    rh.delete_all_results()
 
-    batch_dir = BatchManager(project)._version_dir
-    log_dir = os.path.join(CONFIG["log"]["log_base_dir"], project)
-    to_delete = [log_dir, batch_dir]
-
-    for dr in to_delete:
-        if os.path.isdir(dr):
-            LOGGER.warning(f"Deleting: {dr}")
-            shutil.rmtree(dr)
-
-    lock_files = [
-        f"{value}.lock"
-        for key, value in CONFIG[f"project:{project}"].items()
-        if key.endswith("_pickle")
-    ]
-
-    for lock_file in lock_files:
-        if os.path.isfile(lock_file):
-            LOGGER.warning(f"Deleting: {lock_file}")
-            os.remove(lock_file)
-
-    if buckets_to_delete:
-        LOGGER.warning("Starting to delete buckets from Object Store!")
-        caringo_store = CaringoStore(creds=get_credentials())
-
-        for bucket in buckets_to_delete:
-            LOGGER.warning(f"DELETING BUCKET: {bucket}")
-            caringo_store.delete(bucket)
+    print(f"All records in the {project} catalog's abcunit database have been deleted.")
 
 
 def _get_arg_parser_list(parser):
@@ -216,19 +173,22 @@ def parse_args_list(args):
 
 def list_main(args):
     project, count_only = parse_args_list(args)
-    pstore = get_pickle_store("catalog", project)
-    records = pstore.read().items()
 
-    datasets = set()
+    rh = DataBaseHandler(table_name=f"{project.replace('-', '_')}_catalog_results")
+    fpaths = rh.get_successful_runs()
 
-    for fpath, content in records:
-        if not count_only:
+    datasets = rh.get_successful_datasets()
+
+    if not count_only:
+        for fpath in fpaths:
+            content = rh.get_content(fpath)
             print(f"Record: {fpath}, {content}")
 
-        datasets.add(content["ds_id"])
+    print(f"\nTotal successful files scanned: {rh.count_successes()}")
+    print(f"\nTotal successful datasets scanned: {len(datasets)}")
 
-    print(f"\nTotal files scanned: {len(records)}")
-    print(f"\nTotal datasets scanned: {len(datasets)}")
+    print(f"\nTotal results (including errors): {rh.count_results()}")
+    print(f"\nTotal datasets (including errors): {len(rh.get_all_datasets())}")
 
 
 def _get_arg_parser_write(parser):
@@ -250,13 +210,10 @@ def parse_args_write(args):
 
 def write_main(args):
     project = parse_args_write(args)
-    pstore = get_pickle_store("catalog", project)
-    records = pstore.read().items()
-    entries = []
 
-    for fpath, content in records:
+    rh = DataBaseHandler(table_name=f"{project.replace('-', '_')}_catalog_results")
 
-        entries.append(content)
+    entries = rh.get_all_content()
 
     path, last_updated = to_csv(entries, project)
 
@@ -266,18 +223,32 @@ def write_main(args):
 
 
 def show_errors_main(args):
-    project = parse_args_project(args)
-    error_pstore = get_pickle_store("error", project)
+    project, count_only = parse_args_list(args)
 
-    errors = error_pstore.read().items()
+    rh = DataBaseHandler(table_name=f"{project.replace('-', '_')}_catalog_results")
+    failures_lists = list(rh.get_failed_runs().values())
+    failures_fpaths = [item for sublist in failures_lists for item in sublist]
 
-    for dataset_id, error in errors:
-        print("\n===================================================")
-        print(f"{dataset_id}:")
-        print("===================================================\n")
-        print("\t" + error)
+    errors = dict()
 
-    print(f"\nFound {len(errors)} errors.")
+    if not count_only:
+        for fpath in failures_fpaths:
+            errors[fpath] = rh.get_error_traceback(fpath)
+
+        for fpath, error in errors.items():
+            ds_id = derive_ds_id(fpath)
+            print("\n===================================================")
+            print(f"{ds_id}")
+            print(f"{fpath}")
+            print("===================================================\n")
+            print("\t" + error)
+
+    print(f"\nTotal failed files: {rh.count_failures()}")
+    print(f"\nTotal failed datasets: {len(rh.get_failed_datasets())}")
+
+    print(
+        f"\nFailed datasets that have been partially scanned: {rh.get_successful_datasets() & rh.get_failed_datasets()}"
+    )
 
 
 def main():
@@ -307,7 +278,7 @@ def main():
     write_parser.set_defaults(func=write_main)
 
     show_errors_parser = subparsers.add_parser("show-errors")
-    _get_arg_parser_project(show_errors_parser)
+    _get_arg_parser_list(show_errors_parser)
     show_errors_parser.set_defaults(func=show_errors_main)
 
     args = main_parser.parse_args()

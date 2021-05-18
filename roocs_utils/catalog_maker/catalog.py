@@ -47,7 +47,7 @@ def get_coord_info(coord):
 
 def get_bbox(ds):
     lat = get_coord_by_type(ds, "latitude", ignore_aux_coords=False)
-    lon = coord = get_coord_by_type(ds, "longitude", ignore_aux_coords=False)
+    lon = get_coord_by_type(ds, "longitude", ignore_aux_coords=False)
 
     min_y, max_y = get_coord_info(lat)
     min_x, max_x = get_coord_info(lon)
@@ -149,7 +149,7 @@ def write_catalog(df, project, last_updated, csv_dir, compress):
 
 
 def update_catalog(project, path, last_updated, cat_dir):
-    cat_name = "c3s.yml"
+    cat_name = "c3s.yaml"
     cat_path = os.path.join(cat_dir, cat_name)
 
     # dict to create yaml

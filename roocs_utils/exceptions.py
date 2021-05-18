@@ -16,9 +16,9 @@ class InconsistencyError(Exception):
 
 
 class InvalidCollection(Exception):
-    def __init__(self):
-        self.message = (
-            "Some or all of the requested collection are not in the list "
-            "of available data."
-        )
+    def __init__(
+        self,
+        message="Some or all of the requested collection are not in the list of available data.",
+    ):
+        self.message = message
         super().__init__(self.message)
