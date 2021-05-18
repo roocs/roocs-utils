@@ -11,4 +11,3 @@ dependencies:
  - cf_xarray>=0.3.1 # Note that conda-forge package is cf_xarray (!= cf-xarray)
  - netCDF4>=1.4
  - pandas
- - psycopg2>=2.8.6
