@@ -34,18 +34,18 @@ Features
 The module ``roocs_utils.catalog_maker`` provides tools for writing data catalogs of the known data holdings in a csv format, described by a YAML file.
 
 For each project in ``roocs_utils/etc/roocs.ini`` there are options to set the file paths for the inputs and outputs of this catalog maker.
-A list of datasets to include needs to be provided. The path to this list for each project can be set in ``roocs_utils/etc/roocs.ini``. The datasets in this list must be what you want in the `ds_id` column of the csv file.
+A list of datasets to include needs to be provided. The path to this list for each project can be set in ``roocs_utils/etc/roocs.ini``. The datasets in this list must be what you want in the ``ds_id`` column of the csv file.
 
 The data catalog is created using a database backend to store the results of the scans, from which the csv and YAML files will be created.
-For this, a posgresql database is required. Once you have a database, you need to export an environment variable called $ABCUNIT_DB_SETTINGS:
+For this, a postgresql database is required. Once you have a database, you need to export an environment variable called ``$ABCUNIT_DB_SETTINGS``:
 
 .. code-block::
 
     $ export ABCUNIT_DB_SETTINGS="dbname=<name> user=<user> host=<host> password=<pwd>"
 
-The table created will be named after the porject you are creating a catalog for in the format <project_name>_catalog_results e.g. c3s_cmip6_catalog_results
+The table created will be named after the project you are creating a catalog for in the format ``<project_name>_catalog_results`` e.g. c3s_cmip6_catalog_results
 
-Note when using the catalog maker, the dependencies abcunit-backend and psycopg2 are required. These must be pip installed manually.
+Note when using the catalog maker, the dependencies ``abcunit-backend`` and ``psycopg2`` are required. These must be pip installed manually.
 
 .. code-block::
 
@@ -130,7 +130,7 @@ The final command is to write the entries to a csv file.
     $ python roocs_utils/catalog_maker/cli.py write -p c3s-cmip6
 
 The csv file will be generated in the ``csv_dir`` specified in ``roocs_utils/etc/roocs.ini`` and will have the name "{project}_{version_stamp}.csv".
-e.g. c3s-cmip6_v20210414.csv
+e.g. ``c3s-cmip6_v20210414.csv``
 
 A yaml file will be created the ``catalog_dir`` specified in ``roocs_utils/etc/roocs.ini``.
 It will have the name ``c3s.yml`` and will contain the below for each project scanned and which is using the same ``catalog_dir``:
@@ -154,7 +154,7 @@ It will have the name ``c3s.yml`` and will contain the below for each project sc
 Deleting the table of results
 =============================
 
-In order to delete all entries in the table of results
+In order to delete all entries in the table of results:
 
 .. code-block::
 
