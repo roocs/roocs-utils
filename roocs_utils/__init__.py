@@ -15,3 +15,14 @@ CONFIG = get_config()
 from .parameter import *
 from .xarray_utils import *
 from .utils import *
+
+import logging
+import os
+
+
+LOG_LEVEL = "INFO"
+logging.basicConfig(level=LOG_LEVEL)
+
+
+for env_var, value in CONFIG["environment"].items():
+    os.environ[env_var.upper()] = value
