@@ -65,35 +65,8 @@ e.g. for cmip5 the heading is ``[project:cmip5]``::
         project:project_id
     # whether to use an intake catalog or not for this project
     use_catalog = False
-
-For projects where a catalog is used, there are extra settings which relate to the creation of the catalog.
-These are::
-
-    # directory to store catalog and dataset list used in generation of catalog
-    # if catalog_dir is the same for different projects, the yaml file in this directory will be updated for each project, rather than a new one made
-    catalog_dir = ./catalog_data
-    # Where the csv file will be generated
-    csv_dir = %(catalog_dir)s/%(project_name)s/
-    # Where the user will provide a dataset list which will be used to generate the catalog
-    datasets_file = %(catalog_dir)s/%(project_name)s-datasets.txt
-
     # where original files can be downloaded
     data_node_root = https://data.mips.copernicus-climate.eu/thredds/fileServer/esg_c3s-cmip6/
-
-Further settings for the intake catalog workflow are::
-
-    [log]
-    # directory for logging outputs from LOTUS when generating catalog entries
-    log_base_dir = /gws/smf/j04/cp4cds1/c3s_34e/inventory/log
-
-    [workflow]
-    split_level = 4
-    # max duration for LOTUS jobs, as "hh:mm:ss"
-    max_duration = 04:00:00
-    # job queue on LOTUS
-    job_queue = short-serial
-    # number of datasets to process in one batch - fewer batches is better as it prevents "Exception: Could not obtain file lock" error
-    n_per_batch = 750
 
 
 There are settings for the environment::
@@ -200,3 +173,34 @@ These are settings that are specific to dachar::
     concern_threshold = 0.2
     # possible locations for scans and analysis of datasets
     locations = ceda dkrz other
+
+
+catalog maker
+#############
+
+In the catalog maker there are project level settings as well. The settings under each project heading are the same.
+Settings for the catalog maker are::
+
+    [project:c3s-cmip6]
+    # directory to store catalog and dataset list used in generation of catalog
+    # if catalog_dir is the same for different projects, the yaml file in this directory will be updated for each project, rather than a new one made
+    catalog_dir = ./catalog_data
+    # Where the csv file will be generated
+    csv_dir = %(catalog_dir)s/%(project_name)s/
+    # Where the user will provide a dataset list which will be used to generate the catalog
+    datasets_file = %(catalog_dir)s/%(project_name)s-datasets.txt
+
+Further settings for the intake catalog workflow are::
+
+    [log]
+    # directory for logging outputs from LOTUS when generating catalog entries
+    log_base_dir = /gws/smf/j04/cp4cds1/c3s_34e/inventory/log
+
+    [workflow]
+    split_level = 4
+    # max duration for LOTUS jobs, as "hh:mm:ss"
+    max_duration = 04:00:00
+    # job queue on LOTUS
+    job_queue = short-serial
+    # number of datasets to process in one batch - fewer batches is better as it prevents "Exception: Could not obtain file lock" error
+    n_per_batch = 750

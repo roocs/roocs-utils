@@ -1,6 +1,13 @@
 Version History
 ===============
 
+v0.5.0 (Unreleased)
+-------------------
+Breaking Changes
+^^^^^^^^^^^^^^^^
+* Intake catalog maker removed, now in it's own package: `roocs/catalog-maker <https://github.com/roocs/catalog-maker>`_
+
+
 v0.4.2 (2021-05-18)
 -------------------
 Breaking Changes

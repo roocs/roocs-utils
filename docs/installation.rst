@@ -21,12 +21,6 @@ you through the process.
 .. _pip: https://pip.pypa.io
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
-In order to use the catalog maker in roocs-utils, the abcunit-backend and psycopg2 dependencies must be installed manually:
-
-.. code-block:: console
-
-    $ pip install abcunit-backend psycopg2
-
 
 Install from GitHub
 -------------------

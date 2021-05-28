@@ -13,10 +13,6 @@ def write_roocs_cfg():
     [project:c3s-cmip5]
     base_dir = {{ base_dir }}/master/test_data/gws/nopw/j04/cp4cds1_vol1/data/c3s-cmip5
 
-    [project:c3s-cmip6-test]
-    base_dir = {{ base_dir }}/master/test_data/badc/cmip6/data/CMIP6
-    facet_rule = mip_era activity_id institution_id source_id experiment_id member_id table_id variable_id grid_label version
-
     [project:proj_test]
     base_dir = /projects/test/proj
     fixed_path_mappings =
