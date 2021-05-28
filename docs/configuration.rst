@@ -178,7 +178,7 @@ These are settings that are specific to dachar::
 catalog maker
 #############
 
-In the catalog mkaer there are project level settings as well. The settings under each project heading are the same.
+In the catalog maker there are project level settings as well. The settings under each project heading are the same.
 Settings for the catalog maker are::
 
     [project:c3s-cmip6]
