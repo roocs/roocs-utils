@@ -17,7 +17,7 @@ def open_xr_dataset(dset, **kwargs):
     Opens an xarray dataset from a dataset input.
 
     :param dset: (Str or Path) ds_id, directory path or file path ending in *.nc.
-    :param kwargs: Any further keyword arguments to include when opening the dataset. use_cftime=True and combine="by_coords" for open_mfdataset are used by default.
+    :param kwargs: Any further keyword arguments to include when opening the dataset. use_cftime=True and decode_timedelta=False are used by default, along with combine="by_coords" for open_mfdataset only.
     Any list will be interpreted as list of files
     """
 
@@ -28,15 +28,23 @@ def open_xr_dataset(dset, **kwargs):
 
     # if a list we want a multi-file dataset
     if len(dset) > 1:
-        return xr.open_mfdataset(dset, use_cftime=True, combine="by_coords", **kwargs)
+        return xr.open_mfdataset(
+            dset, use_cftime=True, combine="by_coords", decode_timedelta=False, **kwargs
+        )
     # if there is only one file we only need to call open_dataset
     else:
         try:
-            return xr.open_dataset(dset[0], use_cftime=True, **kwargs)
+            return xr.open_dataset(
+                dset[0], use_cftime=True, decode_timedelta=False, **kwargs
+            )
         # catch when kwargs only exist for open_mfdataset
         except TypeError:
             return xr.open_mfdataset(
-                dset, use_cftime=True, combine="by_coords", **kwargs
+                dset,
+                use_cftime=True,
+                combine="by_coords",
+                decode_timedelta=False,
+                **kwargs,
             )
 
 
