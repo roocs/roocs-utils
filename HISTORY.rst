@@ -7,6 +7,9 @@ Breaking Changes
 ^^^^^^^^^^^^^^^^
 * Intake catalog maker removed, now in it's own package: `roocs/catalog-maker <https://github.com/roocs/catalog-maker>`_
 
+New Features
+^^^^^^^^^^^^
+* ``roocs_utils.xarray_utils.xarray_utils`` now accepts keyword arguments to pass through to xarray's ``open_dataset`` or ``open_mfdataset``. If the argument provided is not an option for ``open_dataset``, then ``open_mfdataset`` will be used, even for one file.
 
 v0.4.2 (2021-05-18)
 -------------------
