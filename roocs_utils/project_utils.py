@@ -96,6 +96,10 @@ class DatasetMapper:
                         f"The project could not be identified and force was set to false"
                     )
 
+        # get base_dir in the case where project has been supplied
+        if not self._base_dir and self._project:
+            self._base_dir = get_project_base_dir(self._project)
+
         # if a file, group of files or directory to files - find files
         if dset.startswith("/") or dset.endswith(".nc"):
 

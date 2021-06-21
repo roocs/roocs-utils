@@ -3,6 +3,10 @@ Version History
 
 v0.5.0 (Unreleased)
 -------------------
+Bug Fixes
+^^^^^^^^^
+* When a project was provided to ``roocs_utils.project_utils.DatasetMapper``, getting the base directory would be skipped, causing an error. This has been resolved.
+
 Breaking Changes
 ^^^^^^^^^^^^^^^^
 * Intake catalog maker removed, now in it's own package: `roocs/catalog-maker <https://github.com/roocs/catalog-maker>`_
