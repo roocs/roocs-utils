@@ -6,6 +6,7 @@ v0.5.0 (Unreleased)
 Bug Fixes
 ^^^^^^^^^
 * When a project was provided to ``roocs_utils.project_utils.DatasetMapper``, getting the base directory would be skipped, causing an error. This has been resolved.
+* ``roocs_utils.project_utils.DatasetMapper`` can now accept `fixed_path_mappings` that include ".gz" (gzip) files. This is allowed because `Xarray` can read gzipped `netCDF` files.
 
 Breaking Changes
 ^^^^^^^^^^^^^^^^
