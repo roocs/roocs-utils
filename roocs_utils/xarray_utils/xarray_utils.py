@@ -21,10 +21,14 @@ def open_xr_dataset(dset, **kwargs):
     Any list will be interpreted as list of files
     """
 
-    # DatasetMapper doesn't handle lists
-    if not isinstance(dset, list):
+    # Force the value of dset to be a list if not a list or tuple
+    if type(dset) not in (list, tuple):
         # use force=True to allow all file paths to pass through DatasetMapper
         dset = dset_to_filepaths(dset, force=True)
+
+    # If an empty sequence, then raise an Exception
+    if len(dset) == 0:
+        raise Exception("No files found to open with xarray.")
 
     # if a list we want a multi-file dataset
     if len(dset) > 1:
