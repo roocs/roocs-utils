@@ -25,6 +25,7 @@ class DatasetMapper:
     When force=True, if the project can not be identified, any attempt to use the base_dir of a project
     to resolve the data path will be ignored. Any of data_path, ds_id and files that can be set, will be set.
     """
+
     SUPPORTED_EXTENSIONS = (".nc", ".gz")
 
     def __init__(self, dset, project=None, force=False):
