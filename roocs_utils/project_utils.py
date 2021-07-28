@@ -27,7 +27,6 @@ class DatasetMapper:
     """
     SUPPORTED_EXTENSIONS = (".nc", ".gz")
 
-
     def __init__(self, dset, project=None, force=False):
 
         self._project = project
