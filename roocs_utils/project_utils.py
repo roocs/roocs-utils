@@ -25,6 +25,8 @@ class DatasetMapper:
     When force=True, if the project can not be identified, any attempt to use the base_dir of a project
     to resolve the data path will be ignored. Any of data_path, ds_id and files that can be set, will be set.
     """
+    SUPPORTED_EXTENSIONS = (".nc", ".gz")
+
 
     def __init__(self, dset, project=None, force=False):
 
@@ -108,8 +110,8 @@ class DatasetMapper:
                 self._files = self.dset.file_paths
                 self._data_path = self.dset.dirpath
 
-            if dset.endswith(".nc"):
-                if dset.endswith("*.nc"):
+            if os.path.splitext(dset)[-1] in self.SUPPORTED_EXTENSIONS:
+                if "*" in dset:
                     self._files = sorted(glob.glob(dset))
                 else:
                     self._files.append(dset)
