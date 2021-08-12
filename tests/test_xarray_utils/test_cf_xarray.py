@@ -8,7 +8,7 @@ from tests.conftest import CMIP5_TAS
 
 def test_get_standard_names(load_test_data):
     ds = xr.open_mfdataset(CMIP5_TAS, use_cftime=True, combine="by_coords")
-    assert sorted(ds.cf.get_standard_names()) == sorted(
+    assert sorted(ds.cf.standard_names) == sorted(
         [
             "air_temperature",
             "height",

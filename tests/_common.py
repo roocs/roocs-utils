@@ -15,9 +15,12 @@ def write_roocs_cfg():
 
     [project:proj_test]
     base_dir = /projects/test/proj
+    fixed_path_modifiers =
+        variable:rain sun cloud
     fixed_path_mappings =
         proj_test.my.first.test:first/test/something.nc
         proj_test.my.second.test:second/test/data_*.txt
+        proj_test.another.{variable}.test:good/test/{variable}.nc
     """
     cfg = Template(cfg_templ).render(base_dir=MINI_ESGF_CACHE_DIR)
     with open(ROOCS_CFG, "w") as fp:
