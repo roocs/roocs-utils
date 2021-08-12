@@ -147,7 +147,6 @@ def _modify_fixed_path_mappings(config, name):
 
     for modifier in d[fp_modifiers]:
         items = d[fp_modifiers][modifier].split()
-        
         mappings = _expand_mappings(mappings, modifier, items)
 
     d[fp_mappings] = mappings.copy()
@@ -157,7 +156,7 @@ def _expand_mappings(mappings, modifier, items):
     """
     Expands mappings by replacing modifier with list of items
     in each case.
-    """ 
+    """
     result = {}
 
     for key, value in mappings.items():
@@ -170,4 +169,3 @@ def _expand_mappings(mappings, modifier, items):
             result[key] = value
 
     return result
-
