@@ -114,6 +114,11 @@ class TestDatasetMapper:
         dsm = DatasetMapper("proj_test.my.unknown")
         assert dsm._data_path == "/projects/test/proj/my/unknown"
 
+    def test_fixed_path_modifiers(self):
+        "Tests how modifiers can change the fixed path mappings."
+        dsm = DatasetMapper("proj_test.another.sun.test")
+        assert dsm._data_path == "/projects/test/proj/good/test/sun.nc"
+
 
 @pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
 def test_get_filepaths():

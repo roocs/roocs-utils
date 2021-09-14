@@ -86,6 +86,7 @@ class DatasetMapper:
             dset = self.dset.dirpath
         else:
             dset = self.dset
+
         # set project and base_dir
         if not self._project:
             try:

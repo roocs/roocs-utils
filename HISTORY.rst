@@ -15,6 +15,15 @@ Breaking Changes
 New Features
 ^^^^^^^^^^^^
 * ``roocs_utils.xarray_utils.xarray_utils`` now accepts keyword arguments to pass through to xarray's ``open_dataset`` or ``open_mfdataset``. If the argument provided is not an option for ``open_dataset``, then ``open_mfdataset`` will be used, even for one file.
+* The `roocs.ini` config file can now accept `fixed_path_modifiers` to work together with the `fixed_path_mappings` section. For example, you can specify parameters in the modifiers that will be expanded into the mappings::
+
+    fixed_path_modifiers =
+        variable:cld dtr frs pet pre tmn tmp tmx vap wet
+    fixed_path_mappings =
+        cru_ts.4.04.{variable}:cru_ts_4.04/data/{variable}/*.nc
+        cru_ts.4.05.{variable}:cru_ts_4.05/data/{variable}/cru_ts4.05.1901.2*.{variable}.dat.nc.gz
+
+  In this example, the `variable` parameter will be expanded out to each of the options provided in the list.
 
 v0.4.2 (2021-05-18)
 -------------------

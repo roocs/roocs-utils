@@ -115,4 +115,57 @@ def _load_config(package=None):
 
             config[section][key] = value
 
+    _post_process(config)
+
     _CONFIG = config
+
+
+def _post_process(config):
+    """
+    Post-processes the contents of the config file to modify sections based on
+    certain rules.
+    Returns None.
+    """
+    for name in [n for n in config.keys() if n.startswith("project:")]:
+        _modify_fixed_path_mappings(config, name)
+
+
+def _modify_fixed_path_mappings(config, name):
+    """
+    Expands the contents of `fixed_path_mappings` based on other fixed path modifiers`.
+    Returns None - changes contents in place.
+    """
+    d = config[name]
+
+    fp_mappings = "fixed_path_mappings"
+    fp_modifiers = "fixed_path_modifiers"
+
+    if fp_mappings not in d or fp_modifiers not in d:
+        return
+
+    mappings = d[fp_mappings].copy()
+
+    for modifier in d[fp_modifiers]:
+        items = d[fp_modifiers][modifier].split()
+        mappings = _expand_mappings(mappings, modifier, items)
+
+    d[fp_mappings] = mappings.copy()
+
+
+def _expand_mappings(mappings, modifier, items):
+    """
+    Expands mappings by replacing modifier with list of items
+    in each case.
+    """
+    result = {}
+
+    for key, value in mappings.items():
+        lookup = "{" + modifier + "}"
+
+        if lookup in key or lookup in value:
+            for item in items:
+                result[key.replace(lookup, item)] = value.replace(lookup, item)
+        else:
+            result[key] = value
+
+    return result
