@@ -1,15 +1,25 @@
 import pytest
 
 from roocs_utils.exceptions import InvalidParameterValue
-from roocs_utils.parameter.dimension_parameter import DimensionParameter
+from roocs_utils.parameter.dimension_parameter import DimensionParameter, dimensions
 
 
 def test__str__():
     dims = "time,latitude"
     parameter = DimensionParameter(dims)
-    assert (
-        parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
-    )
+    assert parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
+    assert parameter.__repr__() == parameter.__str__()
+    assert parameter.__unicode__() == parameter.__str__()
+
+    dims = dimensions("time", "latitude")
+    parameter = DimensionParameter(dims)
+    assert parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
+    assert parameter.__repr__() == parameter.__str__()
+    assert parameter.__unicode__() == parameter.__str__()
+
+    dims = dimensions("time", "latitude")
+    parameter = DimensionParameter(dims)
+    assert parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
 
@@ -23,19 +33,19 @@ def test_raw():
 def test_str():
     dims = "time,latitude"
     parameter = DimensionParameter(dims)
-    assert parameter.tuple == ("time", "latitude")
+    assert parameter.value == ("time", "latitude")
 
 
-def test_tuple():
+def test_value():
     dims = ("time", "latitude")
     parameter = DimensionParameter(dims)
-    assert parameter.tuple == ("time", "latitude")
+    assert parameter.value == ("time", "latitude")
 
 
 def test_input_list():
     dims = ["time", "latitude"]
     parameter = DimensionParameter(dims)
-    assert parameter.tuple == ("time", "latitude")
+    assert parameter.value == ("time", "latitude")
 
 
 def test_validate_error_dimension():
@@ -57,26 +67,26 @@ def test_asdict():
 def test_whitespace():
     dims = "time, latitude"
     parameter = DimensionParameter(dims)
-    assert parameter.tuple == ("time", "latitude")
+    assert parameter.value == ("time", "latitude")
 
 
 def test_empty_string():
     dims = ""
     assert DimensionParameter(dims).asdict() is None
-    assert DimensionParameter(dims).tuple is None
+    assert DimensionParameter(dims).value is None
 
 
 def test_none():
     dims = None
     assert DimensionParameter(dims).asdict() is None
-    assert DimensionParameter(dims).tuple is None
+    assert DimensionParameter(dims).value is None
 
 
 def test_class_instance():
     dims = "time"
     parameter = DimensionParameter(dims)
     new_parameter = DimensionParameter(parameter)
-    assert new_parameter.tuple == ("time",)
+    assert new_parameter.value == ("time",)
 
 
 def test_not_a_string():

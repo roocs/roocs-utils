@@ -24,7 +24,6 @@ class AreaParameter(_BaseParameter):
 
     def _parse(self):
         if isinstance(self.input, type(None)) or self.input == "":
-            self.type = "none"
             return None
 
         if isinstance(self.input, (str, bytes)):

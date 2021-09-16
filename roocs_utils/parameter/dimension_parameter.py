@@ -1,6 +1,9 @@
+from collections.abc import Sequence
+
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.base_parameter import _BaseParameter
 from roocs_utils.xarray_utils.xarray_utils import known_coord_types
+from roocs_utils.parameter.param_utils import dimensions, parse_sequence
 
 
 class DimensionParameter(_BaseParameter):
@@ -18,37 +21,33 @@ class DimensionParameter(_BaseParameter):
 
     """
 
-    preparser = _BaseParameter._parse_sequence
+    allowed_input_types = [Sequence, str, dimensions, type(None)]
 
-    def _validate(self):
+    def _parse(self):
+        classname = self.__class__.__name__
 
-        self._parse_dims()
+        if self.input in (None, ""):
+            return None
+        elif isinstance(self.input, dimensions):
+            value = self.input.value
+        else:
+            value = parse_sequence(self.input, caller=classname)
 
-    def _parse_dims(self):
-        
-        if self._result is None:
-            return self._result
-
-        for value in self._result:
-            if not (isinstance(value, str)):
+        for item in value:
+            if not isinstance(item, str):
                 raise InvalidParameterValue(f"Each dimension must be a string.")
 
-            if value not in known_coord_types:
+            if item not in known_coord_types:
                 raise InvalidParameterValue(
                     f"Dimensions for averaging must be one of {known_coord_types}"
                 )
 
-        return tuple(self._result)
-
-    @property
-    def tuple(self):
-        """Returns a tuple of the dimensions"""
-        return self._parse_dims()
+        return tuple(value)
 
     def asdict(self):
         """Returns a dictionary of the dimensions"""
-        if self.tuple is not None:
-            return {"dims": self.tuple}
+        if self.value is not None:
+            return {"dims": self.value}
 
     def __str__(self):
-        return f"Dimensions to average over:" f"\n {self.tuple}"
+        return f"Dimensions to average over:" f"\n {self.value}"

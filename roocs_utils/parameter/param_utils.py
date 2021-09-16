@@ -89,6 +89,9 @@ class Series:
     as a list.
     """
     def __init__(self, *data):
+        if len(data) == 1:
+            data = data[0]
+
         self.value = parse_sequence(data, caller=self.__class__.__name__)
    
 
@@ -158,5 +161,5 @@ def to_float(i, allow_none=True):
 time_series = level_series = series = Series
 time_interval = level_interval = interval = Interval
 time_components = TimeComponents
-area = Series
+area = collection = dimensions = Series
 collection = Series
