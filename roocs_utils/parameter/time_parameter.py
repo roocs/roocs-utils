@@ -1,12 +1,12 @@
 import datetime
 
-from dateutil import parser as date_parser
-
 from roocs_utils.exceptions import InvalidParameterValue
-from roocs_utils.parameter.base_parameter import _BaseParameter
+from roocs_utils.parameter.base_parameter import _BaseIntervalOrSeriesParameter
+from roocs_utils.parameter.param_utils import (parse_range, parse_sequence,
+                            parse_datetime, interval, series)
 
 
-class TimeParameter(_BaseParameter):
+class TimeParameter(_BaseIntervalOrSeriesParameter):
     """
     Class for time parameter used in subsetting operation.
 
@@ -24,44 +24,44 @@ class TimeParameter(_BaseParameter):
 
     """
 
-    parse_method = "_parse_range"
+    def _parse_as_interval(self):
+        start, end = self.input.value
 
-    def _validate(self):
         try:
-            self._parse_times()
+            if start is not None:
+                start = parse_datetime(start, default=datetime.datetime(datetime.MINYEAR, 1, 1))
+            if end is not None:
+                end = parse_datetime(end, default=datetime.datetime(datetime.MAXYEAR, 12, 30))
 
-        except (date_parser._parser.ParserError, TypeError):
+        except:
             raise InvalidParameterValue("Unable to parse the time values entered")
 
-    def _parse_times(self):
-        # should this default to the start and end time of the data?
-        start, end = self._result
+        # Set as None if no start or end, otherwise set as tuple
+        value = (start, end)
 
-        if start is not None:
-            start = date_parser.parse(
-                start, default=datetime.datetime(datetime.MINYEAR, 1, 1)
-            ).isoformat()
-        if end is not None:
-            end = date_parser.parse(
-                end, default=datetime.datetime(datetime.MAXYEAR, 12, 30)
-            ).isoformat()
+        if set(value) == {None}:
+            value = None
 
-        return start, end
+        return value
 
-    @property
-    def tuple(self):
-        """Returns a tuple of the time values"""
-        if self._parse_times() is not (None, None):
-            return self._parse_times()
+    def _parse_as_series(self):
+        try:
+            value = [parse_datetime(tm) for tm in self.input.value]
+        except:
+            raise InvalidParameterValue("Unable to parse the time values entered")
+
+        return value
 
     def asdict(self):
         """Returns a dictionary of the time values"""
-        if self.tuple is not None:
-            return {"start_time": self.tuple[0], "end_time": self.tuple[1]}
+        value = self._value_as_tuple()
+        return {"start_time": value[0], "end_time": value[1]}
 
     def __str__(self):
+        value = self._value_as_tuple()
         return (
             f"Time period to subset over"
-            f"\n start time: {self.tuple[0]}"
-            f"\n end time: {self.tuple[1]}"
+            f"\n start time: {value[0]}"
+            f"\n end time: {value[1]}"
         )
+

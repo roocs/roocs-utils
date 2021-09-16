@@ -3,6 +3,7 @@ from pydoc import locate
 
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.exceptions import MissingParameterValue
+from roocs_utils.parameter.param_utils import interval, series
 from roocs_utils.utils.file_utils import FileMapper
 
 
@@ -11,78 +12,27 @@ class _BaseParameter(object):
     Base class for parameters used in operations (e.g. subset, average etc.)
     """
 
-    parser_method = "UNDEFINED"
+    allowed_input_types = None
 
     def __init__(self, input):
-        self.input = input
-        self._result = self._parse()
-        self._validate()
+        self.input = self.raw = input
 
-    def _validate(self):
-        raise NotImplementedError
+        # If the input is already an instance of this class, call its parse method 
+        if isinstance(self.input, self.__class__):
+            self.value = self.input._parse()
+        else:
+            self._check_input_type()
+            self.value = self._parse()
 
-    @property
-    def raw(self):
-        return self.input
+    def _check_input_type(self):
+        if not self.allowed_input_types: 
+            return
+        if not isinstance(self.input, tuple(self.allowed_input_types)):
+            raise InvalidParameterValue(f"Input type of {type(self.input)} not allowed. "
+                            f"Must be one of: {self.allowed_input_types}")
 
     def _parse(self):
-
-        if isinstance(self.input, self.__class__):
-            return self.input._parse()
-
-        else:
-            return getattr(self, self.parse_method)()
-
-    def _parse_range(self):
-        if self.input in ("/", None, ""):
-            start = None
-            end = None
-
-        elif isinstance(self.input, str):
-            if "/" not in self.input:
-                raise InvalidParameterValue(
-                    f"{self.__class__.__name__} should be passed in as a range separated by /"
-                )
-
-            # empty string either side of '/' is converted to None
-            start, end = [x.strip() or None for x in self.input.split("/")]
-
-        elif isinstance(self.input, Sequence):
-            if len(self.input) != 2:
-                raise InvalidParameterValue(
-                    f"{self.__class__.__name__} should be a range. Expected 2 values, "
-                    f"received {len(self.input)}"
-                )
-
-            start, end = self.input
-
-        else:
-            raise InvalidParameterValue(
-                f"{self.__class__.__name__} is not in an accepted format"
-            )
-        return start, end
-
-    def _parse_sequence(self):
-
-        if self.input in (None, ""):
-            sequence = None
-
-        # check str or bytes
-        elif isinstance(self.input, (str, bytes)):
-            sequence = [x.strip() for x in self.input.split(",")]
-
-        elif isinstance(self.input, FileMapper):
-            return [self.input]
-
-        elif isinstance(self.input, Sequence):
-            sequence = self.input
-
-        else:
-            raise InvalidParameterValue(
-                f"{self.__class__.__name__} is not in an accepted format"
-            )
-
-        return sequence
+        raise NotImplementedError
 
     def __str__(self):
         raise NotImplementedError
@@ -92,3 +42,39 @@ class _BaseParameter(object):
 
     def __unicode__(self):
         return str(self)
+
+
+class _BaseIntervalOrSeriesParameter(_BaseParameter):
+    """
+    A base class for a parameter that can be instantiated from either and
+    `Interval` or `Series` class instance. It has a `type` and a `value`
+    reflecting the type. E.g.:
+        type: "interval" --> value: (start, end)
+        type: "series"   --> value: [item1, item2, ..., item_n]
+    """
+    allowed_input_types = [interval, series, type(None)]
+
+    def _parse(self):
+
+        if isinstance(self.input, interval):
+            self.type = "interval"
+            return self._parse_as_interval()
+        elif isinstance(self.input, series):
+            self.type = "series"
+            self._parse_as_series()
+        elif isinstance(self.input, type(None)):
+            self.type = "none"
+            return None
+
+    def _parse_as_interval(self):
+        raise NotImplementedError
+
+    def _parse_as_series(self):
+        raise NotImplementedError
+
+    def _value_as_tuple(self):
+        value = self.value
+        if not value:
+            value = None, None
+
+        return value

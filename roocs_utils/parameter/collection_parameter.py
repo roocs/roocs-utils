@@ -1,7 +1,10 @@
+from collections.abc import Sequence
+
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.exceptions import MissingParameterValue
 from roocs_utils.parameter.base_parameter import _BaseParameter
 from roocs_utils.utils.file_utils import FileMapper
+from roocs_utils.parameter.param_utils import collection, parse_sequence
 
 
 class CollectionParameter(_BaseParameter):
@@ -16,31 +19,28 @@ class CollectionParameter(_BaseParameter):
     Validates the input and parses the items.
 
     """
+    allowed_input_types = [Sequence, str, collection]
 
-    parse_method = "_parse_sequence"
+    def _parse(self):
+        classname = self.__class__.__name__
 
-    def _validate(self):
-        if self._result is None:
-            raise MissingParameterValue(f"{self.__class__.__name__} must be provided")
+        if self.input in (None, ""):
+            raise MissingParameterValue(f"{classname} must be provided")
+        elif isinstance(self.input, collection):
+            value = self.input.value
+        else:
+            value = parse_sequence(self.input, caller=classname)
 
-        self._parse_items()
-
-    def _parse_items(self):
-        for value in self._result:
-            if not (isinstance(value, str) or isinstance(value, FileMapper)):
+        for item in value:
+            if not isinstance(item, (str, FileMapper)):
                 raise InvalidParameterValue(
                     f"Each id in a collection must be a string or an instance of {FileMapper}"
                 )
 
-        return tuple(self._result)
-
-    @property
-    def tuple(self):
-        """Returns a tuple of the collection items"""
-        return self._parse_items()
+        return tuple(value)
 
     def __str__(self):
         string = "Datasets to analyse:"
-        for i in self.tuple:
+        for i in self.value:
             string += f"\n{i}"
         return string

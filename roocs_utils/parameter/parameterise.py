@@ -4,9 +4,11 @@ from roocs_utils.parameter import area_parameter
 from roocs_utils.parameter import collection_parameter
 from roocs_utils.parameter import level_parameter
 from roocs_utils.parameter import time_parameter
+from roocs_utils.parameter import time_components_parameter
 
 
-def parameterise(collection=None, area=None, level=None, time=None):
+def parameterise(collection=None, area=None, level=None, time=None,
+                 time_components=None):
     """
     Parameterises inputs to instances of parameter classes which allows
     them to be used throughout roocs.
@@ -16,6 +18,7 @@ def parameterise(collection=None, area=None, level=None, time=None):
     :param area: Area input in any supported format.
     :param level: Level input in any supported format.
     :param time: Time input in any supported format.
+    :param time_components: Time Components input in any supported format.
     :return: Parameters as instances of their respective classes.
     """
 
@@ -24,7 +27,10 @@ def parameterise(collection=None, area=None, level=None, time=None):
         collection = collection_parameter.CollectionParameter(collection)
 
     area = area_parameter.AreaParameter(area)
-    time = time_parameter.TimeParameter(time)
     level = level_parameter.LevelParameter(level)
+    time = time_parameter.TimeParameter(time)
+    time_components = time_components_parameter.TimeComponentsParameter(
+                          time_components)
 
     return locals()
+

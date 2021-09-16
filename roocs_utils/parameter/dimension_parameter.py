@@ -18,19 +18,21 @@ class DimensionParameter(_BaseParameter):
 
     """
 
-    parse_method = "_parse_sequence"
+    preparser = _BaseParameter._parse_sequence
 
     def _validate(self):
 
         self._parse_dims()
 
     def _parse_dims(self):
+        
         if self._result is None:
             return self._result
 
         for value in self._result:
             if not (isinstance(value, str)):
                 raise InvalidParameterValue(f"Each dimension must be a string.")
+
             if value not in known_coord_types:
                 raise InvalidParameterValue(
                     f"Dimensions for averaging must be one of {known_coord_types}"
