@@ -149,3 +149,16 @@ def test_class_instance():
     parameter = LevelParameter(level)
     new_parameter = LevelParameter(parameter)
     assert new_parameter.value == (1000, 2000)
+
+
+def test_level_series_input():
+    value = [1000, 2000, 3000]
+    vstring = ",".join([str(i) for i in value])
+
+    for lev in (vstring, value, tuple(value)):
+
+        level = level_series(lev)
+        parameter = LevelParameter(level)
+        assert parameter.type == "series"
+        assert parameter.value == value
+        assert parameter.asdict() == {"level_values": value}

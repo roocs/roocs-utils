@@ -54,14 +54,19 @@ class TimeParameter(_BaseIntervalOrSeriesParameter):
 
     def asdict(self):
         """Returns a dictionary of the time values"""
-        value = self._value_as_tuple()
-        return {"start_time": value[0], "end_time": value[1]}
+        if self.type in ("interval", "none"):
+            value = self._value_as_tuple()
+            return {"start_time": value[0], "end_time": value[1]}
+        elif self.type == "series":
+            return {"time_values": self.value}
 
     def __str__(self):
-        value = self._value_as_tuple()
-        return (
-            f"Time period to subset over"
-            f"\n start time: {value[0]}"
-            f"\n end time: {value[1]}"
-        )
-
+        if self.type in ("interval", "none"):
+            value = self._value_as_tuple()
+            return (
+                f"Time period to subset over"
+                f"\n start time: {value[0]}"
+                f"\n end time: {value[1]}"
+            )
+        else:
+            return f"Time values to select: {self.value}"

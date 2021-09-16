@@ -38,13 +38,19 @@ class LevelParameter(_BaseIntervalOrSeriesParameter):
 
     def asdict(self):
         """Returns a dictionary of the level values"""
-        value = self._value_as_tuple()
-        return {"first_level": value[0], "last_level": value[1]}
+        if self.type in ("interval", "none"):
+            value = self._value_as_tuple()
+            return {"first_level": value[0], "last_level": value[1]}
+        elif self.type == "series":
+            return {"level_values": self.value}
 
     def __str__(self):
-        value = self._value_as_tuple()
-        return (
-            f"Level range to subset over"
-            f"\n first_level: {value[0]}"
-            f"\n last_level: {value[1]}"
-        )
+        if self.type in ("interval", "none"):
+            value = self._value_as_tuple()
+            return (
+                f"Level range to subset over"
+                f"\n first_level: {value[0]}"
+                f"\n last_level: {value[1]}"
+            )
+        else:
+            return f"Level values to select: {self.value}"

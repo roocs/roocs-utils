@@ -125,3 +125,17 @@ def test_class_instance():
         "2085-01-01T12:00:00+00:00",
         "2120-12-30T12:00:00+00:00",
     )
+
+
+def test_time_series_input():
+    value = ["2085-01-01T12:00:00Z", "2095-03-03T03:03:03", "2120-12-30T12:00:00Z"]
+    expected_value = [i.replace("Z", "+00:00") for i in value]
+    vstring = ",".join([str(i) for i in value])
+
+    for tm in (vstring, value, tuple(value)):
+
+        times = time_series(tm)
+        parameter = TimeParameter(times)
+        assert parameter.type == "series"
+        assert parameter.value == expected_value
+        assert parameter.asdict() == {"time_values": expected_value}

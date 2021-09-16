@@ -61,7 +61,7 @@ class _BaseIntervalOrSeriesParameter(_BaseParameter):
             return self._parse_as_interval()
         elif isinstance(self.input, series):
             self.type = "series"
-            self._parse_as_series()
+            return self._parse_as_series()
         elif isinstance(self.input, type(None)):
             self.type = "none"
             return None
