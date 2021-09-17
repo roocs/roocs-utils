@@ -17,7 +17,7 @@ class _BaseParameter(object):
     def __init__(self, input):
         self.input = self.raw = input
 
-        # If the input is already an instance of this class, call its parse method 
+        # If the input is already an instance of this class, call its parse method
         if isinstance(self.input, self.__class__):
             self.value = self.input._parse()
         else:
@@ -25,11 +25,13 @@ class _BaseParameter(object):
             self.value = self._parse()
 
     def _check_input_type(self):
-        if not self.allowed_input_types: 
+        if not self.allowed_input_types:
             return
         if not isinstance(self.input, tuple(self.allowed_input_types)):
-            raise InvalidParameterValue(f"Input type of {type(self.input)} not allowed. "
-                            f"Must be one of: {self.allowed_input_types}")
+            raise InvalidParameterValue(
+                f"Input type of {type(self.input)} not allowed. "
+                f"Must be one of: {self.allowed_input_types}"
+            )
 
     def _parse(self):
         raise NotImplementedError
@@ -52,6 +54,7 @@ class _BaseIntervalOrSeriesParameter(_BaseParameter):
         type: "interval" --> value: (start, end)
         type: "series"   --> value: [item1, item2, ..., item_n]
     """
+
     allowed_input_types = [interval, series, type(None)]
 
     def _parse(self):

@@ -3,9 +3,12 @@ import pytest
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.area_parameter import AreaParameter, area
 
-type_error = ("Input type of <{}> not allowed. Must be one of: "
+type_error = (
+    "Input type of <{}> not allowed. Must be one of: "
     "[<class 'collections.abc.Sequence'>, <class 'str'>, <class "
-    "'roocs_utils.parameter.param_utils.Series'>, <class 'NoneType'>]")
+    "'roocs_utils.parameter.param_utils.Series'>, <class 'NoneType'>]"
+)
+
 
 def test__str__():
     _area = "0.,49.,10.,65"

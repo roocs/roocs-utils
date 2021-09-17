@@ -7,7 +7,9 @@ from roocs_utils.parameter.dimension_parameter import DimensionParameter, dimens
 def test__str__():
     dims = "time,latitude"
     parameter = DimensionParameter(dims)
-    assert parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
+    assert (
+        parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
+    )
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
 
@@ -20,7 +22,9 @@ def test__str__():
     # Make sequence from args
     dims = dimensions("time", "latitude")
     parameter = DimensionParameter(dims)
-    assert parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
+    assert (
+        parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
+    )
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
 
@@ -34,23 +38,30 @@ def test__str__():
     # Make sequence from comma-separated string
     dims = dimensions("time,latitude")
     parameter = DimensionParameter(dims)
-    assert parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
+    assert (
+        parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
+    )
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
 
     # Make sequence from tuple of values
     dims = dimensions(("time", "latitude"))
     parameter = DimensionParameter(dims)
-    assert parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
+    assert (
+        parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
+    )
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
 
     # Make sequence from list of values
     dims = dimensions(["time", "latitude"])
     parameter = DimensionParameter(dims)
-    assert parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
+    assert (
+        parameter.__str__() == "Dimensions to average over:" f"\n ('time', 'latitude')"
+    )
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
+
 
 def test_raw():
     dims = "time,latitude"

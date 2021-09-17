@@ -2,8 +2,13 @@ import numbers
 
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.base_parameter import _BaseIntervalOrSeriesParameter
-from roocs_utils.parameter.param_utils import (parse_range, parse_sequence,
-                            to_float, interval, series)
+from roocs_utils.parameter.param_utils import (
+    parse_range,
+    parse_sequence,
+    to_float,
+    interval,
+    series,
+)
 
 
 class LevelParameter(_BaseIntervalOrSeriesParameter):

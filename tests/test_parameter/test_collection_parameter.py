@@ -5,9 +5,11 @@ from roocs_utils.exceptions import MissingParameterValue
 from roocs_utils.parameter.collection_parameter import CollectionParameter, collection
 
 
-type_error = ("Input type of <{}> not allowed. Must be one of: "
-              "[<class 'collections.abc.Sequence'>, <class 'str'>, <class "
-              "'roocs_utils.parameter.param_utils.Series'>]")
+type_error = (
+    "Input type of <{}> not allowed. Must be one of: "
+    "[<class 'collections.abc.Sequence'>, <class 'str'>, <class "
+    "'roocs_utils.parameter.param_utils.Series'>]"
+)
 
 
 def test__str__():
@@ -16,22 +18,27 @@ def test__str__():
         "cmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga",
     ]
 
-    expected_str = ("Datasets to analyse:"
+    expected_str = (
+        "Datasets to analyse:"
         "\ncmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
-        "\ncmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga")
+        "\ncmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
+    )
 
     parameter = CollectionParameter(coll)
     assert parameter.__str__() == expected_str
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
 
-    coll = collection("cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga",
-               "cmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga")
+    coll = collection(
+        "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga",
+        "cmip5.output1.MPI-M.MPI-ESM-LR.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga",
+    )
 
     parameter = CollectionParameter(coll)
     assert parameter.__str__() == expected_str
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
+
 
 def test_raw():
     coll = [

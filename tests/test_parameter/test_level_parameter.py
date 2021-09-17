@@ -6,9 +6,11 @@ from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.level_parameter import LevelParameter
 from roocs_utils.parameter.param_utils import level_interval, level_series
 
-type_err = ("Input type of <{}> not allowed. Must be one of: [<class "
-            "'roocs_utils.parameter.param_utils.Interval'>, "
-            "<class 'roocs_utils.parameter.param_utils.Series'>, <class 'NoneType'>]")
+type_err = (
+    "Input type of <{}> not allowed. Must be one of: [<class "
+    "'roocs_utils.parameter.param_utils.Interval'>, "
+    "<class 'roocs_utils.parameter.param_utils.Series'>, <class 'NoneType'>]"
+)
 
 
 def test__str__():
@@ -39,14 +41,13 @@ def test_validate_error_format():
 def test_validate_error_len_1_tuple():
     with pytest.raises(InvalidParameterValue) as exc:
         level_interval((1000,))
-    assert (
-        str(exc.value)
-        == "Interval should be a range. Expected 2 values, received 1"
-    )
+    assert str(exc.value) == "Interval should be a range. Expected 2 values, received 1"
 
 
 def test_not_numbers():
-    level = level_interval(datetime.datetime(2085, 1, 1), datetime.datetime(2120, 12, 30))
+    level = level_interval(
+        datetime.datetime(2085, 1, 1), datetime.datetime(2120, 12, 30)
+    )
     with pytest.raises(InvalidParameterValue) as exc:
         LevelParameter(level)
     assert str(exc.value) == "Values must be valid numbers"
@@ -62,9 +63,7 @@ def test_word_string():
 def test_validate_error_no_slash():
     with pytest.raises(InvalidParameterValue) as exc:
         level_interval("1000 2000")
-    assert (
-        str(exc.value) == "Interval should be passed in as a range separated by /"
-    )
+    assert str(exc.value) == "Interval should be passed in as a range separated by /"
 
 
 def test_start_slash_end():
@@ -118,20 +117,20 @@ def test_as_dict():
 def test_slash_none():
     level = level_interval("/")
     parameter = LevelParameter(level)
-    assert parameter.value == None
+    assert parameter.value is None
     assert parameter.asdict() == {"first_level": None, "last_level": None}
 
 
 def test_none():
     level = None
     parameter = LevelParameter(level)
-    assert parameter.value == None
+    assert parameter.value is None
 
 
 def test_empty_string():
     level = level_interval("")
     parameter = LevelParameter(level)
-    assert parameter.value == None
+    assert parameter.value is None
 
     with pytest.raises(InvalidParameterValue) as exc:
         LevelParameter("")

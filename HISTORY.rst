@@ -11,6 +11,14 @@ Bug Fixes
 Breaking Changes
 ^^^^^^^^^^^^^^^^
 * Intake catalog maker removed, now in it's own package: `roocs/catalog-maker <https://github.com/roocs/catalog-maker>`_
+* Change to input parameter classes::
+  * Added: ``roocs_utils.parameter.time_components_parameter.TimeComponentsParameter``
+  * Modified input types required for classes::
+    * ``roocs_utils.parameter.time_parameter.TimeParameter``
+    * ``roocs_utils.parameter.level_parameter.LevelParameter``
+  * They both now require their inputs to be one of::
+    * ``roocs_utils.parameter.param_utils.Interval`` - to specify a range/interval
+    * ``roocs_utils.parameter.param_utils.Series`` - to specify a series of values
 
 New Features
 ^^^^^^^^^^^^

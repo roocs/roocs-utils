@@ -19,6 +19,7 @@ class CollectionParameter(_BaseParameter):
     Validates the input and parses the items.
 
     """
+
     allowed_input_types = [Sequence, str, collection]
 
     def _parse(self):
