@@ -18,7 +18,7 @@ class TimeComponentsParameter(_BaseParameter):
     `month` is special: you can use either strings or values:
        "feb", "mar" == 2, 3 == "02,03"
 
-    Validates the times input and parses the them into a dictionary.
+    Validates the times input and parses them into a dictionary.
     """
 
     allowed_input_types = [dict, str, time_components, type(None)]

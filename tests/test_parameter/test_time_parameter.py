@@ -141,3 +141,11 @@ def test_time_series_input():
         assert parameter.type == "series"
         assert parameter.value == expected_value
         assert parameter.asdict() == {"time_values": expected_value}
+
+    times = time_series(
+        "2085-01-01T12:00:00Z", "2095-03-03T03:03:03", "2120-12-30T12:00:00Z"
+    )
+    parameter = TimeParameter(times)
+    assert parameter.type == "series"
+    assert parameter.value == expected_value
+    assert parameter.asdict() == {"time_values": expected_value}
