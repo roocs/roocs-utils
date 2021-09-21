@@ -19,7 +19,8 @@ class _BaseParameter(object):
 
         # If the input is already an instance of this class, call its parse method
         if isinstance(self.input, self.__class__):
-            self.value = self.input._parse()
+            self.value = self.input.value
+            self.type = getattr(self.input, "type", "undefined")
         else:
             self._check_input_type()
             self.value = self._parse()
