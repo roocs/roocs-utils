@@ -41,7 +41,7 @@ class TimeComponentsParameter(_BaseParameter):
 
     def asdict(self):
         # Just return the value, either a dict or None
-        return self.value
+        return {"time_components": self.value}
 
     def __str__(self):
         if self.value is None:
