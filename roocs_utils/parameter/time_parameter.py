@@ -6,6 +6,7 @@ from roocs_utils.parameter.param_utils import (
     parse_range,
     parse_sequence,
     parse_datetime,
+    time_interval,
     interval,
     series,
 )
