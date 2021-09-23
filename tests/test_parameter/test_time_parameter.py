@@ -149,3 +149,25 @@ def test_time_series_input():
     assert parameter.type == "series"
     assert parameter.value == expected_value
     assert parameter.asdict() == {"time_values": expected_value}
+
+
+def test_time_parameter_get_bounds():
+    # Tests that the get_bounds() method of TimeParameter is working for
+    # types "series", "interval" and "none"
+    t_values = "2085-01-01T12:00:00", "2095-03-03T03:03:03", "2120-12-30T12:00:00"
+    t_bounds = t_values[0], t_values[-1]
+
+    def are_equal(b0, b1):
+        return b0[0][:19] == b1[0][:19] and b0[1][:19] == b1[1][:19]
+
+    parameter = TimeParameter(time_series(t_values))
+    assert parameter.type == "series"
+    assert are_equal(parameter.get_bounds(), t_bounds)
+
+    parameter = TimeParameter(time_series(t_bounds))
+    assert parameter.type == "series"
+    assert are_equal(parameter.get_bounds(), t_bounds)
+
+    parameter = TimeParameter(None)
+    assert parameter.type == "none"
+    assert parameter.get_bounds() == (None, None)

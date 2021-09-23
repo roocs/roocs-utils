@@ -69,6 +69,15 @@ class TimeParameter(_BaseIntervalOrSeriesParameter):
         elif self.type == "series":
             return {"time_values": self.value}
 
+    def get_bounds(self):
+        """Returns a tuple of the (start, end) times, calculated from
+        the value of the parameter. Either will default to None."""
+        if self.type in ("interval", "none"):
+            return self._value_as_tuple()
+
+        elif self.type == "series":
+            return self.value[0], self.value[-1]
+
     def __str__(self):
         if self.type in ("interval", "none"):
             value = self._value_as_tuple()

@@ -78,7 +78,7 @@ class _BaseIntervalOrSeriesParameter(_BaseParameter):
 
     def _value_as_tuple(self):
         value = self.value
-        if not value:
+        if value is None:
             value = None, None
 
         return value
