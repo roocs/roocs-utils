@@ -58,7 +58,9 @@ def _get_kwargs_for_opener(otype, **kwargs):
 
     # If single file opener, then remove any multifile args that would raise an
     # exception when called
-    [args.pop(arg) for arg in list(args) if arg in xr.open_dataset.__kwdefaults__]
+    if otype.lower() == "single":
+        [args.pop(arg) for arg in list(args) if arg not in xr.open_dataset.__kwdefaults__]
+
     return args
 
 
