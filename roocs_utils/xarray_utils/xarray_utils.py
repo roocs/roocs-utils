@@ -1,4 +1,5 @@
 import os
+import inspect
 from datetime import datetime
 from pathlib import Path
 
@@ -59,7 +60,7 @@ def _get_kwargs_for_opener(otype, **kwargs):
         [
             args.pop(arg)
             for arg in list(args)
-            if arg not in xr.open_dataset.__kwdefaults__
+            if arg not in inspect.getfullargspec(xr.open_dataset).kwonlyargs
         ]
 
     return args
