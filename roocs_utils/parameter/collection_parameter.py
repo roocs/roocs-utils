@@ -20,7 +20,7 @@ class CollectionParameter(_BaseParameter):
 
     """
 
-    allowed_input_types = [Sequence, str, collection]
+    allowed_input_types = [Sequence, str, collection, FileMapper]
 
     def _parse(self):
         classname = self.__class__.__name__
