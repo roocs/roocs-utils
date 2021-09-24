@@ -16,6 +16,11 @@ CMIP5_TAS = os.path.join(
     "master/test_data/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc",
 )
 
+CMIP5_TAS_EC_EARTH = os.path.join(
+    MINI_ESGF_CACHE_DIR,
+    "master/test_data/badc/cmip5/data/cmip5/output1/ICHEC/EC-EARTH/historical/mon/atmos/Amon/r1i1p1/latest/tas/*.nc",
+)
+
 CMIP5_ZOSTOGA = os.path.join(
     MINI_ESGF_CACHE_DIR,
     "master/test_data/badc/cmip5/data/cmip5/output1/INM/inmcm4/rcp45/mon/ocean/Omon/r1i1p1/latest/zostoga/zostoga_Omon_inmcm4_rcp45_r1i1p1_200601-210012.nc",
