@@ -46,20 +46,21 @@ def _get_kwargs_for_opener(otype, **kwargs):
     :param otype: (Str) type of opener (either "single" or "multi")
     :param kwargs: Any further keyword arguments to include when opening the dataset.
     """
-    args = {
-        "use_cftime": True,
-        "decode_timedelta": False
-    }
+    args = {"use_cftime": True, "decode_timedelta": False}
 
     if otype.lower().startswith("multi"):
-        args["combine"] = "by_coords" 
+        args["combine"] = "by_coords"
 
     args.update(kwargs)
 
     # If single file opener, then remove any multifile args that would raise an
     # exception when called
     if otype.lower() == "single":
-        [args.pop(arg) for arg in list(args) if arg not in xr.open_dataset.__kwdefaults__]
+        [
+            args.pop(arg)
+            for arg in list(args)
+            if arg not in xr.open_dataset.__kwdefaults__
+        ]
 
     return args
 
@@ -69,7 +70,7 @@ def open_xr_dataset(dset, **kwargs):
     Opens an xarray dataset from a dataset input.
 
     :param dset: (Str or Path) ds_id, directory path or file path ending in *.nc.
-    :param kwargs: Any further keyword arguments to include when opening the dataset. 
+    :param kwargs: Any further keyword arguments to include when opening the dataset.
                    use_cftime=True and decode_timedelta=False are used by default, along with combine="by_coords" for open_mfdataset only.
     Any list will be interpreted as list of files
     """
@@ -89,7 +90,7 @@ def open_xr_dataset(dset, **kwargs):
     # if a list we want a multi-file dataset
     if len(dset) > 1:
         ds = xr.open_mfdataset(dset, **multi_file_kwargs)
-        # Ensure that time units are retained 
+        # Ensure that time units are retained
         _patch_time_encoding(ds, dset, **single_file_kwargs)
         return ds
 
@@ -290,4 +291,3 @@ def get_main_variable(ds, exclude_common_coords=True):
         raise Exception("Could not determine main variable")
     else:
         return result
-

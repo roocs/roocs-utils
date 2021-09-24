@@ -22,5 +22,4 @@ def test_open_xr_dataset_retains_time_encoding(load_test_data):
     # Now test without our clever opener - to prove time encoding is lost
     kwargs = {"use_cftime": True, "decode_timedelta": False, "combine": "by_coords"}
     ds = xr.open_mfdataset(glob.glob(dset), **kwargs)
-    assert ds.time.encoding == {} 
-
+    assert ds.time.encoding == {}
