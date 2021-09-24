@@ -36,6 +36,32 @@ def _patch_time_encoding(ds, file_list, **kwargs):
         ds.time.encoding["units"] = ds1.time.encoding.get("units", "")
 
 
+def _get_kwargs_for_opener(otype, **kwargs):
+    """
+    Returns a dictionary of keyword args for sending to either `xr.open_dataset()`
+    of `xr.open_mfdataset()`, based on whether otype="single" or "multi".
+    The provided `kwargs` dictionary is used to extend/override the default
+    values.
+
+    :param otype: (Str) type of opener (either "single" or "multi")
+    :param kwargs: Any further keyword arguments to include when opening the dataset.
+    """
+    args = {
+        "use_cftime": True,
+        "decode_timedelta": False
+    }
+
+    if otype.lower().startswith("multi"):
+        args["combine"] = "by_coords" 
+
+    args.update(kwargs)
+
+    # If single file opener, then remove any multifile args that would raise an
+    # exception when called
+    [args.pop(arg) for arg in list(args) if arg in xr.open_dataset.__kwdefaults__]
+    return args
+
+
 def open_xr_dataset(dset, **kwargs):
     """
     Opens an xarray dataset from a dataset input.
@@ -46,14 +72,8 @@ def open_xr_dataset(dset, **kwargs):
     Any list will be interpreted as list of files
     """
     # Set up dictionaries of arguments to send to all `xr.open_*dataset()` calls
-    single_file_kwargs = {
-        "use_cftime": True,
-        "decode_timedelta": False
-    }
-    single_file_kwargs.update(kwargs)
-
-    multi_file_kwargs = single_file_kwargs.copy()
-    multi_file_kwargs["combine"] = "by_coords"
+    single_file_kwargs = _get_kwargs_for_opener("single", **kwargs)
+    multi_file_kwargs = _get_kwargs_for_opener("multi", **kwargs)
 
     # Force the value of dset to be a list if not a list or tuple
     if type(dset) not in (list, tuple):
@@ -73,11 +93,7 @@ def open_xr_dataset(dset, **kwargs):
 
     # if there is only one file we only need to call open_dataset
     else:
-        try:
-            return xr.open_dataset(dset[0], **single_file_kwargs)
-        # catch when kwargs only exist for open_mfdataset
-        except TypeError:
-            return xr.open_mfdataset(dset, **multi_file_kwargs)
+        return xr.open_dataset(dset[0], **single_file_kwargs)
 
 
 # from dachar
