@@ -36,18 +36,7 @@ def _patch_time_encoding(ds, file_list, **kwargs):
         ds.time.encoding["units"] = ds1.time.encoding.get("units", "")
 
 
-
-from xarray.testing import assert_identical
 def open_xr_dataset(dset, **kwargs):
-    ds1 = open_xr_dataset_old(dset, **kwargs)
-    ds2 = open_xr_dasaset_new(dset, **kwargs)
-    assert_identical(ds1, ds2)
-    return ds1 
-
-
-
-
-def open_xr_dataset_new(dset, **kwargs):
     """
     Opens an xarray dataset from a dataset input.
 
@@ -283,3 +272,4 @@ def get_main_variable(ds, exclude_common_coords=True):
         raise Exception("Could not determine main variable")
     else:
         return result
+
