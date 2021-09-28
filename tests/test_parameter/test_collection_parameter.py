@@ -2,13 +2,14 @@ import pytest
 
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.exceptions import MissingParameterValue
-from roocs_utils.parameter.collection_parameter import CollectionParameter, collection
+from roocs_utils.parameter.collection_parameter import collection
+from roocs_utils.parameter.collection_parameter import CollectionParameter
 
 
 type_error = (
     "Input type of <{}> not allowed. Must be one of: "
     "[<class 'collections.abc.Sequence'>, <class 'str'>, <class "
-    "'roocs_utils.parameter.param_utils.Series'>]"
+    "'roocs_utils.parameter.param_utils.Series'>, <class 'roocs_utils.utils.file_utils.FileMapper'>]"
 )
 
 
