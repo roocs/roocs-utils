@@ -1,4 +1,5 @@
 import os
+import inspect
 from datetime import datetime
 from pathlib import Path
 
@@ -12,14 +13,71 @@ from roocs_utils.project_utils import dset_to_filepaths
 known_coord_types = ["time", "level", "latitude", "longitude"]
 
 
+def _patch_time_encoding(ds, file_list, **kwargs):
+    """
+    NOTE: Hopefully this will be fixed in Xarray at some point. The problem is that if
+          time is present, the multi-file dataset has an empty `encoding` dictionary.
+
+    Reads the first file in `file_list` to read in the time units attribute. It then
+    saves that attribute in `ds.time.encoding["units"]`.
+
+    :param ds: xarray.Dataset
+    :file_list: list of file paths
+    """
+    # Check that first file exists, if not return
+    f1 = sorted(file_list)[0]
+
+    if not os.path.isfile(f1):
+        return
+
+    # If time is present and the multi-file dataset has an empty `encoding` dictionary.
+    # Open the first file to get the time units and add into encoding dictionary.
+    if hasattr(ds, "time") and not ds.time.encoding.get("units"):
+        ds1 = xr.open_dataset(f1, **kwargs)
+        ds.time.encoding["units"] = ds1.time.encoding.get("units", "")
+
+
+def _get_kwargs_for_opener(otype, **kwargs):
+    """
+    Returns a dictionary of keyword args for sending to either `xr.open_dataset()`
+    of `xr.open_mfdataset()`, based on whether otype="single" or "multi".
+    The provided `kwargs` dictionary is used to extend/override the default
+    values.
+
+    :param otype: (Str) type of opener (either "single" or "multi")
+    :param kwargs: Any further keyword arguments to include when opening the dataset.
+    """
+    args = {"use_cftime": True, "decode_timedelta": False}
+
+    if otype.lower().startswith("multi"):
+        args["combine"] = "by_coords"
+
+    args.update(kwargs)
+
+    # If single file opener, then remove any multifile args that would raise an
+    # exception when called
+    if otype.lower() == "single":
+        [
+            args.pop(arg)
+            for arg in list(args)
+            if arg not in inspect.getfullargspec(xr.open_dataset).kwonlyargs
+        ]
+
+    return args
+
+
 def open_xr_dataset(dset, **kwargs):
     """
     Opens an xarray dataset from a dataset input.
 
     :param dset: (Str or Path) ds_id, directory path or file path ending in *.nc.
-    :param kwargs: Any further keyword arguments to include when opening the dataset. use_cftime=True and decode_timedelta=False are used by default, along with combine="by_coords" for open_mfdataset only.
+    :param kwargs: Any further keyword arguments to include when opening the dataset.
+                   use_cftime=True and decode_timedelta=False are used by default, along with combine="by_coords" for open_mfdataset only.
     Any list will be interpreted as list of files
     """
+    # Set up dictionaries of arguments to send to all `xr.open_*dataset()` calls
+    single_file_kwargs = _get_kwargs_for_opener("single", **kwargs)
+    multi_file_kwargs = _get_kwargs_for_opener("multi", **kwargs)
 
     # Force the value of dset to be a list if not a list or tuple
     if type(dset) not in (list, tuple):
@@ -32,24 +90,14 @@ def open_xr_dataset(dset, **kwargs):
 
     # if a list we want a multi-file dataset
     if len(dset) > 1:
-        return xr.open_mfdataset(
-            dset, use_cftime=True, combine="by_coords", decode_timedelta=False, **kwargs
-        )
+        ds = xr.open_mfdataset(dset, **multi_file_kwargs)
+        # Ensure that time units are retained
+        _patch_time_encoding(ds, dset, **single_file_kwargs)
+        return ds
+
     # if there is only one file we only need to call open_dataset
     else:
-        try:
-            return xr.open_dataset(
-                dset[0], use_cftime=True, decode_timedelta=False, **kwargs
-            )
-        # catch when kwargs only exist for open_mfdataset
-        except TypeError:
-            return xr.open_mfdataset(
-                dset,
-                use_cftime=True,
-                combine="by_coords",
-                decode_timedelta=False,
-                **kwargs,
-            )
+        return xr.open_dataset(dset[0], **single_file_kwargs)
 
 
 # from dachar
