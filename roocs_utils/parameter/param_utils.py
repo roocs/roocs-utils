@@ -1,10 +1,12 @@
-from collections.abc import Sequence
-from dateutil import parser as date_parser
 import calendar
+from collections.abc import Sequence
+
+from dateutil import parser as date_parser
 
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.exceptions import MissingParameterValue
 from roocs_utils.utils.file_utils import FileMapper
+from roocs_utils.utils.time_utils import str_to_AnyCalendarDateTime
 
 
 # Global variables that are generally useful
@@ -72,10 +74,14 @@ def parse_sequence(x, caller):
     return sequence
 
 
-def parse_datetime(dt, default=None):
-    """Parses string to datetime and returns isoformat string for it.
-    If `default` is set, use that in case `dt` is None."""
-    return date_parser.parse(dt, default=default).isoformat()
+# def parse_datetime(dt, default=None):
+#     """Parses string to datetime and returns isoformat string for it.
+#     If `default` is set, use that in case `dt` is None."""
+#     return date_parser.parse(dt, default=default).isoformat()
+
+
+def parse_datetime(dt, defaults=None):
+    return str(str_to_AnyCalendarDateTime(dt, defaults=defaults))
 
 
 class Series:

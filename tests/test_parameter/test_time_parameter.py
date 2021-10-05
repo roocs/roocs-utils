@@ -3,12 +3,10 @@ import datetime
 import pytest
 
 from roocs_utils.exceptions import InvalidParameterValue
+from roocs_utils.parameter.param_utils import time_components
+from roocs_utils.parameter.param_utils import time_interval
+from roocs_utils.parameter.param_utils import time_series
 from roocs_utils.parameter.time_parameter import TimeParameter
-from roocs_utils.parameter.param_utils import (
-    time_interval,
-    time_series,
-    time_components,
-)
 
 
 type_err = (
@@ -23,8 +21,8 @@ def test__str__():
     parameter = TimeParameter(time)
     assert (
         parameter.__str__() == "Time period to subset over"
-        f"\n start time: 2085-01-01T12:00:00+00:00"
-        f"\n end time: 2120-12-30T12:00:00+00:00"
+        f"\n start time: 2085-01-01T12:00:00"
+        f"\n end time: 2120-12-30T12:00:00"
     )
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
@@ -66,27 +64,27 @@ def test_validate_error_no_slash():
 def test_trailing_slash():
     time = time_interval("2085-01-01T12:00:00Z/")
     parameter = TimeParameter(time)
-    assert parameter.value == ("2085-01-01T12:00:00+00:00", None)
+    assert parameter.value == ("2085-01-01T12:00:00", None)
 
 
 def test_starting_slash():
     time = time_interval("/2120-12-30T12:00:00Z")
     parameter = TimeParameter(time)
-    assert parameter.value == (None, "2120-12-30T12:00:00+00:00")
+    assert parameter.value == (None, "2120-12-30T12:00:00")
 
 
 def test_start_slash_end():
     time = time_interval("2085-01-01T12:00:00Z/2120-12-30T12:00:00Z")
     parameter = TimeParameter(time)
-    assert parameter.value == ("2085-01-01T12:00:00+00:00", "2120-12-30T12:00:00+00:00")
+    assert parameter.value == ("2085-01-01T12:00:00", "2120-12-30T12:00:00")
 
 
 def test_as_dict():
     time = time_interval("2085-01-01T12:00:00Z/2120-12-30T12:00:00Z")
     parameter = TimeParameter(time)
     assert parameter.asdict() == {
-        "start_time": "2085-01-01T12:00:00+00:00",
-        "end_time": "2120-12-30T12:00:00+00:00",
+        "start_time": "2085-01-01T12:00:00",
+        "end_time": "2120-12-30T12:00:00",
     }
 
 
@@ -116,7 +114,7 @@ def test_empty_string():
 def test_white_space():
     time = time_interval("2085-01-01T12:00:00Z / 2120-12-30T12:00:00Z ")
     parameter = TimeParameter(time)
-    assert parameter.value == ("2085-01-01T12:00:00+00:00", "2120-12-30T12:00:00+00:00")
+    assert parameter.value == ("2085-01-01T12:00:00", "2120-12-30T12:00:00")
 
 
 def test_class_instance():
@@ -124,14 +122,30 @@ def test_class_instance():
     parameter = TimeParameter(time)
     new_parameter = TimeParameter(parameter)
     assert new_parameter.value == (
-        "2085-01-01T12:00:00+00:00",
-        "2120-12-30T12:00:00+00:00",
+        "2085-01-01T12:00:00",
+        "2120-12-30T12:00:00",
     )
+
+
+def test_360_day_calendar():
+    time = time_interval("2007-02-29T12:00:00Z/2010-02-30T12:00:00Z")
+    parameter = TimeParameter(time)
+    assert parameter.value == ("2007-02-29T12:00:00", "2010-02-30T12:00:00")
+
+    time = time_series(
+        "2007-02-29T12:00:00Z", "2009-02-30T12:00:00Z", "2010-02-30T12:00:00Z"
+    )
+    parameter = TimeParameter(time)
+    assert parameter.value == [
+        "2007-02-29T12:00:00",
+        "2009-02-30T12:00:00",
+        "2010-02-30T12:00:00",
+    ]
 
 
 def test_time_series_input():
     value = ["2085-01-01T12:00:00Z", "2095-03-03T03:03:03", "2120-12-30T12:00:00Z"]
-    expected_value = [i.replace("Z", "+00:00") for i in value]
+    expected_value = [i.replace("Z", "") for i in value]
     vstring = ",".join([str(i) for i in value])
 
     for tm in (vstring, value, tuple(value)):

@@ -94,13 +94,14 @@ class AnyCalendarDateTime:
             self.month = self.MONTH_RANGE[-1]
 
 
-def str_to_AnyCalendarDateTime(dt):
+def str_to_AnyCalendarDateTime(dt, defaults=None):
     """
     Takes a string representing date/time and returns a DateTimeAnyTime object.
     String formats should start with Year and go through to Second, but you
     can miss out anything from month onwards.
 
-    :param dt: string representing a date/time [string]
+    :param dt: (str) string representing a date/time.
+    :param defaults: (list) The default values to use for year, month, day, hour, minute and second if they cannot be parsed from the string. A default value must be provided for each component. If defaults=None, [-1, 1, 1, 0, 0, 0] is used.
     :return: AnyCalendarDateTime object
     """
     if len(dt) < 1:
@@ -116,10 +117,16 @@ def str_to_AnyCalendarDateTime(dt):
         items = match.groups()
     else:
         # Try a more complex split and build of the time string
-        defaults = [-1, 1, 1, 0, 0, 0]
-        components = re.split("[- T:]", dt)
+        if not defaults:
+            defaults = [-1, 1, 1, 0, 0, 0]
+        else:
+            if len(defaults) < 6:
+                raise Exception(
+                    "A default value must be provided for year, month, day, hour, minute and second."
+                )
+        components = re.split("[- T:]", dt.strip("Z"))
 
         # Build a list of time components
         items = components + defaults[len(components) :]
 
-    return AnyCalendarDateTime(*[int(i) for i in items])
+    return AnyCalendarDateTime(*[int(float(i)) for i in items])
