@@ -74,13 +74,9 @@ def parse_sequence(x, caller):
     return sequence
 
 
-# def parse_datetime(dt, default=None):
-#     """Parses string to datetime and returns isoformat string for it.
-#     If `default` is set, use that in case `dt` is None."""
-#     return date_parser.parse(dt, default=default).isoformat()
-
-
 def parse_datetime(dt, defaults=None):
+    """Parses string to datetime and returns isoformat string for it.
+    If `defaults` is set, use that in case `dt` is None."""
     return str(str_to_AnyCalendarDateTime(dt, defaults=defaults))
 
 

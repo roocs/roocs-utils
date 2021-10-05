@@ -104,9 +104,9 @@ def str_to_AnyCalendarDateTime(dt, defaults=None):
     :param defaults: (list) The default values to use for year, month, day, hour, minute and second if they cannot be parsed from the string. A default value must be provided for each component. If defaults=None, [-1, 1, 1, 0, 0, 0] is used.
     :return: AnyCalendarDateTime object
     """
-    if len(dt) < 1:
+    if not dt and not defaults:
         raise Exception(
-            "Must provide at least the year as argument to create date time."
+            "Must provide at least the year as argument, or all defaults, to create date time."
         )
 
     # Start with most common pattern
