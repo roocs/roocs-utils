@@ -13,6 +13,30 @@ type_err = (
 )
 
 
+def test_interval_string_input():
+    # start/
+    parameter = LevelParameter("1000/")
+    assert parameter.value == (1000, None)
+    # /end
+    parameter = LevelParameter("/2000")
+    assert parameter.value == (None, 2000)
+    # start/end
+    parameter = LevelParameter("1000/2000")
+    assert parameter.value == (1000, 2000)
+
+
+def test_series_string_input():
+    # one value
+    parameter = LevelParameter("1000")
+    assert parameter.value == [1000.0]
+    # two values separated by ","
+    parameter = LevelParameter("1000, 2000")
+    assert parameter.value == [1000.0, 2000.0]
+    # more than two values ...
+    parameter = LevelParameter("1000, 2000, 3000")
+    assert parameter.value == [1000.0, 2000.0, 3000.0]
+
+
 def test__str__():
     level = level_interval("1000/2000")
     parameter = LevelParameter(level)
@@ -35,7 +59,7 @@ def test_validate_error_format():
     level = 1000
     with pytest.raises(InvalidParameterValue) as exc:
         LevelParameter(level)
-    assert str(exc.value) == type_err.format("class 'int'")
+    assert "not allowed" in str(exc.value)
 
 
 def test_validate_error_len_1_tuple():
@@ -134,7 +158,7 @@ def test_empty_string():
 
     with pytest.raises(InvalidParameterValue) as exc:
         LevelParameter("")
-    assert str(exc.value) == type_err.format("class 'str'")
+    assert "Unable to parse the level values entered" in str(exc.value)
 
 
 def test_white_space():

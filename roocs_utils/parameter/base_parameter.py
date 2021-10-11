@@ -1,10 +1,5 @@
-from collections.abc import Sequence
-from pydoc import locate
-
 from roocs_utils.exceptions import InvalidParameterValue
-from roocs_utils.exceptions import MissingParameterValue
 from roocs_utils.parameter.param_utils import interval, series
-from roocs_utils.utils.file_utils import FileMapper
 
 
 class _BaseParameter(object):
@@ -56,7 +51,7 @@ class _BaseIntervalOrSeriesParameter(_BaseParameter):
         type: "series"   --> value: [item1, item2, ..., item_n]
     """
 
-    allowed_input_types = [interval, series, type(None)]
+    allowed_input_types = [interval, series, type(None), type('')]
 
     def _parse(self):
 
@@ -69,6 +64,15 @@ class _BaseIntervalOrSeriesParameter(_BaseParameter):
         elif isinstance(self.input, type(None)):
             self.type = "none"
             return None
+        elif isinstance(self.input, type('')):
+            if '/' in self.input:
+                self.type = "interval"
+                self.input = interval(self.input)
+                return self._parse_as_interval()
+            else:
+                self.type = "series"
+                self.input = series(self.input)
+                return self._parse_as_series()
 
     def _parse_as_interval(self):
         raise NotImplementedError
