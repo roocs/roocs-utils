@@ -35,7 +35,7 @@ def test_series_string_input():
     parameter = TimeParameter("2085-01-01T12:00:00Z")
     assert parameter.value == ["2085-01-01T12:00:00"]
     assert parameter.get_bounds() == ('2085-01-01T12:00:00', '2085-01-01T12:00:00')
-    # two values sepearted by ","
+    # two values separated by ","
     parameter = TimeParameter("2085-01-01T12:00:00Z, 2120-12-30T12:00:00Z")
     assert parameter.value == ['2085-01-01T12:00:00', '2120-12-30T12:00:00']
     assert parameter.get_bounds() == ('2085-01-01T12:00:00', '2120-12-30T12:00:00')

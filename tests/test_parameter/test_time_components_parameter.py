@@ -29,6 +29,14 @@ tc_dict_short_names = {
 }
 
 
+def test_string_input():
+    parameter = TimeComponentsParameter(
+        "year:1999,2000,2001|month:dec,jan,feb|hour:00")
+    assert parameter.value["year"] == [1999, 2000, 2001]
+    assert parameter.value["month"] == [12, 1, 2]
+    assert parameter.value["hour"] == [0]
+
+
 def test_TimeComponents_class():
     tc1 = time_components(**string_to_dict(tc_str))
     tc2 = time_components(**tc_dict)
