@@ -19,26 +19,32 @@ def test_interval_string_input():
     # start/
     parameter = TimeParameter("2085-01-01T12:00:00Z/")
     assert parameter.value == ("2085-01-01T12:00:00", None)
+    assert parameter.get_bounds() == ('2085-01-01T12:00:00', None)
     # /end
     parameter = TimeParameter("/2120-12-30T12:00:00Z")
     assert parameter.value == (None, "2120-12-30T12:00:00")
+    assert parameter.get_bounds() == (None, "2120-12-30T12:00:00")
     # start/end
     parameter = TimeParameter("2085-01-01T12:00:00Z/2120-12-30T12:00:00Z")
     assert parameter.value == ("2085-01-01T12:00:00", "2120-12-30T12:00:00")
+    assert parameter.get_bounds() == ("2085-01-01T12:00:00", "2120-12-30T12:00:00")
 
 
 def test_series_string_input():
     # one value
     parameter = TimeParameter("2085-01-01T12:00:00Z")
     assert parameter.value == ["2085-01-01T12:00:00"]
+    assert parameter.get_bounds() == ('2085-01-01T12:00:00', '2085-01-01T12:00:00')
     # two values sepearted by ","
     parameter = TimeParameter("2085-01-01T12:00:00Z, 2120-12-30T12:00:00Z")
     assert parameter.value == ['2085-01-01T12:00:00', '2120-12-30T12:00:00']
+    assert parameter.get_bounds() == ('2085-01-01T12:00:00', '2120-12-30T12:00:00')
     # more then two values ...
     parameter = TimeParameter(
         "2085-01-01T12:00:00Z, 2090-01-01T12:00:00Z, 2120-12-30T12:00:00Z")
     assert parameter.value == [
         '2085-01-01T12:00:00', '2090-01-01T12:00:00', '2120-12-30T12:00:00']
+    assert parameter.get_bounds() == ('2085-01-01T12:00:00', '2120-12-30T12:00:00')
 
 
 def test__str__():
