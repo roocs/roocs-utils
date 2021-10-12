@@ -56,7 +56,7 @@ class _BaseIntervalOrSeriesParameter(_BaseParameter):
         type: "series"   --> value: [item1, item2, ..., item_n]
     """
 
-    allowed_input_types = [interval, series, type(None), type('')]
+    allowed_input_types = [interval, series, type(None), type("")]
 
     def _parse(self):
 
@@ -69,8 +69,8 @@ class _BaseIntervalOrSeriesParameter(_BaseParameter):
         elif isinstance(self.input, type(None)):
             self.type = "none"
             return None
-        elif isinstance(self.input, type('')):
-            if '/' in self.input:
+        elif isinstance(self.input, type("")):
+            if "/" in self.input:
                 self.type = "interval"
                 self.input = interval(self.input)
                 return self._parse_as_interval()

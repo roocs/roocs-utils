@@ -31,23 +31,20 @@ tc_dict_short_names = {
 
 def test_string_input():
     # year, month, hour
-    parameter = TimeComponentsParameter(
-        "year:1999,2000,2001|month:dec,jan,feb|hour:00")
+    parameter = TimeComponentsParameter("year:1999,2000,2001|month:dec,jan,feb|hour:00")
     assert parameter.value["year"] == [1999, 2000, 2001]
     assert parameter.value["month"] == [12, 1, 2]
     assert parameter.value["hour"] == [0]
-    assert parameter.get_bounds() == ('1999-01-01T12:00:00', '2001-12-30T12:00:00')
+    assert parameter.get_bounds() == ("1999-01-01T12:00:00", "2001-12-30T12:00:00")
     # month
-    parameter = TimeComponentsParameter(
-        "month:12,1,02")
+    parameter = TimeComponentsParameter("month:12,1,02")
     assert parameter.value["month"] == [12, 1, 2]
     assert parameter.get_bounds() == (None, None)
     # single year
-    parameter = TimeComponentsParameter(
-        "year:2010|month:mar,apr,may")
+    parameter = TimeComponentsParameter("year:2010|month:mar,apr,may")
     assert parameter.value["year"] == [2010]
     assert parameter.value["month"] == [3, 4, 5]
-    assert parameter.get_bounds() == ('2010-01-01T12:00:00', '2010-12-30T12:00:00')
+    assert parameter.get_bounds() == ("2010-01-01T12:00:00", "2010-12-30T12:00:00")
 
 
 def test_TimeComponents_class():
