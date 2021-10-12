@@ -32,6 +32,11 @@ class _BaseParameter(object):
     def _parse(self):
         raise NotImplementedError
 
+    def get_bounds(self):
+        """Returns a tuple of the (start, end) times, calculated from
+        the value of the parameter. Either will default to None."""
+        raise NotImplementedError
+
     def __str__(self):
         raise NotImplementedError
 

@@ -43,6 +43,16 @@ class TimeComponentsParameter(_BaseParameter):
         # Just return the value, either a dict or None
         return {"time_components": self.value}
 
+    def get_bounds(self):
+        """Returns a tuple of the (start, end) times, calculated from
+        the value of the parameter. Either will default to None."""
+        if "year" in self.value:
+            start = f"{self.value['year'][0]}-01-01T12:00:00"
+            end = f"{self.value['year'][-1]}-12-30T12:00:00"
+        else:
+            start = end = None
+        return (start, end)
+
     def __str__(self):
         if self.value is None:
             return "No time components specified"
