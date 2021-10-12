@@ -35,6 +35,7 @@ def test_string_input():
     assert parameter.value["year"] == [1999, 2000, 2001]
     assert parameter.value["month"] == [12, 1, 2]
     assert parameter.value["hour"] == [0]
+    # assert parameter.get_bounds() == ('1999-01-01T12:00:00', '2001-12-30T12:00:00')
 
 
 def test_TimeComponents_class():
