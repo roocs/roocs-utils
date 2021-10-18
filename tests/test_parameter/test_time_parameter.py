@@ -36,6 +36,10 @@ def test_interval_string_input():
     parameter = TimeParameter("2085/2120")
     assert parameter.value == ("2085-01-01T00:00:00", "2120-12-31T23:59:59")
     assert parameter.get_bounds() == ("2085-01-01T00:00:00", "2120-12-31T23:59:59")
+    # start/end with year-month-day
+    parameter = TimeParameter("2085-01-16/2120-12-16")
+    assert parameter.value == ("2085-01-16T00:00:00", "2120-12-16T23:59:59")
+    assert parameter.get_bounds() == ("2085-01-16T00:00:00", "2120-12-16T23:59:59")
 
 
 def test_series_string_input():
