@@ -33,7 +33,9 @@ class TimeParameter(_BaseIntervalOrSeriesParameter):
                     start, defaults=[datetime.MINYEAR, 1, 1, 0, 0, 0]
                 )
             if end is not None:
-                end = parse_datetime(end, defaults=[datetime.MAXYEAR, 12, 30, 0, 0, 0])
+                end = parse_datetime(
+                    end, defaults=[datetime.MAXYEAR, 12, 31, 23, 59, 59]
+                )
 
         except Exception:
             raise InvalidParameterValue("Unable to parse the time values entered")
