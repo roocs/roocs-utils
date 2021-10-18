@@ -72,7 +72,8 @@ def open_xr_dataset(dset, **kwargs):
 
     :param dset: (Str or Path) ds_id, directory path or file path ending in *.nc.
     :param kwargs: Any further keyword arguments to include when opening the dataset.
-                   use_cftime=True and decode_timedelta=False are used by default, along with combine="by_coords" for open_mfdataset only.
+                   use_cftime=True and decode_timedelta=False are used by default, 
+                   along with combine="by_coords" for open_mfdataset only.
     Any list will be interpreted as list of files
     """
     # Set up dictionaries of arguments to send to all `xr.open_*dataset()` calls
