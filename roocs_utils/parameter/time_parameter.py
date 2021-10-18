@@ -2,11 +2,7 @@ import datetime
 
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.base_parameter import _BaseIntervalOrSeriesParameter
-from roocs_utils.parameter.param_utils import interval
 from roocs_utils.parameter.param_utils import parse_datetime
-from roocs_utils.parameter.param_utils import parse_range
-from roocs_utils.parameter.param_utils import parse_sequence
-from roocs_utils.parameter.param_utils import series
 from roocs_utils.parameter.param_utils import time_interval
 
 
@@ -37,7 +33,9 @@ class TimeParameter(_BaseIntervalOrSeriesParameter):
                     start, defaults=[datetime.MINYEAR, 1, 1, 0, 0, 0]
                 )
             if end is not None:
-                end = parse_datetime(end, defaults=[datetime.MAXYEAR, 12, 30, 0, 0, 0])
+                end = parse_datetime(
+                    end, defaults=[datetime.MAXYEAR, 12, 31, 23, 59, 59]
+                )
 
         except Exception:
             raise InvalidParameterValue("Unable to parse the time values entered")

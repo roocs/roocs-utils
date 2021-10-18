@@ -3,7 +3,6 @@ import datetime
 import pytest
 
 from roocs_utils.exceptions import InvalidParameterValue
-from roocs_utils.parameter.param_utils import time_components
 from roocs_utils.parameter.param_utils import time_interval
 from roocs_utils.parameter.param_utils import time_series
 from roocs_utils.parameter.time_parameter import TimeParameter
@@ -16,13 +15,65 @@ type_err = (
 )
 
 
+def test_interval_string_input():
+    # start/
+    parameter = TimeParameter("2085-01-01T12:00:00Z/")
+    assert parameter.value == ("2085-01-01T12:00:00", None)
+    assert parameter.get_bounds() == ("2085-01-01T12:00:00", None)
+    # /end
+    parameter = TimeParameter("/2120-12-30T12:00:00Z")
+    assert parameter.value == (None, "2120-12-30T12:00:00")
+    assert parameter.get_bounds() == (None, "2120-12-30T12:00:00")
+    # start/end
+    parameter = TimeParameter("2085-01-01T12:00:00Z/2120-12-30T12:00:00Z")
+    assert parameter.value == ("2085-01-01T12:00:00", "2120-12-30T12:00:00")
+    assert parameter.get_bounds() == ("2085-01-01T12:00:00", "2120-12-30T12:00:00")
+    # start/end with non 360-day calendar
+    parameter = TimeParameter("2085-01-01T00:00:00Z/2120-12-31T23:59:59Z")
+    assert parameter.value == ("2085-01-01T00:00:00", "2120-12-31T23:59:59")
+    assert parameter.get_bounds() == ("2085-01-01T00:00:00", "2120-12-31T23:59:59")
+    # start/end with year
+    parameter = TimeParameter("2085/2120")
+    assert parameter.value == ("2085-01-01T00:00:00", "2120-12-31T23:59:59")
+    assert parameter.get_bounds() == ("2085-01-01T00:00:00", "2120-12-31T23:59:59")
+    # start/end with year-month-day
+    parameter = TimeParameter("2085-01-16/2120-12-16")
+    assert parameter.value == ("2085-01-16T00:00:00", "2120-12-16T23:59:59")
+    assert parameter.get_bounds() == ("2085-01-16T00:00:00", "2120-12-16T23:59:59")
+
+
+def test_series_string_input():
+    # one value
+    parameter = TimeParameter("2085-01-01T12:00:00Z")
+    assert parameter.value == ["2085-01-01T12:00:00"]
+    assert parameter.get_bounds() == ("2085-01-01T12:00:00", "2085-01-01T12:00:00")
+    # two values separated by ","
+    parameter = TimeParameter("2085-01-01T12:00:00Z, 2120-12-30T12:00:00Z")
+    assert parameter.value == ["2085-01-01T12:00:00", "2120-12-30T12:00:00"]
+    assert parameter.get_bounds() == ("2085-01-01T12:00:00", "2120-12-30T12:00:00")
+    # more then two values ...
+    parameter = TimeParameter(
+        "2085-01-01T12:00:00Z, 2090-01-01T12:00:00Z, 2120-12-30T12:00:00Z"
+    )
+    assert parameter.value == [
+        "2085-01-01T12:00:00",
+        "2090-01-01T12:00:00",
+        "2120-12-30T12:00:00",
+    ]
+    assert parameter.get_bounds() == ("2085-01-01T12:00:00", "2120-12-30T12:00:00")
+    # with year only
+    parameter = TimeParameter("2085, 2120")
+    assert parameter.value == ["2085-01-01T00:00:00", "2120-01-01T00:00:00"]
+    assert parameter.get_bounds() == ("2085-01-01T00:00:00", "2120-01-01T00:00:00")
+
+
 def test__str__():
     time = time_interval("2085-01-01T12:00:00Z/2120-12-30T12:00:00Z")
     parameter = TimeParameter(time)
     assert (
         parameter.__str__() == "Time period to subset over"
-        f"\n start time: 2085-01-01T12:00:00"
-        f"\n end time: 2120-12-30T12:00:00"
+        "\n start time: 2085-01-01T12:00:00"
+        "\n end time: 2120-12-30T12:00:00"
     )
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
@@ -45,7 +96,7 @@ def test_validate_error_datetime():
     time = datetime.datetime(2085, 1, 1)
     with pytest.raises(InvalidParameterValue) as exc:
         TimeParameter(time)
-    assert str(exc.value) == type_err.format("class 'datetime.datetime'")
+    assert "not allowed" in str(exc.value)
 
 
 def test_datetime_tuple():
@@ -108,7 +159,7 @@ def test_empty_string():
 
     with pytest.raises(InvalidParameterValue) as exc:
         TimeParameter("")
-    assert str(exc.value) == type_err.format("class 'str'")
+    assert "Unable to parse the time values entered" in str(exc.value)
 
 
 def test_white_space():

@@ -1,14 +1,6 @@
-import numbers
-
-from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.base_parameter import _BaseIntervalOrSeriesParameter
-from roocs_utils.parameter.param_utils import (
-    parse_range,
-    parse_sequence,
-    to_float,
-    interval,
-    series,
-)
+from roocs_utils.parameter.param_utils import to_float
+from roocs_utils.exceptions import InvalidParameterValue
 
 
 class LevelParameter(_BaseIntervalOrSeriesParameter):
@@ -31,7 +23,12 @@ class LevelParameter(_BaseIntervalOrSeriesParameter):
     """
 
     def _parse_as_interval(self):
-        value = tuple([to_float(i) for i in self.input.value])
+        try:
+            value = tuple([to_float(i) for i in self.input.value])
+        except InvalidParameterValue:
+            raise
+        except Exception:
+            raise InvalidParameterValue("Unable to parse the level values entered")
 
         if set(value) == {None}:
             value = None
@@ -39,7 +36,13 @@ class LevelParameter(_BaseIntervalOrSeriesParameter):
         return value
 
     def _parse_as_series(self):
-        return [to_float(i) for i in self.input.value if i is not None]
+        try:
+            value = [to_float(i) for i in self.input.value if i is not None]
+        except InvalidParameterValue:
+            raise
+        except Exception:
+            raise InvalidParameterValue("Unable to parse the level values entered")
+        return value
 
     def asdict(self):
         """Returns a dictionary of the level values"""

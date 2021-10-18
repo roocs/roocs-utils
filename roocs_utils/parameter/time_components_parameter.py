@@ -1,6 +1,7 @@
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.base_parameter import _BaseParameter
-from roocs_utils.parameter.param_utils import time_components, string_to_dict
+from roocs_utils.parameter.param_utils import string_to_dict
+from roocs_utils.parameter.param_utils import time_components
 
 
 class TimeComponentsParameter(_BaseParameter):
@@ -42,6 +43,16 @@ class TimeComponentsParameter(_BaseParameter):
     def asdict(self):
         # Just return the value, either a dict or None
         return {"time_components": self.value}
+
+    def get_bounds(self):
+        """Returns a tuple of the (start, end) times, calculated from
+        the value of the parameter. Either will default to None."""
+        if "year" in self.value:
+            start = f"{self.value['year'][0]}-01-01T00:00:00"
+            end = f"{self.value['year'][-1]}-12-31T23:59:59"
+        else:
+            start = end = None
+        return (start, end)
 
     def __str__(self):
         if self.value is None:

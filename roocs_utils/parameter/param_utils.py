@@ -1,10 +1,7 @@
 import calendar
 from collections.abc import Sequence
 
-from dateutil import parser as date_parser
-
 from roocs_utils.exceptions import InvalidParameterValue
-from roocs_utils.exceptions import MissingParameterValue
 from roocs_utils.utils.file_utils import FileMapper
 from roocs_utils.utils.time_utils import str_to_AnyCalendarDateTime
 
