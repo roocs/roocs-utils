@@ -1,11 +1,9 @@
 import pytest
 
 from roocs_utils.exceptions import InvalidParameterValue
-from roocs_utils.parameter.time_components_parameter import (
-    TimeComponentsParameter,
-    time_components,
-    string_to_dict,
-)
+from roocs_utils.parameter.time_components_parameter import string_to_dict
+from roocs_utils.parameter.time_components_parameter import time_components
+from roocs_utils.parameter.time_components_parameter import TimeComponentsParameter
 
 
 type_error = (
@@ -35,7 +33,7 @@ def test_string_input():
     assert parameter.value["year"] == [1999, 2000, 2001]
     assert parameter.value["month"] == [12, 1, 2]
     assert parameter.value["hour"] == [0]
-    assert parameter.get_bounds() == ("1999-01-01T12:00:00", "2001-12-30T12:00:00")
+    assert parameter.get_bounds() == ("1999-01-01T00:00:00", "2001-12-31T23:59:59")
     # month
     parameter = TimeComponentsParameter("month:12,1,02")
     assert parameter.value["month"] == [12, 1, 2]
@@ -44,7 +42,7 @@ def test_string_input():
     parameter = TimeComponentsParameter("year:2010|month:mar,apr,may")
     assert parameter.value["year"] == [2010]
     assert parameter.value["month"] == [3, 4, 5]
-    assert parameter.get_bounds() == ("2010-01-01T12:00:00", "2010-12-30T12:00:00")
+    assert parameter.get_bounds() == ("2010-01-01T00:00:00", "2010-12-31T23:59:59")
 
 
 def test_TimeComponents_class():

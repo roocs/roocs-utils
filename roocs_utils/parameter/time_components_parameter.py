@@ -1,6 +1,7 @@
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.base_parameter import _BaseParameter
-from roocs_utils.parameter.param_utils import time_components, string_to_dict
+from roocs_utils.parameter.param_utils import string_to_dict
+from roocs_utils.parameter.param_utils import time_components
 
 
 class TimeComponentsParameter(_BaseParameter):
@@ -47,8 +48,8 @@ class TimeComponentsParameter(_BaseParameter):
         """Returns a tuple of the (start, end) times, calculated from
         the value of the parameter. Either will default to None."""
         if "year" in self.value:
-            start = f"{self.value['year'][0]}-01-01T12:00:00"
-            end = f"{self.value['year'][-1]}-12-30T12:00:00"
+            start = f"{self.value['year'][0]}-01-01T00:00:00"
+            end = f"{self.value['year'][-1]}-12-31T23:59:59"
         else:
             start = end = None
         return (start, end)

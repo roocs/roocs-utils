@@ -28,6 +28,10 @@ def test_interval_string_input():
     parameter = TimeParameter("2085-01-01T12:00:00Z/2120-12-30T12:00:00Z")
     assert parameter.value == ("2085-01-01T12:00:00", "2120-12-30T12:00:00")
     assert parameter.get_bounds() == ("2085-01-01T12:00:00", "2120-12-30T12:00:00")
+    # start/end with non 360-day calendar
+    parameter = TimeParameter("2085-01-01T00:00:00Z/2120-12-31T23:59:59Z")
+    assert parameter.value == ("2085-01-01T00:00:00", "2120-12-31T23:59:59")
+    assert parameter.get_bounds() == ("2085-01-01T00:00:00", "2120-12-31T23:59:59")
 
 
 def test_series_string_input():
