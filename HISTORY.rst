@@ -32,7 +32,7 @@ New Features
         cru_ts.4.05.{variable}:cru_ts_4.05/data/{variable}/cru_ts4.05.1901.2*.{variable}.dat.nc.gz
 
   In this example, the `variable` parameter will be expanded out to each of the options provided in the list.
-* The ``roocs_utils.xarray_utils.xarray_utils.open_xr_dataset()`` function was improved so that the time units of the first data file are preserved in: ``ds.time.encoding["units"]``
+* The ``roocs_utils.xarray_utils.xarray_utils.open_xr_dataset()`` function was improved so that the time units of the first data file are preserved in: ``ds.time.encoding["units"]``. A multi-file dataset has now keeps the time "units" of the first file (if present). This is useful for converting to other formats (e.g. CSV).
 
 v0.4.2 (2021-05-18)
 -------------------
