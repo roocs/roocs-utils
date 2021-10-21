@@ -1,7 +1,7 @@
 Version History
 ===============
 
-v0.5.0 (Unreleased)
+v0.5.0 (2021-10-26)
 -------------------
 Bug Fixes
 ^^^^^^^^^
@@ -33,6 +33,11 @@ New Features
 
   In this example, the `variable` parameter will be expanded out to each of the options provided in the list.
 * The ``roocs_utils.xarray_utils.xarray_utils.open_xr_dataset()`` function was improved so that the time units of the first data file are preserved in: ``ds.time.encoding["units"]``. A multi-file dataset has now keeps the time "units" of the first file (if present). This is useful for converting to other formats (e.g. CSV).
+
+Other Changes
+^^^^^^^^^^^^^
+* Python 3.6 no longer tested in GitHub actions.
+
 
 v0.4.2 (2021-05-18)
 -------------------
