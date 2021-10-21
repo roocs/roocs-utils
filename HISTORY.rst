@@ -1,7 +1,7 @@
 Version History
 ===============
 
-v0.5.0 (Unreleased)
+v0.5.0 (2021-10-26)
 -------------------
 Bug Fixes
 ^^^^^^^^^
@@ -11,6 +11,14 @@ Bug Fixes
 Breaking Changes
 ^^^^^^^^^^^^^^^^
 * Intake catalog maker removed, now in it's own package: `roocs/catalog-maker <https://github.com/roocs/catalog-maker>`_
+* Change to input parameter classes::
+  * Added: ``roocs_utils.parameter.time_components_parameter.TimeComponentsParameter``
+  * Modified input types required for classes::
+    * ``roocs_utils.parameter.time_parameter.TimeParameter``
+    * ``roocs_utils.parameter.level_parameter.LevelParameter``
+  * They both now require their inputs to be one of::
+    * ``roocs_utils.parameter.param_utils.Interval`` - to specify a range/interval
+    * ``roocs_utils.parameter.param_utils.Series`` - to specify a series of values
 
 New Features
 ^^^^^^^^^^^^
@@ -24,6 +32,12 @@ New Features
         cru_ts.4.05.{variable}:cru_ts_4.05/data/{variable}/cru_ts4.05.1901.2*.{variable}.dat.nc.gz
 
   In this example, the `variable` parameter will be expanded out to each of the options provided in the list.
+* The ``roocs_utils.xarray_utils.xarray_utils.open_xr_dataset()`` function was improved so that the time units of the first data file are preserved in: ``ds.time.encoding["units"]``. A multi-file dataset has now keeps the time "units" of the first file (if present). This is useful for converting to other formats (e.g. CSV).
+
+Other Changes
+^^^^^^^^^^^^^
+* Python 3.6 no longer tested in GitHub actions.
+
 
 v0.4.2 (2021-05-18)
 -------------------

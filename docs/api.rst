@@ -35,7 +35,19 @@ Parameters
    :undoc-members:
    :show-inheritance:
 
+.. automodule:: roocs_utils.parameter.time_components_parameter
+   :noindex:
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. automodule:: roocs_utils.parameter.dimension_parameter
+   :noindex:
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: roocs_utils.parameter.param_utils
    :noindex:
    :members:
    :undoc-members:
