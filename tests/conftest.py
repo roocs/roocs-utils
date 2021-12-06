@@ -1,11 +1,12 @@
 import os
 import shutil
-from git import Repo
 from pathlib import Path
 
 import pytest
+from git import Repo
 
-from tests._common import write_roocs_cfg, MINI_ESGF_CACHE_DIR
+from tests._common import MINI_ESGF_CACHE_DIR
+from tests._common import write_roocs_cfg
 
 write_roocs_cfg()
 
@@ -35,6 +36,11 @@ C3S_CMIP5_TAS = os.path.join(
     MINI_ESGF_CACHE_DIR,
     "master/test_data/gws/nopw/j04/cp4cds1_vol1/data/c3s-cmip5/output1/ICHEC/EC-EARTH/historical/day/atmos/day/r1i1p1/tas/v20131231/*.nc",
 )
+
+C3S_CORDEX_AFR_TAS = Path(
+    MINI_ESGF_CACHE_DIR,
+    "master/test_data/pool/data/CORDEX/data/cordex/output/AFR-22/GERICS/MPI-M-MPI-ESM-LR/historical/r1i1p1/GERICS-REMO2015/v1/day/tas/v20201015/*.nc",
+).as_posix()
 
 
 @pytest.fixture

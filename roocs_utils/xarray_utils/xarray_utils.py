@@ -242,8 +242,6 @@ def get_coord_by_type(ds, coord_type, ignore_aux_coords=True):
                             Default is True.
     :return: Xarray Dataset coordinate (ds.coords[coord_id])
     """
-    "Can take a Dataset or DataArray"
-
     if coord_type not in known_coord_types:
         raise Exception(f"Coordinate type not known: {coord_type}")
 
@@ -256,6 +254,12 @@ def get_coord_by_type(ds, coord_type, ignore_aux_coords=True):
 
         if get_coord_type(coord) == coord_type:
             return coord
+
+    # add this in for if lat/lon have not been found yet (e.g. they are data variables)
+    # will also find time
+    if coord_type != "level" and ignore_aux_coords is False:
+        coord = ds.cf[coord_type]
+        return coord
 
     return None
 
