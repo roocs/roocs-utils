@@ -3,12 +3,13 @@ import os
 import pytest
 import xarray as xr
 
+from roocs_utils.xarray_utils.xarray_utils import get_coord_by_type
 from roocs_utils.xarray_utils.xarray_utils import get_coord_type
 from tests.conftest import C3S_CMIP5_TAS
+from tests.conftest import C3S_CORDEX_AFR_TAS
 from tests.conftest import CMIP5_TAS
 from tests.conftest import CMIP5_ZOSTOGA
 from tests.conftest import CMIP6_SICONC
-
 
 text_coord_path = "/badc/cmip6/data/CMIP6/ScenarioMIP/IPSL/IPSL-CM6A-LR/ssp245/r1i1p1f1/Lmon/landCoverFrac/gr/v20190119/*.nc"
 
@@ -114,3 +115,36 @@ def test_text_coord_not_level():
     coord_type = get_coord_type(ds.sector)
     assert coord_type is None
     assert coord_type != "level"
+
+
+def test_get_coords_by_type():
+    ds = xr.open_mfdataset(C3S_CORDEX_AFR_TAS, use_cftime=True, combine="by_coords")
+
+    # check lat, lon, time and level are found when they are coordinates
+    lat = get_coord_by_type(ds, "latitude", ignore_aux_coords=False)
+    lon = get_coord_by_type(ds, "longitude", ignore_aux_coords=False)
+    time = get_coord_by_type(ds, "time", ignore_aux_coords=False)
+    level = get_coord_by_type(ds, "level", ignore_aux_coords=False)
+
+    assert lat.name == "lat"
+    assert lon.name == "lon"
+    assert time.name == "time"
+    assert level.name == "height"
+
+    # test that latitude and longitude are still found when they are data variables
+    # reset coords sets lat and lon as data variables
+    ds = ds.reset_coords(["lat", "lon"])
+
+    # if ignore_Aux_coords=True then lat/lon should not be identified
+    lat = get_coord_by_type(ds, "latitude", ignore_aux_coords=True)
+    lon = get_coord_by_type(ds, "longitude", ignore_aux_coords=True)
+
+    assert lat is None
+    assert lon is None
+
+    # if ignore_Aux_coords=False then lat/lon should be identified
+    lat = get_coord_by_type(ds, "latitude", ignore_aux_coords=False)
+    lon = get_coord_by_type(ds, "longitude", ignore_aux_coords=False)
+
+    assert lat.name == "lat"
+    assert lon.name == "lon"
