@@ -1,6 +1,13 @@
 Version History
 ===============
 
+v0.6.0 (2022-04-13)
+-------------------
+Bug Fixes
+^^^^^^^^^
+* Updated default `roocs.ini` for C3S-CORDEX (#93, #95).
+* Fix added for `get_bbox <https://github.com/roocs/catalog-maker/issues/11>`_ on C3S-CORDEX (#94).
+
 v0.5.0 (2021-10-26)
 -------------------
 Bug Fixes
