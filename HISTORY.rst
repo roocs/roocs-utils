@@ -1,6 +1,12 @@
 Version History
 ===============
 
+v0.6.1 (2022-04-19)
+-------------------
+Bug Fixes
+^^^^^^^^^
+* Added data_node_root in `roocs.ini` for C3S-CORDEX and C3S-CMIP5 (#97).
+
 v0.6.0 (2022-04-14)
 -------------------
 Bug Fixes
