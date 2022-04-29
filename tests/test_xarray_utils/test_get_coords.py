@@ -148,3 +148,14 @@ def test_get_coords_by_type():
 
     assert lat.name == "lat"
     assert lon.name == "lon"
+
+
+def test_get_coords_by_type_with_no_time():
+    ds = xr.open_mfdataset(C3S_CORDEX_AFR_TAS, use_cftime=True, combine="by_coords")
+    # check time
+    time = get_coord_by_type(ds, "time", ignore_aux_coords=False)
+    assert time.name == "time"
+    # drop time
+    ds = ds.drop_dims("time")
+    time = get_coord_by_type(ds, "time", ignore_aux_coords=False)
+    assert time is None
