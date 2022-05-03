@@ -1,17 +1,24 @@
 Version History
 ===============
 
+v0.6.2 (2022-05-03)
+-------------------
+Bug Fixes
+^^^^^^^^^
+* Fixed ``get_coords_by_type`` in ``xarray_utils`` to handle non existing coords (#99).
+
+
 v0.6.1 (2022-04-19)
 -------------------
 Bug Fixes
 ^^^^^^^^^
-* Added data_node_root in `roocs.ini` for C3S-CORDEX and C3S-CMIP5 (#97).
+* Added data_node_root in ``roocs.ini`` for C3S-CORDEX and C3S-CMIP5 (#97).
 
 v0.6.0 (2022-04-14)
 -------------------
 Bug Fixes
 ^^^^^^^^^
-* Updated default `roocs.ini` for C3S-CORDEX (#93, #95).
+* Updated default ``roocs.ini`` for C3S-CORDEX (#93, #95).
 * Fix added for `get_bbox <https://github.com/roocs/catalog-maker/issues/11>`_ on C3S-CORDEX (#94).
 
 v0.5.0 (2021-10-26)
