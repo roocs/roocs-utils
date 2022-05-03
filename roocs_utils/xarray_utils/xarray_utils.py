@@ -259,7 +259,10 @@ def get_coord_by_type(ds, coord_type, ignore_aux_coords=True):
     # will also find time if not yet found
     # only relevant when ignore_aux_coords=False
     if coord_type != "level" and ignore_aux_coords is False:
-        coord = ds.cf[coord_type]
+        try:
+            coord = ds.cf[coord_type]
+        except KeyError:
+            coord = None
         return coord
 
     return None
