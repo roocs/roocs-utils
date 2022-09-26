@@ -1,6 +1,14 @@
 Version History
 ===============
 
+v0.6.3 (2022-09-26)
+-------------------
+
+Other Changes
+^^^^^^^^^^^^^
+* Added c3s-cmip-decadal project to default roocs.ini (#101).
+
+
 v0.6.2 (2022-05-03)
 -------------------
 Bug Fixes
