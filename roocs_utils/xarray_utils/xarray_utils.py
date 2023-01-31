@@ -10,7 +10,7 @@ import xarray as xr
 
 from roocs_utils.project_utils import dset_to_filepaths
 
-known_coord_types = ["time", "level", "latitude", "longitude"]
+known_coord_types = ["time", "level", "latitude", "longitude", "realization"]
 
 
 def _patch_time_encoding(ds, file_list, **kwargs):
@@ -200,6 +200,22 @@ def is_time(coord):
     return False
 
 
+def is_realization(coord):
+    """
+    Determines if a coordinate is realization.
+
+    :param coord: coordinate of xarray dataset e.g. coord = ds.coords[coord_id]
+    :return: (bool) True if the coordinate is longitude.
+    """
+    if "realization" in coord.cf and coord.cf["realization"].name == coord.name:
+        return True
+
+    if coord.attrs.get("standard_name", None) == "realization":
+        return True
+
+    return False
+
+
 def get_coord_type(coord):
     """
     Gets the coordinate type.
@@ -216,6 +232,8 @@ def get_coord_type(coord):
         return "level"
     elif is_time(coord):
         return "time"
+    elif is_realization(coord):
+        return "realization"
 
     return None
 
@@ -228,7 +246,13 @@ def convert_coord_to_axis(coord):
     :return: (str) The single character axis identifier of the coordinate (tzyx).
     """
 
-    axis_dict = {"time": "t", "longitude": "x", "latitude": "y", "level": "z"}
+    axis_dict = {
+        "time": "t",
+        "longitude": "x",
+        "latitude": "y",
+        "level": "z",
+        "realization": "r",
+    }
     return axis_dict.get(coord, None)
 
 
@@ -283,7 +307,7 @@ def get_main_variable(ds, exclude_common_coords=True):
     flat_dims = [dim for sublist in data_dims for dim in sublist]
 
     results = {}
-    common_coords = ["bnd", "bound", "lat", "lon", "time", "level"]
+    common_coords = ["bnd", "bound", "lat", "lon", "time", "level", "realization_index"]
 
     for var_id, data in ds.variables.items():
 
