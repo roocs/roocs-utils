@@ -35,7 +35,7 @@ def parse_range(x, caller):
             )
 
         # empty string either side of '/' is converted to None
-        start, end = [i.strip() or None for i in x.split("/")]
+        start, end = (i.strip() or None for i in x.split("/"))
 
     elif isinstance(x, Sequence):
         if len(x) != 2:
@@ -51,7 +51,6 @@ def parse_range(x, caller):
 
 
 def parse_sequence(x, caller):
-
     if x in (None, ""):
         sequence = None
 
@@ -121,7 +120,6 @@ class TimeComponents:
 
         self.value = {}
         for comp in comps:
-
             if comp in locals():
                 value = locals()[comp]
 

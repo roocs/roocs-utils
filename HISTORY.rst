@@ -1,6 +1,15 @@
 Version History
 ===============
 
+v0.6.4 (2023-02-01)
+-------------------
+
+Other Changes
+^^^^^^^^^^^^^
+* Added ``realization`` dimension to known coords (#103).
+* Update pre-commit.
+
+
 v0.6.3 (2022-09-26)
 -------------------
 

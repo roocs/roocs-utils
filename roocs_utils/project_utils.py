@@ -29,7 +29,6 @@ class DatasetMapper:
     SUPPORTED_EXTENSIONS = (".nc", ".gz")
 
     def __init__(self, dset, project=None, force=False):
-
         self._project = project
         self.dset = dset
 
@@ -42,7 +41,6 @@ class DatasetMapper:
 
     @staticmethod
     def _get_base_dirs_dict():
-
         projects = get_projects()
         base_dirs = {
             project: CONFIG[f"project:{project}"]["base_dir"] for project in projects
@@ -105,7 +103,6 @@ class DatasetMapper:
 
         # if a file, group of files or directory to files - find files
         if dset.startswith("/") or dset.endswith(".nc"):
-
             # if instance of FileMapper
             if isinstance(self.dset, FileMapper):
                 self._files = self.dset.file_paths

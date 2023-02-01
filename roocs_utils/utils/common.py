@@ -14,7 +14,6 @@ def parse_size(size):
     n, suffix = re.match(r"^(\d+\.?\d*)([a-zA-Z]+)$", size).groups()
 
     try:
-
         multiplier = byte_sizes[suffix.lower()]
 
         size_in_bytes = multiplier * float(n)

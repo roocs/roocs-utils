@@ -2,7 +2,6 @@ from roocs_utils.utils.common import parse_size
 
 
 def test_parse_size():
-
     tests = [
         ("1000000.0b", 1000000),
         ("1MiB", 1048576),
