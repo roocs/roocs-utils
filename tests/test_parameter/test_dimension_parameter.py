@@ -1,7 +1,8 @@
 import pytest
 
 from roocs_utils.exceptions import InvalidParameterValue
-from roocs_utils.parameter.dimension_parameter import DimensionParameter, dimensions
+from roocs_utils.parameter.dimension_parameter import DimensionParameter
+from roocs_utils.parameter.dimension_parameter import dimensions
 
 
 def test__str__():
@@ -93,7 +94,7 @@ def test_validate_error_dimension():
         DimensionParameter(dims)
     assert (
         str(exc.value)
-        == "Dimensions for averaging must be one of ['time', 'level', 'latitude', 'longitude']"
+        == "Dimensions for averaging must be one of ['time', 'level', 'latitude', 'longitude', 'realization']"
     )
 
 
