@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # roocs_utils documentation build configuration file, created by
 # sphinx-quickstart on Fri Jun  9 13:47:02 2017.
@@ -70,7 +69,7 @@ author = "Eleanor Smith"
 # the built documents.
 #
 # The short X.Y version.
-version = "0.6.3"
+version = "0.6.4"
 # The full version, including alpha/beta/rc tags.
 release = version
 

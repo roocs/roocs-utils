@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """The setup script."""
 
 __author__ = "Elle Smith"
 __contact__ = "eleanor.smith@stfc.ac.uk"
 __copyright__ = "Copyright 2018 United Kingdom Research and Innovation"
 __license__ = "BSD - see LICENSE file in top-level package directory"
-__version__ = "0.6.3"
+__version__ = "0.6.4"
 
 from setuptools import find_packages
 from setuptools import setup
