@@ -31,7 +31,6 @@ class AnyCalendarDateTime:
     SECOND_RANGE = range(0, 60)
 
     def __init__(self, year, month, day, hour, minute, second):
-
         self.year = year
 
         self.month = month

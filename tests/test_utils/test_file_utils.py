@@ -58,7 +58,6 @@ def test_file_mapper_fake_files():
 
 
 def test_is_file_list():
-
     coll = ["/badc/cmip6/fake1.nc", "/badc/cmip6/fake2.nc"]
     assert is_file_list(coll) is True
 

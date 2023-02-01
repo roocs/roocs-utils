@@ -4,7 +4,8 @@ import pytest
 
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.level_parameter import LevelParameter
-from roocs_utils.parameter.param_utils import level_interval, level_series
+from roocs_utils.parameter.param_utils import level_interval
+from roocs_utils.parameter.param_utils import level_series
 
 type_err = (
     "Input type of <{}> not allowed. Must be one of: [<class "
@@ -179,7 +180,6 @@ def test_level_series_input():
     vstring = ",".join([str(i) for i in value])
 
     for lev in (vstring, value, tuple(value)):
-
         level = level_series(lev)
         parameter = LevelParameter(level)
         assert parameter.type == "series"

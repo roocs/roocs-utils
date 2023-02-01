@@ -286,7 +286,6 @@ def get_main_variable(ds, exclude_common_coords=True):
     common_coords = ["bnd", "bound", "lat", "lon", "time", "level"]
 
     for var_id, data in ds.variables.items():
-
         if var_id in flat_dims:
             continue
         if exclude_common_coords is True and any(

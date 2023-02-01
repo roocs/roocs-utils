@@ -162,7 +162,6 @@ def test_get_filepaths():
 
 
 def test_derive_dset():
-
     dset = "c3s-cmip6.CMIP.MIROC.MIROC6.historical.r1i1p1f1.SImon.siconc.gn.latest"
     ds_id = derive_dset(dset)
 
@@ -181,7 +180,6 @@ def test_derive_dset():
 
 
 def test_switch_dset():
-
     dset = "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/historical/r1i1p1f1/SImon/siconc/gn/latest/*.nc"
     ds_id = switch_dset(dset)
 

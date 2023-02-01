@@ -200,7 +200,6 @@ def test_time_series_input():
     vstring = ",".join([str(i) for i in value])
 
     for tm in (vstring, value, tuple(value)):
-
         times = time_series(tm)
         parameter = TimeParameter(times)
         assert parameter.type == "series"

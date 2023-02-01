@@ -107,7 +107,6 @@ def _load_config(package=None):
         config.setdefault(section, {})
 
         for key in conf.options(section):
-
             value = conf.get(section, key)
 
             if key in mappers:
