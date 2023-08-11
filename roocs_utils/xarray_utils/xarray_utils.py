@@ -74,8 +74,7 @@ def is_kerchunk_file(dset):
     Returns a boolean based on reading the file extension.
     """
     if not isinstance(dset, str):
-        raise Exception("Dataset ID must be a string if testing if it is a Kerchunk file."
-                        f" Value given: {dset}")
+        return False
 
     return os.path.splitext(dset)[-1] in KERCHUNK_EXTS
 
