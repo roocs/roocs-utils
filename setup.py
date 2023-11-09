@@ -60,9 +60,10 @@ setup(
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Topic :: Security",
         "Topic :: Internet",
         "Topic :: Scientific/Engineering",
@@ -74,7 +75,7 @@ setup(
     license=__license__,
     # This qualifier can be used to selectively exclude Python versions -
     # in this case early Python 2 and 3 releases
-    python_requires=">=3.6.0",
+    python_requires=">=3.8.0",
     entry_points={
         "console_scripts": [
             "roocs_utils=roocs_utils.cli:main",
