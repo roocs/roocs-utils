@@ -307,7 +307,16 @@ def get_main_variable(ds, exclude_common_coords=True):
     flat_dims = [dim for sublist in data_dims for dim in sublist]
 
     results = {}
-    common_coords = ["bnd", "bound", "lat", "lon", "time", "level", "realization_index"]
+    common_coords = [
+        "bnd",
+        "bound",
+        "lat",
+        "lon",
+        "time",
+        "level",
+        "realization_index",
+        "realization",
+    ]
 
     for var_id, data in ds.variables.items():
         if var_id in flat_dims:
