@@ -1,6 +1,16 @@
 Version History
 ===============
 
+v0.6.5 (2023-11-09)
+-------------------
+
+Other Changes
+^^^^^^^^^^^^^
+* Updated ``realization`` dimension in common coords (#108).
+* Linting.
+* Added Python 3.11 to tests.
+* Updated requirements for cf_xarray.
+
 v0.6.4 (2023-02-01)
 -------------------
 
