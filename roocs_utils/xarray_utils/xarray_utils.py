@@ -93,8 +93,9 @@ def _open_as_kerchunk(dset, **kwargs):
     # Create a copy of kwargs and remove mapper-specific values
     kw = kwargs.copy()
     for key in ("compression", "remote_options", "remote_protocol"):
-        if key in kw: del kw[key]
- 
+        if key in kw:
+            del kw[key]
+
     return xr.open_zarr(mapper, consolidated=False, **kw)
 
 
@@ -115,12 +116,12 @@ def open_xr_dataset(dset, **kwargs):
     # Assume that a JSON or ZST/ZSTD file is kerchunk
     if type(dset) not in (list, tuple):
 
-        # Assume that a JSON or ZST/ZSTD file is kerchunk  
+        # Assume that a JSON or ZST/ZSTD file is kerchunk
         if is_kerchunk_file(dset):
             return _open_as_kerchunk(dset, **single_file_kwargs)
 
         else:
-        # Force the value of dset to be a list if not a list or tuple
+            # Force the value of dset to be a list if not a list or tuple
             # use force=True to allow all file paths to pass through DatasetMapper
             dset = dset_to_filepaths(dset, force=True)
 

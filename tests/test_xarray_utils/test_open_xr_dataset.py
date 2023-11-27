@@ -5,7 +5,7 @@ import pytest
 import xarray as xr
 
 from roocs_utils.xarray_utils.xarray_utils import open_xr_dataset
-from tests.conftest import (C3S_CMIP5_TAS, CMIP5_TAS_EC_EARTH, CMIP6_KERCHUNK_HTTPS_OPEN_JSON, 
+from tests.conftest import (C3S_CMIP5_TAS, CMIP5_TAS_EC_EARTH, CMIP6_KERCHUNK_HTTPS_OPEN_JSON,
                             CMIP6_KERCHUNK_HTTPS_OPEN_ZST)
 
 
@@ -38,7 +38,8 @@ def _common_test_open_xr_dataset_kerchunk(uri):
     assert hasattr(ds, "time")
     assert ds.time.encoding.get("units") == "days since 1850-01-01"
 
-    return ds    
+    return ds
+
 
 def test_open_xr_dataset_kerchunk_json(load_test_data):
     ds = _common_test_open_xr_dataset_kerchunk(CMIP6_KERCHUNK_HTTPS_OPEN_JSON)
@@ -54,5 +55,3 @@ def test_open_xr_dataset_kerchunk_compare_json_vs_zst(load_test_data):
 
     diff = ds1.isel(time=slice(0, 2)) - ds2.isel(time=slice(0, 2))
     assert diff.max() == diff.min() == 0.0
- 
-
