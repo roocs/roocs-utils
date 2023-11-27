@@ -83,12 +83,21 @@ def _open_as_kerchunk(dset, **kwargs):
     """
     Open the dataset `dset` as a Kerchunk file. Return an Xarray Dataset.
     """
-    compression = "zstd" if dset.split(".")[-1].startswith("zst") else kwargs.get("compression", None)
+    compression = (
+        "zstd"
+        if dset.split(".")[-1].startswith("zst")
+        else kwargs.get("compression", None)
+    )
     remote_options = kwargs.get("remote_options", {})
     remote_protocol = kwargs.get("remote_protocol", None)
 
-    mapper = fsspec.get_mapper("reference://", fo=dset, target_options={"compression": compression},
-                               remote_options=remote_options, remote_protocol=remote_protocol)
+    mapper = fsspec.get_mapper(
+        "reference://",
+        fo=dset,
+        target_options={"compression": compression},
+        remote_options=remote_options,
+        remote_protocol=remote_protocol,
+    )
 
     # Create a copy of kwargs and remove mapper-specific values
     kw = kwargs.copy()
@@ -115,7 +124,6 @@ def open_xr_dataset(dset, **kwargs):
 
     # Assume that a JSON or ZST/ZSTD file is kerchunk
     if type(dset) not in (list, tuple):
-
         # Assume that a JSON or ZST/ZSTD file is kerchunk
         if is_kerchunk_file(dset):
             return _open_as_kerchunk(dset, **single_file_kwargs)

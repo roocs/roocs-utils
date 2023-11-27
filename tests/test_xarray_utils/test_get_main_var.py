@@ -7,7 +7,9 @@ from roocs_utils.xarray_utils.xarray_utils import get_main_variable
 from tests.conftest import CMIP5_TAS
 
 
-@pytest.mark.skipif(os.path.isdir("/gws/nopw/j04/cp4cds1_vol1") is False, reason="data not available")
+@pytest.mark.skipif(
+    os.path.isdir("/gws/nopw/j04/cp4cds1_vol1") is False, reason="data not available"
+)
 def test_get_main_var():
     data = (
         "/gws/nopw/j04/cp4cds1_vol1/data"
