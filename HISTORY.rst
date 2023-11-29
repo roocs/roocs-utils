@@ -1,6 +1,10 @@
 Version History
 ===============
 
+Next
+----
+* Updated `xarray_utils` module to support reading `kerchunk` files (#106).
+
 v0.6.5 (2023-11-09)
 -------------------
 

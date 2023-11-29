@@ -7,10 +7,13 @@ import cf_xarray  # noqa
 import cftime
 import numpy as np
 import xarray as xr
+import fsspec
 
 from roocs_utils.project_utils import dset_to_filepaths
 
 known_coord_types = ["time", "level", "latitude", "longitude", "realization"]
+
+KERCHUNK_EXTS = [".json", ".zst", ".zstd"]
 
 
 def _patch_time_encoding(ds, file_list, **kwargs):
@@ -66,6 +69,45 @@ def _get_kwargs_for_opener(otype, **kwargs):
     return args
 
 
+def is_kerchunk_file(dset):
+    """
+    Returns a boolean based on reading the file extension.
+    """
+    if not isinstance(dset, str):
+        return False
+
+    return os.path.splitext(dset)[-1] in KERCHUNK_EXTS
+
+
+def _open_as_kerchunk(dset, **kwargs):
+    """
+    Open the dataset `dset` as a Kerchunk file. Return an Xarray Dataset.
+    """
+    compression = (
+        "zstd"
+        if dset.split(".")[-1].startswith("zst")
+        else kwargs.get("compression", None)
+    )
+    remote_options = kwargs.get("remote_options", {})
+    remote_protocol = kwargs.get("remote_protocol", None)
+
+    mapper = fsspec.get_mapper(
+        "reference://",
+        fo=dset,
+        target_options={"compression": compression},
+        remote_options=remote_options,
+        remote_protocol=remote_protocol,
+    )
+
+    # Create a copy of kwargs and remove mapper-specific values
+    kw = kwargs.copy()
+    for key in ("compression", "remote_options", "remote_protocol"):
+        if key in kw:
+            del kw[key]
+
+    return xr.open_zarr(mapper, consolidated=False, **kw)
+
+
 def open_xr_dataset(dset, **kwargs):
     """
     Opens an xarray dataset from a dataset input.
@@ -80,10 +122,16 @@ def open_xr_dataset(dset, **kwargs):
     single_file_kwargs = _get_kwargs_for_opener("single", **kwargs)
     multi_file_kwargs = _get_kwargs_for_opener("multi", **kwargs)
 
-    # Force the value of dset to be a list if not a list or tuple
+    # Assume that a JSON or ZST/ZSTD file is kerchunk
     if type(dset) not in (list, tuple):
-        # use force=True to allow all file paths to pass through DatasetMapper
-        dset = dset_to_filepaths(dset, force=True)
+        # Assume that a JSON or ZST/ZSTD file is kerchunk
+        if is_kerchunk_file(dset):
+            return _open_as_kerchunk(dset, **single_file_kwargs)
+
+        else:
+            # Force the value of dset to be a list if not a list or tuple
+            # use force=True to allow all file paths to pass through DatasetMapper
+            dset = dset_to_filepaths(dset, force=True)
 
     # If an empty sequence, then raise an Exception
     if len(dset) == 0:
