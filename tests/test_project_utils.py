@@ -53,6 +53,11 @@ def test_get_project_name(load_test_data):
     project = get_project_name(dset)
     assert project == "c3s-cmip6"
 
+    # c3s-cmip6-decadal
+    dset = "c3s-cmip6-decadal.DCPP.MOHC.HadGEM3-GC31-MM.dcppA-hindcast.s1995-r1i1p1f2.Amon.tas.gn.v20200417"
+    project = get_project_name(dset)
+    assert project == "c3s-cmip6-decadal"
+
 
 def test_get_project_name_badc():
     dset = "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
