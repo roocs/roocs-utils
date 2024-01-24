@@ -162,6 +162,7 @@ def test_get_filepaths():
 
 
 def test_derive_dset():
+    # c3s-cmip6
     dset = "c3s-cmip6.CMIP.MIROC.MIROC6.historical.r1i1p1f1.SImon.siconc.gn.latest"
     ds_id = derive_dset(dset)
 
@@ -170,12 +171,22 @@ def test_derive_dset():
         == "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/historical/r1i1p1f1/SImon/siconc/gn/latest"
     )
 
+    # cmip5
     dset = "cmip5.output1.ICHEC.EC-EARTH.historical.day.atmos.day.r1i1p1.tas.v20131231"
     ds_id = derive_dset(dset)
 
     assert (
         ds_id
         == "/badc/cmip5/data/cmip5/output1/ICHEC/EC-EARTH/historical/day/atmos/day/r1i1p1/tas/v20131231"
+    )
+
+    # c3s-cmip6-decadal
+    dset = "c3s-cmip6-decadal.DCPP.MOHC.HadGEM3-GC31-MM.dcppA-hindcast.s1995-r1i1p1f2.Amon.tas.gn.v20200417"
+    ds_id = derive_dset(dset)
+
+    assert (
+        ds_id
+        == "/badc/cmip6/data/CMIP6/DCPP/MOHC/HadGEM3-GC31-MM/dcppA-hindcast/s1995-r1i1p1f2/Amon/tas/gn/v20200417"
     )
 
 
