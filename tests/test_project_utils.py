@@ -18,6 +18,7 @@ from roocs_utils.utils.file_utils import FileMapper
 
 
 def test_get_project_name(load_test_data):
+    # cmip5
     dset = "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
     project = get_project_name(dset)
     assert project == "cmip5"
@@ -26,10 +27,6 @@ def test_get_project_name(load_test_data):
     project = get_project_name(dset)
     assert project == "cmip5"
 
-    dset = "CMIP6.CMIP.NCAR.CESM2.historical.r1i1p1f1.SImon.siconc.gn.latest"
-    project = get_project_name(dset)
-    assert project == "cmip6"
-
     ds = xr.open_mfdataset(
         CMIP5_TAS,
         use_cftime=True,
@@ -37,6 +34,11 @@ def test_get_project_name(load_test_data):
     )
     project = get_project_name(ds)
     assert project == "cmip5"
+
+    # cmip6
+    dset = "CMIP6.CMIP.NCAR.CESM2.historical.r1i1p1f1.SImon.siconc.gn.latest"
+    project = get_project_name(dset)
+    assert project == "cmip6"
 
     ds = xr.open_mfdataset(
         CMIP6_SICONC,
