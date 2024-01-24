@@ -58,6 +58,11 @@ def test_get_project_name(load_test_data):
     project = get_project_name(dset)
     assert project == "c3s-cmip6-decadal"
 
+    # c3s-cica-atlas
+    dset = "c3s-cica-atlas.cd.CMIP6.historical.yr"
+    project = get_project_name(dset)
+    assert project == "c3s-cica-atlas"
+
 
 def test_get_project_name_badc():
     dset = "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
