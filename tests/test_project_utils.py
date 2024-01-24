@@ -189,6 +189,12 @@ def test_derive_dset():
         == "/badc/cmip6/data/CMIP6/DCPP/MOHC/HadGEM3-GC31-MM/dcppA-hindcast/s1995-r1i1p1f2/Amon/tas/gn/v20200417"
     )
 
+    # c3s-cica-atlas
+    dset = "c3s-cica-atlas.cd.CMIP6.historical.yr"
+    ds_id = derive_dset(dset)
+
+    assert ds_id == "/pool/data/c3s-cica-atlas/cd/CMIP6/historical/yr"
+
 
 def test_switch_dset():
     dset = "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/historical/r1i1p1f1/SImon/siconc/gn/latest/*.nc"
