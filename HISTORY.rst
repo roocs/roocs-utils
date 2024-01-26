@@ -3,6 +3,15 @@ Version History
 
 Next
 ----
+
+* ...
+
+v0.6.6 (2024-01-26)
+-------------------
+
+Other Changes
+^^^^^^^^^^^^^
+* Updated `roocs.ini` default values for atlas datasets (#111).
 * Updated `xarray_utils` module to support reading `kerchunk` files (#106).
 
 v0.6.5 (2023-11-09)
