@@ -63,6 +63,21 @@ def test_get_project_name(load_test_data):
     project = get_project_name(dset)
     assert project == "c3s-cica-atlas"
 
+    # c3s-cica-atlas 2
+    dset = "/pool/data/c3s-cica-atlas/ERA5/psl_ERA5_mon_194001-202212.nc"
+    project = get_project_name(dset)
+    assert project == "c3s-cica-atlas"
+
+    # c3s-ipcc-ar6-atlas
+    dset = "c3s-ipcc-ar6-atlas.t.CORDEX-ANT.rcp45.mon"
+    project = get_project_name(dset)
+    assert project == "c3s-ipcc-ar6-atlas"
+
+    # c3s-ipcc-ar6-atlas
+    dset = "/pool/data/c3s-ipcc-ar6-atlas/CORDEX-ANT/rcp45/pr_CORDEX-ANT_rcp45_mon_200601-210012.nc"
+    project = get_project_name(dset)
+    assert project == "c3s-ipcc-ar6-atlas"
+
 
 def test_get_project_name_badc():
     dset = "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
@@ -206,6 +221,12 @@ def test_derive_dset():
     ds_id = derive_dset(dset)
 
     assert ds_id == "/pool/data/c3s-cica-atlas/cd/CMIP6/historical/yr"
+
+    # c3s-ipcc-ar6-atlas
+    dset = "c3s-ipcc-ar6-atlas.cd.CMIP6.historical.yr"
+    ds_id = derive_dset(dset)
+
+    assert ds_id == "/pool/data/c3s-ipcc-ar6-atlas/cd/CMIP6/historical/yr"
 
 
 def test_switch_dset():
