@@ -18,6 +18,7 @@ from roocs_utils.utils.file_utils import FileMapper
 
 
 def test_get_project_name(load_test_data):
+    # cmip5
     dset = "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
     project = get_project_name(dset)
     assert project == "cmip5"
@@ -26,10 +27,6 @@ def test_get_project_name(load_test_data):
     project = get_project_name(dset)
     assert project == "cmip5"
 
-    dset = "CMIP6.CMIP.NCAR.CESM2.historical.r1i1p1f1.SImon.siconc.gn.latest"
-    project = get_project_name(dset)
-    assert project == "cmip6"
-
     ds = xr.open_mfdataset(
         CMIP5_TAS,
         use_cftime=True,
@@ -37,6 +34,11 @@ def test_get_project_name(load_test_data):
     )
     project = get_project_name(ds)
     assert project == "cmip5"
+
+    # cmip6
+    dset = "CMIP6.CMIP.NCAR.CESM2.historical.r1i1p1f1.SImon.siconc.gn.latest"
+    project = get_project_name(dset)
+    assert project == "cmip6"
 
     ds = xr.open_mfdataset(
         CMIP6_SICONC,
@@ -50,6 +52,16 @@ def test_get_project_name(load_test_data):
     dset = "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/historical/r1i1p1f1/SImon/siconc/gn/latest/*.nc"
     project = get_project_name(dset)
     assert project == "c3s-cmip6"
+
+    # c3s-cmip6-decadal
+    dset = "c3s-cmip6-decadal.DCPP.MOHC.HadGEM3-GC31-MM.dcppA-hindcast.s1995-r1i1p1f2.Amon.tas.gn.v20200417"
+    project = get_project_name(dset)
+    assert project == "c3s-cmip6-decadal"
+
+    # c3s-cica-atlas
+    dset = "c3s-cica-atlas.cd.CMIP6.historical.yr"
+    project = get_project_name(dset)
+    assert project == "c3s-cica-atlas"
 
 
 def test_get_project_name_badc():
@@ -162,6 +174,7 @@ def test_get_filepaths():
 
 
 def test_derive_dset():
+    # c3s-cmip6
     dset = "c3s-cmip6.CMIP.MIROC.MIROC6.historical.r1i1p1f1.SImon.siconc.gn.latest"
     ds_id = derive_dset(dset)
 
@@ -170,6 +183,7 @@ def test_derive_dset():
         == "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/historical/r1i1p1f1/SImon/siconc/gn/latest"
     )
 
+    # cmip5
     dset = "cmip5.output1.ICHEC.EC-EARTH.historical.day.atmos.day.r1i1p1.tas.v20131231"
     ds_id = derive_dset(dset)
 
@@ -177,6 +191,21 @@ def test_derive_dset():
         ds_id
         == "/badc/cmip5/data/cmip5/output1/ICHEC/EC-EARTH/historical/day/atmos/day/r1i1p1/tas/v20131231"
     )
+
+    # c3s-cmip6-decadal
+    dset = "c3s-cmip6-decadal.DCPP.MOHC.HadGEM3-GC31-MM.dcppA-hindcast.s1995-r1i1p1f2.Amon.tas.gn.v20200417"
+    ds_id = derive_dset(dset)
+
+    assert (
+        ds_id
+        == "/badc/cmip6/data/CMIP6/DCPP/MOHC/HadGEM3-GC31-MM/dcppA-hindcast/s1995-r1i1p1f2/Amon/tas/gn/v20200417"
+    )
+
+    # c3s-cica-atlas
+    dset = "c3s-cica-atlas.cd.CMIP6.historical.yr"
+    ds_id = derive_dset(dset)
+
+    assert ds_id == "/pool/data/c3s-cica-atlas/cd/CMIP6/historical/yr"
 
 
 def test_switch_dset():
