@@ -58,6 +58,12 @@ def test_get_project_name(load_test_data):
     project = get_project_name(dset)
     assert project == "c3s-cmip6-decadal"
 
+    # TODO: This needs to be cleaned up by introducing aliases and/or multiple mapping facets.
+    #       Each project should be defined only once in the roocs.ini.
+    #       Currently, without the possibility to define aliases, this is not possible
+    #       for the ATLAS projects, because the web prefix, the project name in the DRS and the
+    #       project name in the netCDF metadata differ from one another ...
+    #
     # c3s-cica-atlas
     dset = "c3s-cica-atlas.cd.CMIP6.historical.yr"
     project = get_project_name(dset)
@@ -76,7 +82,7 @@ def test_get_project_name(load_test_data):
     # c3s-ipcc-ar6-atlas
     dset = "/pool/data/c3s-ipcc-ar6-atlas/CORDEX-ANT/rcp45/pr_CORDEX-ANT_rcp45_mon_200601-210012.nc"
     project = get_project_name(dset)
-    assert project == "c3s-ipcc-ar6-atlas"
+    assert project in ["c3s-ipcc-ar6-atlas", "c3s-ipcc-atlas"]
 
 
 def test_get_project_name_badc():
