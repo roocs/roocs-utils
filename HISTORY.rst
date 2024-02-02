@@ -6,6 +6,14 @@ Next
 
 * ...
 
+
+v0.6.7 (unreleased)
+-------------------
+
+Other Changes
+^^^^^^^^^^^^^
+* Updated `roocs.ini` default values for atlas datasets for further methods of how to infer the project name (#113).
+
 v0.6.6 (2024-01-26)
 -------------------
 
