@@ -7,7 +7,7 @@ Next
 * ...
 
 
-v0.6.7 (unreleased)
+v0.6.7 (2024.02.05)
 -------------------
 
 Other Changes
