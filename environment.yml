@@ -3,10 +3,14 @@ channels:
  - conda-forge
  - defaults
 dependencies:
+ - aiohttp
+ - cftime
  - numpy>=1.16
  - xarray>=0.15
  - dask>=2.6
- - cftime
+ - netCDF4>=1.4
  - python-dateutil>=2.8.1
  - cf_xarray>=0.3.1 # Note that conda-forge package is cf_xarray (!= cf-xarray)
- - netCDF4>=1.4
+ - fsspec
+ - zarr
+ - zstandard 
