@@ -66,7 +66,7 @@ e.g. for cmip5 the heading is ``[project:cmip5]``::
     # whether to use an intake catalog or not for this project
     use_catalog = False
     # where original files can be downloaded
-    data_node_root = https://data.mips.copernicus-climate.eu/thredds/fileServer/esg_c3s-cmip6/
+    data_node_root = https://data.mips.climate.copernicus.eu/thredds/fileServer/esg_c3s-cmip6/
 
 
 There are settings for the environment::

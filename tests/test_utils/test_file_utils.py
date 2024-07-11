@@ -62,8 +62,8 @@ def test_is_file_list():
     assert is_file_list(coll) is True
 
     coll = [
-        "https://data.mips.copernicus-climate.eu/cmip6/fake1.nc",
-        "https://data.mips.copernicus-climate.eu/badc/cmip6/fake2.nc",
+        "https://data.mips.climate.copernicus.eu/cmip6/fake1.nc",
+        "https://data.mips.climate.copernicus.eu/badc/cmip6/fake2.nc",
     ]
     assert is_file_list(coll) is True
 

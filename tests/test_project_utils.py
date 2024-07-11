@@ -312,7 +312,7 @@ def test_FileMapper():
 
 def test_url_to_file_path():
     url = (
-        "https://data.mips.copernicus-climate.eu/thredds/fileServer/esg_c3s-cmip6/CMIP/E3SM-Project/E3SM-1-1"
+        "https://data.mips.climate.copernicus.eu/thredds/fileServer/esg_c3s-cmip6/CMIP/E3SM-Project/E3SM-1-1"
         "/historical/r1i1p1f1/Amon/rlus/gr/v20191211/rlus_Amon_E3SM-1-1_historical_r1i1p1f1_gr_200001-200912.nc"
     )
     fpath = url_to_file_path(url)
