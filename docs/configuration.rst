@@ -1,23 +1,23 @@
-
 *********************
 Configuration options
 *********************
 
-There are many configuartion options that can be adjusted to change the behaviour of the roocs stack.
-The configuration file used can always be found under ``<package>/etc/roocs.ini`` where package is a package in roocs e.g. roocs-utils.
+There are many configuration options that can be adjusted to change the behaviour of the roocs stack.
+The configuration file used can always be found under ``<package>/etc/roocs.ini`` where package is a package in `roocs` e.g. `roocs-utils`.
 
 Any section of the configuration files can be overwritten by creating a new INI file with the desired sections and values and then setting the environment variable ``ROOCS_CONFIG`` as the file path to the new INI file.
 e.g. ``ROOCS_CONFIG="path/to/config.ini"``
 
-The configuration settings used are listed and explained below. Explanations will be provided as comments in the code blocks if needed.
-Examples are provided so these settings will not necesarily match up with what is used in each of the packages.
+Below are the configuration settings, with explanations provided as comments within the code blocks. The examples given may not directly correspond to the settings used in each package.
 
 Specifying types
 ################
 
 It is possible to specify the type of the entries in the configuration file, for example if you want a value to be a list when the file is parsed.
 
-This is managed through a ``[config_data_types]`` section at the top of the INI file which has the following options::
+This is managed through a ``[config_data_types]`` section at the top of the ``ini`` file which has the following options:
+
+.. code-block::
 
     [config_data_types]
     # use only in roocs-utils
@@ -33,14 +33,15 @@ This is managed through a ``[config_data_types]`` section at the top of the INI 
     extra_floats =
     extra_booleans =
 
-Simply adding the name of the value you want to format afer ``=`` will render the correct format. e.g. ``boolean = use_inventory is_default_for_path`` will set both ``use_inventory`` and ``is_default_for_path`` as booleans.
-
+Simply adding the name of the value you want to format after ``=`` will render in the correct format. e.g. ``boolean = use_inventory is_default_for_path`` will set both ``use_inventory`` and ``is_default_for_path`` as booleans.
 
 roocs-utils
 ###########
 
 In roocs-utils there are project level settings. The settings under each project heading are the same.
-e.g. for cmip5 the heading is ``[project:cmip5]``::
+e.g. for cmip5 the heading is ``[project:cmip5]``:
+
+.. code-block::
 
     [project:cmip5]
     project_name = cmip5
@@ -69,7 +70,9 @@ e.g. for cmip5 the heading is ``[project:cmip5]``::
     data_node_root = https://data.mips.climate.copernicus.eu/thredds/fileServer/esg_c3s-cmip6/
 
 
-There are settings for the environment::
+There are settings for the environment:
+
+.. code-block::
 
     [environment]
     # relating to the number of threads to use for processing
@@ -79,7 +82,9 @@ There are settings for the environment::
     VECLIB_MAXIMUM_THREADS = 1
     NUMEXPR_NUM_THREADS = 1
 
-The elastic search settings are specifed here::
+The elastic search settings are specified here:
+
+.. code-block::
 
     [elasticsearch]
     endpoint = elasticsearch.ceda.ac.uk
@@ -94,14 +99,16 @@ The elastic search settings are specifed here::
 clisops
 #######
 
-These are settings that are specific to clisops::
+These are settings that are specific to `clisops`:
+
+.. code-block::
 
     [clisops:read]
     # memory limit for chunks - dask breaks up its underlying array into chunks
     chunk_memory_limit = 250MiB
 
     [clisops:write]
-    # maximum file size of output files. Files are split if this is exceeded
+    # maximum file size of output files. Files are split if this is exceeded
     file_size_limit = 1GB
     # staging directory to output files to before they are moved to the requested output directory
     # if unset, the files are output straight to the requested output directory
@@ -111,7 +118,9 @@ These are settings that are specific to clisops::
 daops
 #####
 
-daops provides settings for using the intake catalog::
+`daops` provides settings for using the `intake` catalog:
+
+.. code-block::
 
     [catalog]
     # provides the url for the intake catalog with details of datasets
@@ -121,12 +130,14 @@ daops provides settings for using the intake catalog::
 rook
 ####
 
-There are currently no settings in rook but these would be set in the same way as the clisops and daops settings. e.g. with ``[rook:section]`` headings.
+There are currently no settings in `rook` but these would be set in the same way as the `clisops` and `daops` settings. e.g. with ``[rook:section]`` headings.
 
 dachar
 ######
 
-These are settings that are specific to dachar::
+These are settings that are specific to `dachar`:
+
+.. code-block::
 
     [dachar:processing]
     # LOTUS settings for scanning datasets
@@ -178,8 +189,11 @@ These are settings that are specific to dachar::
 catalog maker
 #############
 
-In the catalog maker there are project level settings as well. The settings under each project heading are the same.
-Settings for the catalog maker are::
+In the catalog maker there are project level settings as well.
+The settings under each project heading are the same.
+Settings for the catalog maker are:
+
+.. code-block::
 
     [project:c3s-cmip6]
     # directory to store catalog and dataset list used in generation of catalog

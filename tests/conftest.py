@@ -1,5 +1,4 @@
 import os
-import shutil
 from pathlib import Path
 
 import pytest
@@ -47,6 +46,11 @@ CMIP6_KERCHUNK_HTTPS_OPEN_JSON = (
     "CMIP6.CMIP.MOHC.UKESM1-1-LL.1pctCO2.r1i1p1f2.Amon.tasmax.gn.v20220513.json"
 )
 CMIP6_KERCHUNK_HTTPS_OPEN_ZST = CMIP6_KERCHUNK_HTTPS_OPEN_JSON + ".zst"
+
+
+@pytest.fixture()
+def cds_domain():
+    return "https://data.mips.copernicus-climate.eu/"
 
 
 @pytest.fixture
