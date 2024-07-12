@@ -1,32 +1,38 @@
 name: build
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
-
+    name: Test (Python${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 black pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
-    - name: Lint with flake8
-      run: flake8 roocs_utils tests
-      if: matrix.python-version == 3.8
-    - name: Check formatting with black
-      run: black --check --target-version py38 roocs_utils tests
-      if: matrix.python-version == 3.8
-    - name: Test with pytest
-      run: |
-        pytest -v tests
+      - name: Checkout Repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Set up Python${{ matrix.python-version }}
+        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install roocs-utils
+        run: |
+          python -m pip install --editable ".[dev]"
+      - name: Lint with flake8
+        run: |
+          flake8 roocs_utils tests
+        if: matrix.python-version == 3.8
+      - name: Check formatting with black
+        run: |
+          black --check --target-version py38 roocs_utils tests
+        if: matrix.python-version == 3.8
+      - name: Test with pytest
+        run: |
+          pytest -v tests

@@ -24,12 +24,6 @@ _long_description = open(os.path.join(here, "README.rst")).read()
 
 requirements = [line.strip() for line in open("requirements.txt")]
 
-setup_requirements = [
-    "pytest-runner",
-]
-
-test_requirements = ["pytest", "tox"]
-
 docs_requirements = [
     "sphinx",
     "sphinx-rtd-theme",
@@ -91,9 +85,7 @@ setup(
     packages=find_packages(
         include=["roocs_utils", "roocs_utils.xarray_utils", "roocs_utils.*"]
     ),
-    setup_requires=setup_requirements,
     test_suite="tests",
-    tests_require=test_requirements,
     extras_require={"docs": docs_requirements},
     package_data={"roocs_utils": ["etc/roocs.ini"]},
     url="https://github.com/roocs/roocs-utils",
