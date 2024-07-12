@@ -5,12 +5,10 @@ import pytest
 import xarray as xr
 
 from roocs_utils.xarray_utils.xarray_utils import open_xr_dataset
-from tests.conftest import (
-    C3S_CMIP5_TAS,
-    CMIP5_TAS_EC_EARTH,
-    CMIP6_KERCHUNK_HTTPS_OPEN_JSON,
-    CMIP6_KERCHUNK_HTTPS_OPEN_ZST,
-)
+from tests.conftest import C3S_CMIP5_TAS
+from tests.conftest import CMIP5_TAS_EC_EARTH
+from tests.conftest import CMIP6_KERCHUNK_HTTPS_OPEN_JSON
+from tests.conftest import CMIP6_KERCHUNK_HTTPS_OPEN_ZST
 
 
 def test_open_xr_dataset(load_test_data):

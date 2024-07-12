@@ -57,13 +57,13 @@ def test_file_mapper_fake_files():
     assert str(exc.value) == "Some files could not be found."
 
 
-def test_is_file_list():
+def test_is_file_list(cds_domain):
     coll = ["/badc/cmip6/fake1.nc", "/badc/cmip6/fake2.nc"]
     assert is_file_list(coll) is True
 
     coll = [
-        "https://data.mips.climate.copernicus.eu/cmip6/fake1.nc",
-        "https://data.mips.climate.copernicus.eu/badc/cmip6/fake2.nc",
+        f"{cds_domain}/cmip6/fake1.nc",
+        f"{cds_domain}/badc/cmip6/fake2.nc",
     ]
     assert is_file_list(coll) is True
 

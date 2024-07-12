@@ -2,10 +2,9 @@ import os
 from pathlib import Path
 
 import pytest
+from _common import MINI_ESGF_CACHE_DIR
+from _common import write_roocs_cfg
 from git import Repo
-
-from tests._common import MINI_ESGF_CACHE_DIR
-from tests._common import write_roocs_cfg
 
 write_roocs_cfg()
 
@@ -51,6 +50,16 @@ CMIP6_KERCHUNK_HTTPS_OPEN_ZST = CMIP6_KERCHUNK_HTTPS_OPEN_JSON + ".zst"
 @pytest.fixture()
 def cds_domain():
     return "https://data.mips.copernicus-climate.eu/"
+
+
+@pytest.fixture()
+def cmip5_tas():
+    return CMIP5_TAS
+
+
+@pytest.fixture()
+def cmip6_siconc():
+    return CMIP6_SICONC
 
 
 @pytest.fixture
