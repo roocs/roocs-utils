@@ -4,7 +4,6 @@ import pytest
 import xarray as xr
 
 from roocs_utils.xarray_utils.xarray_utils import get_main_variable
-from tests.conftest import CMIP5_TAS
 
 
 @pytest.mark.skipif(
@@ -49,14 +48,14 @@ def test_get_main_var_4():
     assert result == "rh"
 
 
-def test_get_main_var_test_data(load_test_data):
-    ds = xr.open_mfdataset(CMIP5_TAS, use_cftime=True, combine="by_coords")
+def test_get_main_var_test_data(load_test_data, cmip5_tas):
+    ds = xr.open_mfdataset(cmip5_tas, use_cftime=True, combine="by_coords")
     var_id = get_main_variable(ds)
     assert var_id == "tas"
 
 
-def test_get_main_var_include_common_coords(load_test_data):
-    ds = xr.open_mfdataset(CMIP5_TAS, use_cftime=True, combine="by_coords")
+def test_get_main_var_include_common_coords(load_test_data, cmip5_tas):
+    ds = xr.open_mfdataset(cmip5_tas, use_cftime=True, combine="by_coords")
     var_id = get_main_variable(ds, exclude_common_coords=False)
 
     # incorrectly identified main variable and common_coords included in search

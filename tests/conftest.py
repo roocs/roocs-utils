@@ -47,19 +47,49 @@ CMIP6_KERCHUNK_HTTPS_OPEN_JSON = (
 CMIP6_KERCHUNK_HTTPS_OPEN_ZST = CMIP6_KERCHUNK_HTTPS_OPEN_JSON + ".zst"
 
 
-@pytest.fixture()
+@pytest.fixture
 def cds_domain():
     return "https://data.mips.copernicus-climate.eu/"
 
 
 @pytest.fixture()
+def cmip5_tas_ec_earth():
+    return CMIP5_TAS_EC_EARTH
+
+
+@pytest.fixture
+def cmip5_zostoga():
+    return CMIP5_ZOSTOGA
+
+
+@pytest.fixture
+def c3s_cmip5_tas():
+    return C3S_CMIP5_TAS
+
+
+@pytest.fixture
+def c3s_cordex_afr_tas():
+    return C3S_CORDEX_AFR_TAS
+
+
+@pytest.fixture
 def cmip5_tas():
     return CMIP5_TAS
 
 
-@pytest.fixture()
+@pytest.fixture
 def cmip6_siconc():
     return CMIP6_SICONC
+
+
+@pytest.fixture
+def cmip6_kerchunk_https_open_json():
+    return CMIP6_KERCHUNK_HTTPS_OPEN_JSON
+
+
+@pytest.fixture
+def cmip6_kerchunk_https_open_zst():
+    return CMIP6_KERCHUNK_HTTPS_OPEN_ZST
 
 
 @pytest.fixture
