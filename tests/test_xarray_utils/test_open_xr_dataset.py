@@ -1,5 +1,4 @@
 import glob
-import os
 
 import pytest
 import xarray as xr
@@ -44,11 +43,11 @@ def _common_test_open_xr_dataset_kerchunk(uri):
 
 
 def test_open_xr_dataset_kerchunk_json(load_test_data):
-    ds = _common_test_open_xr_dataset_kerchunk(CMIP6_KERCHUNK_HTTPS_OPEN_JSON)
+    _common_test_open_xr_dataset_kerchunk(CMIP6_KERCHUNK_HTTPS_OPEN_JSON)
 
 
 def test_open_xr_dataset_kerchunk_zst(load_test_data):
-    ds = _common_test_open_xr_dataset_kerchunk(CMIP6_KERCHUNK_HTTPS_OPEN_ZST)
+    _common_test_open_xr_dataset_kerchunk(CMIP6_KERCHUNK_HTTPS_OPEN_ZST)
 
 
 def test_open_xr_dataset_kerchunk_compare_json_vs_zst(load_test_data):

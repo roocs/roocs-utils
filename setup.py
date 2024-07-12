@@ -23,7 +23,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 _long_description = open(os.path.join(here, "README.rst")).read()
 
 requirements = [line.strip() for line in open("requirements.txt")]
-
+dev_requirements = [line.strip() for line in open("requirements_dev.txt")]
 docs_requirements = [
     "sphinx",
     "sphinx-rtd-theme",
@@ -86,7 +86,7 @@ setup(
         include=["roocs_utils", "roocs_utils.xarray_utils", "roocs_utils.*"]
     ),
     test_suite="tests",
-    extras_require={"docs": docs_requirements},
+    extras_require={"docs": docs_requirements, "dev": dev_requirements},
     package_data={"roocs_utils": ["etc/roocs.ini"]},
     url="https://github.com/roocs/roocs-utils",
     version=__version__,

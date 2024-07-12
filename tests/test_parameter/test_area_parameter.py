@@ -14,13 +14,13 @@ type_error = (
 def test__str__():
     _area = "0.,49.,10.,65"
     parameter = AreaParameter(_area)
-    assert parameter.__str__() == "Area to subset over:" f"\n (0.0, 49.0, 10.0, 65.0)"
+    assert parameter.__str__() == "Area to subset over:\n (0.0, 49.0, 10.0, 65.0)"
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
 
     _area = area("0.,49.,10.,65")
     parameter = AreaParameter(_area)
-    assert parameter.__str__() == "Area to subset over:" f"\n (0.0, 49.0, 10.0, 65.0)"
+    assert parameter.__str__() == "Area to subset over:\n (0.0, 49.0, 10.0, 65.0)"
     assert parameter.__repr__() == parameter.__str__()
     assert parameter.__unicode__() == parameter.__str__()
 

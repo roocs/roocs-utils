@@ -36,7 +36,7 @@ class DimensionParameter(_BaseParameter):
 
         for item in value:
             if not isinstance(item, str):
-                raise InvalidParameterValue(f"Each dimension must be a string.")
+                raise InvalidParameterValue("Each dimension must be a string.")
 
             if item not in known_coord_types:
                 raise InvalidParameterValue(
