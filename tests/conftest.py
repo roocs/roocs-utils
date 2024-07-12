@@ -49,7 +49,7 @@ CMIP6_KERCHUNK_HTTPS_OPEN_ZST = CMIP6_KERCHUNK_HTTPS_OPEN_JSON + ".zst"
 
 @pytest.fixture
 def cds_domain():
-    return "https://data.mips.copernicus-climate.eu"
+    return "https://data.mips.copernicus.climate.eu"
 
 
 @pytest.fixture()
