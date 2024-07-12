@@ -1,6 +1,6 @@
+from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.base_parameter import _BaseIntervalOrSeriesParameter
 from roocs_utils.parameter.param_utils import to_float
-from roocs_utils.exceptions import InvalidParameterValue
 
 
 class LevelParameter(_BaseIntervalOrSeriesParameter):

@@ -1,13 +1,11 @@
 import inspect
 import os
-from datetime import datetime
-from pathlib import Path
 
 import cf_xarray  # noqa
 import cftime
+import fsspec
 import numpy as np
 import xarray as xr
-import fsspec
 
 from roocs_utils.project_utils import dset_to_filepaths
 

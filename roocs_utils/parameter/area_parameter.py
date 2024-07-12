@@ -2,7 +2,9 @@ from collections.abc import Sequence
 
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.base_parameter import _BaseParameter
-from roocs_utils.parameter.param_utils import area, to_float, parse_sequence
+from roocs_utils.parameter.param_utils import area
+from roocs_utils.parameter.param_utils import parse_sequence
+from roocs_utils.parameter.param_utils import to_float
 
 
 class AreaParameter(_BaseParameter):

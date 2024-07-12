@@ -2,8 +2,9 @@ from collections.abc import Sequence
 
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.base_parameter import _BaseParameter
+from roocs_utils.parameter.param_utils import dimensions
+from roocs_utils.parameter.param_utils import parse_sequence
 from roocs_utils.xarray_utils.xarray_utils import known_coord_types
-from roocs_utils.parameter.param_utils import dimensions, parse_sequence
 
 
 class DimensionParameter(_BaseParameter):

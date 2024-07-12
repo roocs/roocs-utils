@@ -3,7 +3,6 @@ import datetime
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.parameter.base_parameter import _BaseIntervalOrSeriesParameter
 from roocs_utils.parameter.param_utils import parse_datetime
-from roocs_utils.parameter.param_utils import time_interval
 
 
 class TimeParameter(_BaseIntervalOrSeriesParameter):
