@@ -1,7 +1,7 @@
 Version History
 ===============
 
-v0.6.9 (unreleased)
+v0.6.9 (2024-07-15)
 -------------------
 
 Other Changes
@@ -11,6 +11,7 @@ Other Changes
 * Added a "dev" recipe to setup.py to install dev dependencies (#118).
 * Updated pre-commit and adjusted to use Python3.8+ coding conventions (#118).
 * Tests now explicitly use pytest fixtures (#118).
+* Updated roocs.ini default values for the new CDS domain name (#118).
 
 v0.6.8 (2024-04-17)
 -------------------
