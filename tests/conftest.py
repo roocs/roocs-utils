@@ -1,12 +1,10 @@
 import os
-import shutil
 from pathlib import Path
 
 import pytest
+from _common import MINI_ESGF_CACHE_DIR
+from _common import write_roocs_cfg
 from git import Repo
-
-from tests._common import MINI_ESGF_CACHE_DIR
-from tests._common import write_roocs_cfg
 
 write_roocs_cfg()
 
@@ -47,6 +45,51 @@ CMIP6_KERCHUNK_HTTPS_OPEN_JSON = (
     "CMIP6.CMIP.MOHC.UKESM1-1-LL.1pctCO2.r1i1p1f2.Amon.tasmax.gn.v20220513.json"
 )
 CMIP6_KERCHUNK_HTTPS_OPEN_ZST = CMIP6_KERCHUNK_HTTPS_OPEN_JSON + ".zst"
+
+
+@pytest.fixture
+def cds_domain():
+    return "https://data.mips.climate.copernicus.eu"
+
+
+@pytest.fixture()
+def cmip5_tas_ec_earth():
+    return CMIP5_TAS_EC_EARTH
+
+
+@pytest.fixture
+def cmip5_zostoga():
+    return CMIP5_ZOSTOGA
+
+
+@pytest.fixture
+def c3s_cmip5_tas():
+    return C3S_CMIP5_TAS
+
+
+@pytest.fixture
+def c3s_cordex_afr_tas():
+    return C3S_CORDEX_AFR_TAS
+
+
+@pytest.fixture
+def cmip5_tas():
+    return CMIP5_TAS
+
+
+@pytest.fixture
+def cmip6_siconc():
+    return CMIP6_SICONC
+
+
+@pytest.fixture
+def cmip6_kerchunk_https_open_json():
+    return CMIP6_KERCHUNK_HTTPS_OPEN_JSON
+
+
+@pytest.fixture
+def cmip6_kerchunk_https_open_zst():
+    return CMIP6_KERCHUNK_HTTPS_OPEN_ZST
 
 
 @pytest.fixture

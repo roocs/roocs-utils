@@ -3,8 +3,9 @@ from collections.abc import Sequence
 from roocs_utils.exceptions import InvalidParameterValue
 from roocs_utils.exceptions import MissingParameterValue
 from roocs_utils.parameter.base_parameter import _BaseParameter
+from roocs_utils.parameter.param_utils import collection
+from roocs_utils.parameter.param_utils import parse_sequence
 from roocs_utils.utils.file_utils import FileMapper
-from roocs_utils.parameter.param_utils import collection, parse_sequence
 
 
 class CollectionParameter(_BaseParameter):

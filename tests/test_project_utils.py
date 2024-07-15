@@ -1,11 +1,8 @@
-import glob
 import os
 
 import pytest
 import xarray as xr
 
-from .conftest import CMIP5_TAS
-from .conftest import CMIP6_SICONC
 from roocs_utils.exceptions import InvalidProject
 from roocs_utils.project_utils import DatasetMapper
 from roocs_utils.project_utils import derive_dset
@@ -17,7 +14,7 @@ from roocs_utils.project_utils import url_to_file_path
 from roocs_utils.utils.file_utils import FileMapper
 
 
-def test_get_project_name(load_test_data):
+def test_get_project_name(load_test_data, cmip5_tas, cmip6_siconc):
     # cmip5
     dset = "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
     project = get_project_name(dset)
@@ -28,7 +25,7 @@ def test_get_project_name(load_test_data):
     assert project == "cmip5"
 
     ds = xr.open_mfdataset(
-        CMIP5_TAS,
+        cmip5_tas,
         use_cftime=True,
         combine="by_coords",
     )
@@ -41,7 +38,7 @@ def test_get_project_name(load_test_data):
     assert project == "cmip6"
 
     ds = xr.open_mfdataset(
-        CMIP6_SICONC,
+        cmip6_siconc,
         use_cftime=True,
         combine="by_coords",
     )
@@ -310,9 +307,9 @@ def test_FileMapper():
     assert dm.ds_id == "c3s-cmip6.CMIP.MIROC.MIROC6.amip.r1i1p1f1.day.tas.gn.latest"
 
 
-def test_url_to_file_path():
+def test_url_to_file_path(cds_domain):
     url = (
-        "https://data.mips.copernicus-climate.eu/thredds/fileServer/esg_c3s-cmip6/CMIP/E3SM-Project/E3SM-1-1"
+        f"{cds_domain}/thredds/fileServer/esg_c3s-cmip6/CMIP/E3SM-Project/E3SM-1-1"
         "/historical/r1i1p1f1/Amon/rlus/gr/v20191211/rlus_Amon_E3SM-1-1_historical_r1i1p1f1_gr_200001-200912.nc"
     )
     fpath = url_to_file_path(url)

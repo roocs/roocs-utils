@@ -5,6 +5,7 @@ include LICENSE
 
 recursive-include etc *
 recursive-include roocs_utils *
+recursive-include tests *
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]

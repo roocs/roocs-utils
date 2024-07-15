@@ -1,21 +1,25 @@
 Version History
 ===============
 
-Next
-----
+v0.6.9 (unreleased)
+-------------------
 
-* ...
+Other Changes
+^^^^^^^^^^^^^
+* Documentation adjustments to address grammatical mistakes and improve clarity (#118).
+* Dropped support for Python versions below 3.8, added support for Python3.12 (#118).
+* Added a "dev" recipe to setup.py to install dev dependencies (#118).
+* Updated pre-commit and adjusted to use Python3.8+ coding conventions (#118).
+* Tests now explicitly use pytest fixtures (#118).
 
-
-v0.6.8 (2024.04.17)
+v0.6.8 (2024-04-17)
 -------------------
 
 Other Changes
 ^^^^^^^^^^^^^
 * Fixed logging and updated conda env (#115).
 
-
-v0.6.7 (2024.02.05)
+v0.6.7 (2024-02-05)
 -------------------
 
 Other Changes
@@ -48,7 +52,6 @@ Other Changes
 * Added ``realization`` dimension to known coords (#103).
 * Update pre-commit.
 
-
 v0.6.3 (2022-09-26)
 -------------------
 
@@ -56,22 +59,23 @@ Other Changes
 ^^^^^^^^^^^^^
 * Added c3s-cmip-decadal project to default roocs.ini (#101).
 
-
 v0.6.2 (2022-05-03)
 -------------------
+
 Bug Fixes
 ^^^^^^^^^
 * Fixed ``get_coords_by_type`` in ``xarray_utils`` to handle non existing coords (#99).
 
-
 v0.6.1 (2022-04-19)
 -------------------
+
 Bug Fixes
 ^^^^^^^^^
 * Added data_node_root in ``roocs.ini`` for C3S-CORDEX and C3S-CMIP5 (#97).
 
 v0.6.0 (2022-04-14)
 -------------------
+
 Bug Fixes
 ^^^^^^^^^
 * Updated default ``roocs.ini`` for C3S-CORDEX (#93, #95).
@@ -79,6 +83,7 @@ Bug Fixes
 
 v0.5.0 (2021-10-26)
 -------------------
+
 Bug Fixes
 ^^^^^^^^^
 * When a project was provided to ``roocs_utils.project_utils.DatasetMapper``, getting the base directory would be skipped, causing an error. This has been resolved.
@@ -114,15 +119,16 @@ Other Changes
 ^^^^^^^^^^^^^
 * Python 3.6 no longer tested in GitHub actions.
 
-
 v0.4.2 (2021-05-18)
 -------------------
+
 Breaking Changes
 ^^^^^^^^^^^^^^^^
 * Remove abcunit-backend and psycopg2 dependencies from requirements.txt, these must now be manually installed in order to use the catalog maker.
 
 v0.4.0 (2021-05-18)
 -------------------
+
 Breaking Changes
 ^^^^^^^^^^^^^^^^
 * Inventory maker now removed and replaced by intake catalog maker which writes a csv file with the dataset entries and a yaml description file.
@@ -136,14 +142,15 @@ Other Changes
 
 v0.3.0 (2021-03-30)
 -------------------
+
 New Features
 ^^^^^^^^^^^^
 * Added ``AnyCalendarDateTime`` and ``str_to_AnyCalendarDateTime`` to ``utils.time_utils`` to aid in handling date strings that may not exist in all calendar types.
 * Inventory maker will check latitude and longitude of the dataset it is scanning are within acceptable bounds and raise an exception if they are not.
 
-
 v0.2.1 (2021-02-19)
 -------------------
+
 Bug Fixes
 ^^^^^^^^^
 * clean up imports ... remove pandas dependency.
@@ -179,64 +186,44 @@ v0.1.5 (2020-11-23)
 
 Breaking Changes
 ^^^^^^^^^^^^^^^^
-
 * Replaced use of ``cfunits`` by ``cf_xarray`` and ``cftime`` (new dependency) in ``roocs_utils.xarray_utils``.
-
 
 v0.1.4 (2020-10-22)
 -------------------
 
 Fixing pip install
 
-
 Bug Fixes
 ^^^^^^^^^
-
-
 * Importing and using roocs-utils when pip installing now works
-
 
 v0.1.3 (2020-10-21)
 -------------------
 
 Fixing formatting of doc strings and imports
 
-
 Breaking Changes
 ^^^^^^^^^^^^^^^^
-
-
 * Use of ``roocs_utils.parameter.parameterise.parameterise``:
 import should now be ``from roocs_utils.parameter import parameterise``
 and usage should be, for example ``parameters = parameterise(collection=ds, time=time, area=area, level=level)``
 
-
 New Features
 ^^^^^^^^^^^^
 
-
 * Added a notebook to show examples
-
-
 
 Other Changes
 ^^^^^^^^^^^^^
-
-
 * Updated formatting of doc strings
-
 
 v0.1.2 (2020-10-15)
 -------------------
 
 Updating the documentation and improving the changelog.
 
-
-
 Other Changes
 ^^^^^^^^^^^^^
-
-
 * Updated doc strings to improve documentation.
 * Updated documentation.
 
@@ -245,19 +232,13 @@ v0.1.1 (2020-10-12)
 
 Fixing mostly existing functionality to work more efficiently with the other packages in roocs.
 
-
-
 Breaking Changes
 ^^^^^^^^^^^^^^^^
-
-
 * ``environment.yml`` has been updated to bring it in line with requirements.txt.
 * ``level`` coordinates would previously have been identified as ``None``. They are now identified as ``level``.
 
 New Features
 ^^^^^^^^^^^^
-
-
 * ``parameterise`` function added in ``roocs_utils.parameter`` to use in all roocs packages.
 * ``ROOCS_CONFIG`` environment variable can be used to override default config in ``etc/roocs.ini``.
   To use a local config file set ``ROOCS_CONFIG`` as the file path to this file. Several file paths can be provided
@@ -270,21 +251,16 @@ New Features
 
 Bug Fixes
 ^^^^^^^^^
-
-
 * ``xarray_utils.xarray_utils.get_main_variable`` updated to exclude common coordinates from the search for the
   main variable. This fixes a bug where coordinates such as ``lon_bounds`` would be returned as the main variable.
 
 Other Changes
 ^^^^^^^^^^^^^
-
-
 * ``README`` update to explain inventory functionality.
 * ``Black`` and ``flake8`` formatting applied.
 * Fixed import warning with ``collections.abc``.
 
 v0.1.0 (2020-07-30)
 -------------------
-
 
 * First release.

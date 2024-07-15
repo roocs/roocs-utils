@@ -104,3 +104,6 @@ ENV/
 # catalog data
 catalog_data/
 log/
+
+# JetBrains
+.idea/

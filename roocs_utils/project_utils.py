@@ -91,10 +91,10 @@ class DatasetMapper:
                 self._project = self._deduce_project(dset)
                 self._base_dir = get_project_base_dir(self._project)
             except InvalidProject:
-                LOGGER.info(f"The project could not be identified")
+                LOGGER.info("The project could not be identified")
                 if not force:
                     raise InvalidProject(
-                        f"The project could not be identified and force was set to false"
+                        "The project could not be identified and force was set to false"
                     )
 
         # get base_dir in the case where project has been supplied
