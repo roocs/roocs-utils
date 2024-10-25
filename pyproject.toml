@@ -1,0 +1,144 @@
+[build-system]
+requires = ["flit-core >=3.9,<4.0"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "roocs_utils"
+description = "A package containing common components for the roocs project"
+readme = "README.rst"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Elle Smith", email = "eleanor.smith@stfc.ac.uk"}
+]
+keywords = ["roocs_utils"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Environment :: Web Environment",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Internet",
+    "Topic :: Scientific/Engineering",
+    "Topic :: System :: Distributed Computing",
+    "Topic :: System :: Systems Administration :: Authentication/Directory",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+requires-python = ">=3.9.0"
+dynamic = ["version"]
+dependencies = [
+    "aiohttp",
+    "cf-xarray>=0.3.1",
+    "cftime",
+    "dask[complete]>=2.6",
+    "filelock",
+    "jinja2",
+    "loguru",
+    "fsspec",
+    "netCDF4>=1.4",
+    "numpy>=1.16",
+    "pooch",
+    "python-dateutil>=2.8.1",
+    "xarray>=0.15",
+    "zarr",
+    "zstandard"
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=24.10.0",
+    "bump-my-version",
+    "coverage",
+    "jinja2",
+    "pip",
+    "pre-commit>=3.5.0",
+    "pytest>=8.0.0",
+    "pytest-xdist>=3.5.0",
+    "tox",
+    "twine",
+    "watchdog",
+    "wheel",
+]
+docs = [
+    "sphinx",
+    "sphinx-rtd-theme",
+    "nbsphinx",
+    "pandoc",
+    "ipython",
+    "ipykernel",
+    "jupyter_client",
+    "matplotlib"
+]
+
+
+[project.urls]
+homepage = "https://github.com/roocs/roocs-utils"
+
+[project.scripts]
+roocs_utils = "roocs_utils.cli:main"
+
+[tool]
+
+[tool.bumpversion]
+current_version = "0.6.9"
+commit = true
+commit_args = "--no-verify"
+tag = false
+
+[[tool.bumpversion.files]]
+filename = "roocs_utils/_version.py"
+search = "__version__ = \"{current_version}\""
+replace = "__version__ = \"{new_version}\""
+
+[[tool.bumpversion.files]]
+filename = "docs/conf.py"
+search = "version = \"{current_version}\""
+replace = "version = \"{new_version}\""
+
+[tool.flit.sdist]
+include = [
+    "AUTHORS.rst",
+    "HISTORY.rst",
+    "CONTRIBUTING.rst",
+    "README.rst",
+    "MakeFile",
+    "*.txt",
+    "*.rst",
+    "LICENSE",
+    "etc/*",
+    "roocs_utils/**/*.py",
+    "tests/**/*.py",
+    "roocs_utils/etc/roocs.ini",
+    "tox.ini",
+]
+exclude = [
+    "**/__pycache__",
+    "**/*.py[co]",
+    ".*"
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts =[
+    "--color=yes",
+    "--verbose",
+    "--dist=worksteal",
+    "--numprocesses=0",
+    "--maxprocesses=8",
+    "--strict-config",
+    "--strict-markers"
+]
+filterwarnings = ["ignore::UserWarning"]
+markers = ["online: mark test to need internet connection"]

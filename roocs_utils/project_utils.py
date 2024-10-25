@@ -1,14 +1,12 @@
 import glob
 import os
 
+from loguru import logger
 import xarray as xr
 
 from roocs_utils import CONFIG
-from roocs_utils import logging
 from roocs_utils.exceptions import InvalidProject
 from roocs_utils.utils.file_utils import FileMapper
-
-LOGGER = logging.getLogger(__file__)
 
 
 class DatasetMapper:
@@ -74,8 +72,7 @@ class DatasetMapper:
 
         else:
             raise InvalidProject(
-                f"The format of {dset} is not known and the project name could not "
-                f"be found."
+                f"The format of {dset} is not known and the project name could not be found."
             )
 
     def _parse(self, force):
@@ -91,7 +88,7 @@ class DatasetMapper:
                 self._project = self._deduce_project(dset)
                 self._base_dir = get_project_base_dir(self._project)
             except InvalidProject:
-                LOGGER.info("The project could not be identified")
+                logger.info("The project could not be identified")
                 if not force:
                     raise InvalidProject(
                         "The project could not be identified and force was set to false"
@@ -311,7 +308,7 @@ def get_data_node_dirs_dict():
 
 
 def get_project_from_data_node_root(url):
-    """Identify the project from data node root by identifyng the data node root in the input url."""
+    """Identify the project from data node root by identifying the data node root in the input url."""
     data_node_dict = get_data_node_dirs_dict()
     project = None
 

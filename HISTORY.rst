@@ -1,6 +1,19 @@
 Version History
 ===============
 
+v0.7.0 (unreleased)
+-------------------
+
+This is a major release to help synchronize the package with the other roocs packages in advance of
+an eventual merge with `CLISOPS`. This will be the final release of `roocs-utils` as a standalone package.
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+* The package has been refactored to use `pyproject.toml` with the `flit-core` backend for packaging.
+* The testing framework has been updated to use `pooch` for testing data caching, with on-the-fly data download and caching.
+* `pre-commit` hooks have been updated and simplified.
+* `pytest-xdist` has been added to the `dev` dependencies (distributed testing is disabled by default).
+
 v0.6.9 (2024-07-15)
 -------------------
 

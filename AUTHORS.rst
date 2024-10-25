@@ -17,3 +17,4 @@ Contributors
 ------------
 
 * Martin Schupfner <schupfner@dkrz.de> `@sol1105 <https://github.com/sol1105>`_
+* Trevor James Smith <smith.trevorj@ouranos.ca> `@Zeistperre <https://github.com/Zeistperre>`_

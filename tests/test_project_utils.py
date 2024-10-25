@@ -1,8 +1,10 @@
+import importlib
 import os
 
 import pytest
 import xarray as xr
 
+import roocs_utils
 from roocs_utils.exceptions import InvalidProject
 from roocs_utils.project_utils import DatasetMapper
 from roocs_utils.project_utils import derive_dset
@@ -14,7 +16,12 @@ from roocs_utils.project_utils import url_to_file_path
 from roocs_utils.utils.file_utils import FileMapper
 
 
-def test_get_project_name(load_test_data, cmip5_tas, cmip6_siconc):
+@pytest.fixture(scope="module")
+def cds_domain():
+    return "https://data.mips.climate.copernicus.eu"
+
+
+def test_get_project_name(mini_esgf_data):
     # cmip5
     dset = "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
     project = get_project_name(dset)
@@ -24,26 +31,26 @@ def test_get_project_name(load_test_data, cmip5_tas, cmip6_siconc):
     project = get_project_name(dset)
     assert project == "cmip5"
 
-    ds = xr.open_mfdataset(
-        cmip5_tas,
+    with xr.open_mfdataset(
+        mini_esgf_data["CMIP5_TAS"],
         use_cftime=True,
         combine="by_coords",
-    )
-    project = get_project_name(ds)
-    assert project == "cmip5"
+    ) as ds:
+        project = get_project_name(ds)
+        assert project == "cmip5"
 
     # cmip6
     dset = "CMIP6.CMIP.NCAR.CESM2.historical.r1i1p1f1.SImon.siconc.gn.latest"
     project = get_project_name(dset)
     assert project == "cmip6"
 
-    ds = xr.open_mfdataset(
-        cmip6_siconc,
+    with xr.open_mfdataset(
+        mini_esgf_data["CMIP6_SICONC"],
         use_cftime=True,
         combine="by_coords",
-    )
-    project = get_project_name(ds)
-    assert project == "cmip6"
+    ) as ds:
+        project = get_project_name(ds)
+        assert project == "cmip6"
 
     # tests default for cmip6 path is c3s-cmip6
     dset = "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/historical/r1i1p1f1/SImon/siconc/gn/latest/*.nc"
@@ -132,7 +139,12 @@ class TestDatasetMapper:
             "/siconc_SImon_CESM2_historical_r1i1p1f1_gn_185001-201412.nc"
         ]
 
-    def test_fixed_path_mappings(self):
+    def test_fixed_path_mappings(self, write_roocs_cfg, monkeypatch):
+        # reload the roocs_config
+        monkeypatch.setenv("ROOCS_CONFIG", write_roocs_cfg)
+        importlib.reload(roocs_utils)
+        from roocs_utils import CONFIG
+
         dsm = DatasetMapper("proj_test.my.first.test")
         assert dsm._data_path == "/projects/test/proj/first/test/something.nc"
         assert dsm.files == []  # because these do not exist when globbed
@@ -145,7 +157,7 @@ class TestDatasetMapper:
         assert dsm._data_path == "/projects/test/proj/my/unknown"
 
     def test_fixed_path_modifiers(self):
-        "Tests how modifiers can change the fixed path mappings."
+        """Tests how modifiers can change the fixed path mappings."""
         dsm = DatasetMapper("proj_test.another.sun.test")
         assert dsm._data_path == "/projects/test/proj/good/test/sun.nc"
 

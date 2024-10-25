@@ -6,6 +6,11 @@ from roocs_utils.utils.file_utils import FileMapper
 from roocs_utils.utils.file_utils import is_file_list
 
 
+@pytest.fixture(scope="module")
+def cds_domain():
+    return "https://data.mips.climate.copernicus.eu"
+
+
 @pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
 def test_file_mapper():
     file_paths = [

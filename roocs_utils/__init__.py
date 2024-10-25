@@ -1,23 +1,36 @@
 """Top-level package for roocs-utils."""
 
-__author__ = """Eleanor Smith"""
-__contact__ = "eleanor.smith@stfc.ac.uk"
-__copyright__ = "Copyright 2018 United Kingdom Research and Innovation"
-__license__ = "BSD - see LICENSE file in top-level package directory"
-__version__ = "0.6.9"
+import os
+import warnings
 
+from loguru import logger
+
+from roocs_utils._version import __author__
+from roocs_utils._version import __contact__
+from roocs_utils._version import __copyright__
+from roocs_utils._version import __license__
+from roocs_utils._version import __version__
 from roocs_utils.config import get_config
-import roocs_utils
+
+
+def showwarning(message, *args, **kwargs):
+    """Inject warnings from `warnings.warn` into `loguru`."""
+    logger.warning(message)
+    showwarning_(message, *args, **kwargs)
+
+
+showwarning_ = warnings.showwarning
+warnings.showwarning = showwarning
+
+# Disable logging for clisops and remove the logger that is instantiated on import
+logger.disable("roocs_utils")
+logger.remove()
 
 CONFIG = get_config()
 
-from .parameter import *
-from .xarray_utils import *
-from .utils import *
-
-import logging
-import os
-
+from roocs_utils.parameter import *
+from roocs_utils.utils import *
+from roocs_utils.xarray_utils import *
 
 for env_var, value in CONFIG["environment"].items():
     os.environ[env_var.upper()] = value

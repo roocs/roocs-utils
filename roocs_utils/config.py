@@ -1,3 +1,4 @@
+from pathlib import Path
 import os
 from configparser import ConfigParser
 from itertools import chain
@@ -9,7 +10,7 @@ _CONFIG = None
 def get_config(package=None):
     global _CONFIG
 
-    if True:  # not _CONFIG:
+    if not _CONFIG:
         _load_config(package)
 
     return _CONFIG
@@ -17,25 +18,27 @@ def get_config(package=None):
 
 def _gather_config_files(package=None):
     conf_files = []
-    roocs_utils_config = os.path.join(os.path.dirname(__file__), "etc", "roocs.ini")
+    roocs_utils_config = Path(__file__).parent.joinpath("etc").joinpath("roocs.ini")
 
-    if not os.path.isfile(roocs_utils_config):
-        print(f"[WARN] Cannot load default config file from: {roocs_utils_config}")
+    if not roocs_utils_config.is_file():
+        print(
+            f"[WARN] Cannot load default config file from: {roocs_utils_config.as_posix()}"
+        )
     else:
         conf_files.append(roocs_utils_config)
     if package:
-        pkg_config = os.path.join(os.path.dirname(package.__file__), "etc", "roocs.ini")
-        if os.path.isfile(pkg_config):
+        pkg_config = Path(package.__file__).parent.joinpath("etc").joinpath("roocs.ini")
+        if pkg_config.is_file():
             conf_files.append(pkg_config)
 
     # add system config /etc/roocs.ini
-    sys_config = os.path.abspath(os.path.join(os.sep, "etc", "roocs.ini"))
-    if os.path.isfile(sys_config):
+    sys_config = Path(Path(os.sep, "etc", "roocs.ini")).absolute()
+    if sys_config.is_file():
         conf_files.append(sys_config)
 
-    ROOCS_CONFIG = "ROOCS_CONFIG"
-    if ROOCS_CONFIG in os.environ:
-        conf_files.extend(os.environ[ROOCS_CONFIG].split(":"))
+    roocs_config = "ROOCS_CONFIG"
+    if roocs_config in os.environ:
+        conf_files.extend([Path(p) for p in os.environ[roocs_config].split(":")])
 
     return conf_files
 
@@ -59,16 +62,24 @@ def _to_float(i):
 
 
 def _to_boolean(i):
-    if i != "False" and i != "True":
-        raise Exception(
-            f"{i} is not valid for boolean field - you must use either True or False"
-        )
+    if i == "True":
+        return True
+    elif i == "False":
+        return False
     else:
-        return eval(i)
+        raise ValueError(
+            f"{i} is not valid for a boolean field - use 'True' or 'False'"
+        )
 
 
 def _chain_config_types(conf, keys):
-    return chain(*[conf.get("config_data_types", key).split() for key in keys])
+    return chain(
+        *[
+            conf.get("config_data_types", key).split()
+            for key in keys
+            if conf.has_option("config_data_types", key)
+        ]
+    )
 
 
 def _get_mappers(conf):
@@ -115,7 +126,6 @@ def _load_config(package=None):
             config[section][key] = value
 
     _post_process(config)
-
     _CONFIG = config
 
 
