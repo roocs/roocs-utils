@@ -20,6 +20,8 @@ def _gather_config_files(package=None):
     conf_files = []
     roocs_utils_config = Path(__file__).parent.joinpath("etc").joinpath("roocs.ini")
 
+    # add default config file
+    # FIXME: we should be using importlib.resources to get the default config file
     if not roocs_utils_config.is_file():
         print(
             f"[WARN] Cannot load default config file from: {roocs_utils_config.as_posix()}"
@@ -36,6 +38,7 @@ def _gather_config_files(package=None):
     if sys_config.is_file():
         conf_files.append(sys_config)
 
+    # add custom config from environment variable
     roocs_config = "ROOCS_CONFIG"
     if roocs_config in os.environ:
         conf_files.extend([Path(p) for p in os.environ[roocs_config].split(":")])

@@ -109,32 +109,32 @@ def test_get_project_base_dir():
 
 class TestDatasetMapper:
     dset = "CMIP6.CMIP.NCAR.CESM2.historical.r1i1p1f1.SImon.siconc.gn.latest"
-    dm = DatasetMapper(dset)
 
     def test_raw(self):
+
         assert (
-            self.dm.raw
+            DatasetMapper(self.dset).raw
             == "CMIP6.CMIP.NCAR.CESM2.historical.r1i1p1f1.SImon.siconc.gn.latest"
         )
 
     def test_data_path(self):
         assert (
-            self.dm.data_path
+            DatasetMapper(self.dset).data_path
             == "/badc/cmip6/data/CMIP6/CMIP/NCAR/CESM2/historical/r1i1p1f1/SImon/siconc/gn/latest"
         )
 
     def test_ds_id(self):
         assert (
-            self.dm.ds_id
+            DatasetMapper(self.dset).ds_id
             == "CMIP6.CMIP.NCAR.CESM2.historical.r1i1p1f1.SImon.siconc.gn.latest"
         )
 
     def test_base_dir(self):
-        assert self.dm.base_dir == "/badc/cmip6/data/CMIP6"
+        assert DatasetMapper(self.dset).base_dir == "/badc/cmip6/data/CMIP6"
 
     @pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
     def test_files(self):
-        assert self.dm.files == [
+        assert DatasetMapper(self.dset).files == [
             "/badc/cmip6/data/CMIP6/CMIP/NCAR/CESM2/historical/r1i1p1f1/SImon/siconc/gn/latest"
             "/siconc_SImon_CESM2_historical_r1i1p1f1_gn_185001-201412.nc"
         ]
@@ -142,8 +142,6 @@ class TestDatasetMapper:
     def test_fixed_path_mappings(self, write_roocs_cfg, monkeypatch):
         # reload the roocs_config
         monkeypatch.setenv("ROOCS_CONFIG", write_roocs_cfg)
-        importlib.reload(roocs_utils)
-        from roocs_utils import CONFIG
 
         dsm = DatasetMapper("proj_test.my.first.test")
         assert dsm._data_path == "/projects/test/proj/first/test/something.nc"

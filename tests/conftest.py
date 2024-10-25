@@ -14,7 +14,7 @@ from roocs_utils.utils.testing import stratus as _stratus
 
 
 @pytest.fixture
-def write_roocs_cfg(stratus, tmp_path):
+def write_roocs_cfg(stratus, tmp_path) -> str:
     cfg_template = """
     [project:cmip5]
     base_dir = {{ base_dir }}/badc/cmip5/data/cmip5
