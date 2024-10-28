@@ -1,19 +1,10 @@
-import importlib
 import os
-
 import pytest
 import xarray as xr
 
-import roocs_utils
-from roocs_utils.exceptions import InvalidProject
+
 from roocs_utils.project_utils import DatasetMapper
-from roocs_utils.project_utils import derive_dset
 from roocs_utils.project_utils import dset_to_filepaths
-from roocs_utils.project_utils import get_project_base_dir
-from roocs_utils.project_utils import get_project_name
-from roocs_utils.project_utils import switch_dset
-from roocs_utils.project_utils import url_to_file_path
-from roocs_utils.utils.file_utils import FileMapper
 
 
 @pytest.fixture(scope="module")
@@ -21,90 +12,92 @@ def cds_domain():
     return "https://data.mips.climate.copernicus.eu"
 
 
-def test_get_project_name(mini_esgf_data):
-    # cmip5
-    dset = "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
-    project = get_project_name(dset)
-    assert project == "cmip5"
+class TestProjectUtils:
+    from roocs_utils.project_utils import get_project_name
+    from roocs_utils.project_utils import get_project_base_dir
 
-    dset = "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
-    project = get_project_name(dset)
-    assert project == "cmip5"
-
-    with xr.open_mfdataset(
-        mini_esgf_data["CMIP5_TAS"],
-        use_cftime=True,
-        combine="by_coords",
-    ) as ds:
-        project = get_project_name(ds)
+    def test_get_project_name(self, mini_esgf_data):
+        # cmip5
+        dset = "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
+        project = self.get_project_name(dset)
         assert project == "cmip5"
 
-    # cmip6
-    dset = "CMIP6.CMIP.NCAR.CESM2.historical.r1i1p1f1.SImon.siconc.gn.latest"
-    project = get_project_name(dset)
-    assert project == "cmip6"
+        dset = "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
+        project = self.get_project_name(dset)
+        assert project == "cmip5"
 
-    with xr.open_mfdataset(
-        mini_esgf_data["CMIP6_SICONC"],
-        use_cftime=True,
-        combine="by_coords",
-    ) as ds:
-        project = get_project_name(ds)
+        with xr.open_mfdataset(
+            mini_esgf_data["CMIP5_TAS"],
+            use_cftime=True,
+            combine="by_coords",
+        ) as ds:
+            project = self.get_project_name(ds)
+            assert project == "cmip5"
+
+        # cmip6
+        dset = "CMIP6.CMIP.NCAR.CESM2.historical.r1i1p1f1.SImon.siconc.gn.latest"
+        project = self.get_project_name(dset)
         assert project == "cmip6"
 
-    # tests default for cmip6 path is c3s-cmip6
-    dset = "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/historical/r1i1p1f1/SImon/siconc/gn/latest/*.nc"
-    project = get_project_name(dset)
-    assert project == "c3s-cmip6"
+        with xr.open_mfdataset(
+            mini_esgf_data["CMIP6_SICONC"],
+            use_cftime=True,
+            combine="by_coords",
+        ) as ds:
+            project = self.get_project_name(ds)
+            assert project == "cmip6"
 
-    # c3s-cmip6-decadal
-    dset = "c3s-cmip6-decadal.DCPP.MOHC.HadGEM3-GC31-MM.dcppA-hindcast.s1995-r1i1p1f2.Amon.tas.gn.v20200417"
-    project = get_project_name(dset)
-    assert project == "c3s-cmip6-decadal"
+        # tests default for cmip6 path is c3s-cmip6
+        dset = "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/historical/r1i1p1f1/SImon/siconc/gn/latest/*.nc"
+        project = self.get_project_name(dset)
+        assert project == "c3s-cmip6"
 
-    # TODO: This needs to be cleaned up by introducing aliases and/or multiple mapping facets.
-    #       Each project should be defined only once in the roocs.ini.
-    #       Currently, without the possibility to define aliases, this is not possible
-    #       for the ATLAS projects, because the web prefix, the project name in the DRS and the
-    #       project name in the netCDF metadata differ from one another ...
-    #
-    # c3s-cica-atlas
-    dset = "c3s-cica-atlas.cd.CMIP6.historical.yr"
-    project = get_project_name(dset)
-    assert project == "c3s-cica-atlas"
+        # c3s-cmip6-decadal
+        dset = "c3s-cmip6-decadal.DCPP.MOHC.HadGEM3-GC31-MM.dcppA-hindcast.s1995-r1i1p1f2.Amon.tas.gn.v20200417"
+        project = self.get_project_name(dset)
+        assert project == "c3s-cmip6-decadal"
 
-    # c3s-cica-atlas 2
-    dset = "/pool/data/c3s-cica-atlas/ERA5/psl_ERA5_mon_194001-202212.nc"
-    project = get_project_name(dset)
-    assert project == "c3s-cica-atlas"
+        # TODO: This needs to be cleaned up by introducing aliases and/or multiple mapping facets.
+        #       Each project should be defined only once in the roocs.ini.
+        #       Currently, without the possibility to define aliases, this is not possible
+        #       for the ATLAS projects, because the web prefix, the project name in the DRS and the
+        #       project name in the netCDF metadata differ from one another ...
+        #
+        # c3s-cica-atlas
+        dset = "c3s-cica-atlas.cd.CMIP6.historical.yr"
+        project = self.get_project_name(dset)
+        assert project == "c3s-cica-atlas"
 
-    # c3s-ipcc-ar6-atlas
-    dset = "c3s-ipcc-ar6-atlas.t.CORDEX-ANT.rcp45.mon"
-    project = get_project_name(dset)
-    assert project == "c3s-ipcc-ar6-atlas"
+        # c3s-cica-atlas 2
+        dset = "/pool/data/c3s-cica-atlas/ERA5/psl_ERA5_mon_194001-202212.nc"
+        project = self.get_project_name(dset)
+        assert project == "c3s-cica-atlas"
 
-    # c3s-ipcc-ar6-atlas
-    dset = "/pool/data/c3s-ipcc-ar6-atlas/CORDEX-ANT/rcp45/pr_CORDEX-ANT_rcp45_mon_200601-210012.nc"
-    project = get_project_name(dset)
-    assert project in ["c3s-ipcc-ar6-atlas", "c3s-ipcc-atlas"]
+        # c3s-ipcc-ar6-atlas
+        dset = "c3s-ipcc-ar6-atlas.t.CORDEX-ANT.rcp45.mon"
+        project = self.get_project_name(dset)
+        assert project == "c3s-ipcc-ar6-atlas"
 
+        # c3s-ipcc-ar6-atlas
+        dset = "/pool/data/c3s-ipcc-ar6-atlas/CORDEX-ANT/rcp45/pr_CORDEX-ANT_rcp45_mon_200601-210012.nc"
+        project = self.get_project_name(dset)
+        assert project in ["c3s-ipcc-ar6-atlas", "c3s-ipcc-atlas"]
 
-def test_get_project_name_badc():
-    dset = "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
-    project = get_project_name(dset)
-    assert project == "cmip5"
+    def test_get_project_name_badc(self):
+        dset = "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
+        project = self.get_project_name(dset)
+        assert project == "cmip5"
 
+    def test_get_project_base_dir(self):
+        cmip5_base_dir = self.get_project_base_dir("cmip5")
+        assert cmip5_base_dir == "/badc/cmip5/data/cmip5"
 
-def test_get_project_base_dir():
-    cmip5_base_dir = get_project_base_dir("cmip5")
-    assert cmip5_base_dir == "/badc/cmip5/data/cmip5"
+        c3s_cordex_base_dir = self.get_project_base_dir("c3s-cordex")
+        assert c3s_cordex_base_dir == "/gws/nopw/j04/cp4cds1_vol1/data/c3s-cordex"
 
-    c3s_cordex_base_dir = get_project_base_dir("c3s-cordex")
-    assert c3s_cordex_base_dir == "/gws/nopw/j04/cp4cds1_vol1/data/c3s-cordex"
-
-    with pytest.raises(Exception) as exc:
-        get_project_base_dir("test")
-    assert str(exc.value) == "The project supplied is not known."
+        with pytest.raises(Exception) as exc:
+            self.get_project_base_dir("test")
+        assert str(exc.value) == "The project supplied is not known."
 
 
 class TestDatasetMapper:
@@ -142,8 +135,9 @@ class TestDatasetMapper:
     def test_fixed_path_mappings(self, write_roocs_cfg, monkeypatch):
         # reload the roocs_config
         monkeypatch.setenv("ROOCS_CONFIG", write_roocs_cfg)
+        import roocs_utils.project_utils
 
-        dsm = DatasetMapper("proj_test.my.first.test")
+        dsm = roocs_utils.project_utils.DatasetMapper("proj_test.my.first.test")
         assert dsm._data_path == "/projects/test/proj/first/test/something.nc"
         assert dsm.files == []  # because these do not exist when globbed
 
@@ -202,6 +196,8 @@ def test_get_filepaths():
 
 
 def test_derive_dset():
+    from roocs_utils.project_utils import derive_dset
+
     # c3s-cmip6
     dset = "c3s-cmip6.CMIP.MIROC.MIROC6.historical.r1i1p1f1.SImon.siconc.gn.latest"
     ds_id = derive_dset(dset)
@@ -243,6 +239,8 @@ def test_derive_dset():
 
 
 def test_switch_dset():
+    from roocs_utils.project_utils import switch_dset
+
     dset = "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/historical/r1i1p1f1/SImon/siconc/gn/latest/*.nc"
     ds_id = switch_dset(dset)
 
@@ -271,53 +269,60 @@ def test_unknown_fpath_force():
     ]
 
 
-def test_unknown_fpath_no_force():
-    dset = "/tmp/tmpxi6d78ng/subset_tttaum9d/rlds_Amon_IPSL-CM6A-LR_historical_r1i1p1f1_gr_19850116-20141216.nc"
+class TestExceptions:
+    from roocs_utils.exceptions import InvalidProject
 
-    with pytest.raises(InvalidProject) as exc:
-        DatasetMapper(dset)
-    assert (
-        str(exc.value)
-        == "The project could not be identified and force was set to false"
-    )
+    def test_unknown_fpath_no_force(self):
+        dset = "/tmp/tmpxi6d78ng/subset_tttaum9d/rlds_Amon_IPSL-CM6A-LR_historical_r1i1p1f1_gr_19850116-20141216.nc"
+
+        with pytest.raises(self.InvalidProject) as exc:
+            DatasetMapper(dset)
+        assert (
+            str(exc.value)
+            == "The project could not be identified and force was set to false"
+        )
+
+    def test_unknown_project_no_force(self):
+        dset = "unknown_project.data1.data2.data3.data4"
+
+        with pytest.raises(self.InvalidProject) as exc:
+            DatasetMapper(dset)
+        assert (
+            str(exc.value)
+            == "The project could not be identified and force was set to false"
+        )
 
 
-def test_unknown_project_no_force():
-    dset = "unknown_project.data1.data2.data3.data4"
+class TestFileMapper:
+    from roocs_utils.utils.file_utils import FileMapper
 
-    with pytest.raises(InvalidProject) as exc:
-        DatasetMapper(dset)
-    assert (
-        str(exc.value)
-        == "The project could not be identified and force was set to false"
-    )
+    @pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
+    def test_filemapper(self):
+        file_paths = [
+            "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/"
+            "tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc",
+            "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/"
+            "tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc",
+        ]
+        dset = self.FileMapper(file_paths)
+        dm = DatasetMapper(dset)
 
-
-@pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
-def test_FileMapper():
-    file_paths = [
-        "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/"
-        "tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc",
-        "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest/"
-        "tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc",
-    ]
-    dset = FileMapper(file_paths)
-    dm = DatasetMapper(dset)
-
-    assert dm.files == [
-        "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest"
-        "/tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc",
-        "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest"
-        "/tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc",
-    ]
-    assert (
-        dm.data_path
-        == "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest"
-    )
-    assert dm.ds_id == "c3s-cmip6.CMIP.MIROC.MIROC6.amip.r1i1p1f1.day.tas.gn.latest"
+        assert dm.files == [
+            "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest"
+            "/tas_day_MIROC6_amip_r1i1p1f1_gn_19790101-19881231.nc",
+            "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest"
+            "/tas_day_MIROC6_amip_r1i1p1f1_gn_19890101-19981231.nc",
+        ]
+        assert (
+            dm.data_path
+            == "/badc/cmip6/data/CMIP6/CMIP/MIROC/MIROC6/amip/r1i1p1f1/day/tas/gn/latest"
+        )
+        assert dm.ds_id == "c3s-cmip6.CMIP.MIROC.MIROC6.amip.r1i1p1f1.day.tas.gn.latest"
 
 
 def test_url_to_file_path(cds_domain):
+    from roocs_utils.project_utils import url_to_file_path
+
     url = (
         f"{cds_domain}/thredds/fileServer/esg_c3s-cmip6/CMIP/E3SM-Project/E3SM-1-1"
         "/historical/r1i1p1f1/Amon/rlus/gr/v20191211/rlus_Amon_E3SM-1-1_historical_r1i1p1f1_gr_200001-200912.nc"
