@@ -4,9 +4,7 @@ from roocs_utils.parameter.param_utils import series
 
 
 class _BaseParameter:
-    """
-    Base class for parameters used in operations (e.g. subset, average etc.)
-    """
+    """Base class for parameters used in operations (e.g. subset, average etc.)."""
 
     allowed_input_types = None
 
@@ -31,15 +29,15 @@ class _BaseParameter:
             )
 
     def _parse(self):
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def get_bounds(self):
         """Returns a tuple of the (start, end) times, calculated from
         the value of the parameter. Either will default to None."""
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def __str__(self):
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def __repr__(self):
         return str(self)
@@ -50,11 +48,11 @@ class _BaseParameter:
 
 class _BaseIntervalOrSeriesParameter(_BaseParameter):
     """
-    A base class for a parameter that can be instantiated from either and
-    `Interval` or `Series` class instance. It has a `type` and a `value`
-    reflecting the type. E.g.:
-        type: "interval" --> value: (start, end)
-        type: "series"   --> value: [item1, item2, ..., item_n]
+    A base class for a parameter that can be instantiated from either and `Interval` or `Series` class instance.
+
+    It has a `type` and a `value` reflecting the type, e.g.:
+        - type: "interval" --> value: (start, end)
+        - type: "series"   --> value: [item1, item2, ..., item_n]
     """
 
     allowed_input_types = [interval, series, type(None), str]
@@ -80,10 +78,10 @@ class _BaseIntervalOrSeriesParameter(_BaseParameter):
                 return self._parse_as_series()
 
     def _parse_as_interval(self):
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def _parse_as_series(self):
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def _value_as_tuple(self):
         value = self.value

@@ -40,8 +40,7 @@ clean-build: ## remove build artifacts
 
 clean-docs: ## remove documentation artifacts
 	rm -fr docs/notebooks/.ipynb_checkpoints/
-	rm -f docs/apidoc/rooc_utils*.rst
-	rm -f docs/apidoc/modules.rst
+	rm -fr docs/apidoc/
 	$(MAKE) -C docs clean
 
 clean-pyc: ## remove Python file artifacts
