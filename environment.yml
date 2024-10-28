@@ -12,13 +12,15 @@ dependencies:
  - jinja2
  - loguru
  - netCDF4 >=1.4
- - numpy >=1.23.0
+ - numpy >=1.23.0,<2.2
+ - pip >=24.2
  - pooch >=1.8.0
  - python-dateutil >=2.8.1
- - xarray>=0.15
+ - xarray>=2022.9.0
  - zarr >=2.13
  - zstandard
  # Docs
+ - ipykernel
  - ipython >=8.5.0
  - matplotlib >=3.6.0
  - nbsphinx >=0.9.5
