@@ -4,17 +4,23 @@ channels:
  - defaults
 dependencies:
  - aiohttp
- - cf_xarray>=0.3.1 # Note that conda-forge package is cf_xarray (!= cf-xarray)
+ - cf_xarray >=0.3.1 # Note that conda-forge package is cf_xarray (!= cf-xarray)
  - cftime
- - dask>=2.6
- - filelock
+ - dask >=2.6.0
+ - filelock >=3.14.0
  - fsspec
  - jinja2
  - loguru
- - netCDF4>=1.4
- - numpy>=1.16
- - pooch
- - python-dateutil>=2.8.1
+ - netCDF4 >=1.4
+ - numpy >=1.23.0
+ - pooch >=1.8.0
+ - python-dateutil >=2.8.1
  - xarray>=0.15
- - zarr
+ - zarr >=2.13
  - zstandard
+ # Docs
+ - ipython >=8.5.0
+ - matplotlib >=3.6.0
+ - nbsphinx >=0.9.5
+ - sphinx >=7.0.0
+ - sphinx-rtd-theme >=1.0

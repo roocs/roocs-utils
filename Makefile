@@ -38,6 +38,12 @@ clean-build: ## remove build artifacts
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -f {} +
 
+clean-docs: ## remove documentation artifacts
+	rm -fr docs/notebooks/.ipynb_checkpoints/
+	rm -f docs/apidoc/rooc_utils*.rst
+	rm -f docs/apidoc/modules.rst
+	$(MAKE) -C docs clean
+
 clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
@@ -65,11 +71,8 @@ coverage: ## check code coverage quickly with the default Python
 	coverage html
 	$(BROWSER) htmlcov/index.html
 
-docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/roocs_utils.rst
-	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ roocs_utils
-	$(MAKE) -C docs clean
+docs: clean-docs ## generate Sphinx HTML documentation, including API docs
+	sphinx-apidoc -o docs/apidoc/ --private --module-first roocs_utils
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
 

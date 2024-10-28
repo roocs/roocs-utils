@@ -10,15 +10,15 @@ from roocs_utils.utils.file_utils import FileMapper
 
 
 class DatasetMapper:
-    """
+    r"""
     Class to map to data path, dataset ID and files from any dataset input.
 
-    | dset must be a string and can be input as:
-    | A dataset ID: e.g. "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga"
-    | A file path: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/tas_Amon_HadGEM2-ES_rcp85_r1i1p1_200512-203011.nc"
-    | A path to a group of files: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/*.nc"
-    | A directory e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas"
-    | An instance of the FileMapper class (that represents a set of files within a single directory)
+    Dset must be a string and can be input as:
+        - A dataset ID: e.g. "cmip5.output1.INM.inmcm4.rcp45.mon.ocean.Omon.r1i1p1.latest.zostoga".
+        - A file path: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/tas_Amon_HadGEM2-ES_rcp85_r1i1p1_200512-203011.nc".
+        - A path to a group of files: e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas/\*.nc".
+        - A directory e.g. "/badc/cmip5/data/cmip5/output1/MOHC/HadGEM2-ES/rcp85/mon/atmos/Amon/r1i1p1/latest/tas".
+        - An instance of the FileMapper class (that represents a set of files within a single directory).
 
     When force=True, if the project can not be identified, any attempt to use the base_dir of a project
     to resolve the data path will be ignored. Any of data_path, ds_id and files that can be set, will be set.

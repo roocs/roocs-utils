@@ -16,6 +16,7 @@
 # relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
 #
+import datetime
 import os
 import sys
 
@@ -44,6 +45,9 @@ extensions = [
     "IPython.sphinxext.ipython_console_highlighting",
 ]
 
+autosectionlabel_prefix_document = True
+autosectionlabel_maxdepth = 2
+
 nbsphinx_execute = "never"
 nbsphinx_timeout = 300
 
@@ -54,14 +58,16 @@ templates_path = ["_templates"]
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_suffix = ".rst"
+source_suffix = {".rst": "restructuredtext"}
 
 # The master toctree document.
 master_doc = "index"
 
 # General information about the project.
 project = "roocs-utils"
-copyright = "2020, Eleanor Smith"
+copyright = (
+    f"2020-{datetime.datetime.now().year}, United Kingdom Research and Innovation"
+)
 author = "Eleanor Smith"
 
 # The version info for the project you're documenting, acts as replacement
@@ -78,7 +84,7 @@ release = version
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

@@ -13,18 +13,15 @@ roocs-utils
    :target: https://roocs-utils.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation
 
-
 A package containing common components for the roocs project.
 
-
-* Free software: BSD - see LICENSE file in top-level package directory
+* Free software: BSD-3-Clause
 * Documentation: https://roocs-utils.readthedocs.io.
 
 Credits
 =======
 
 This package was created with ``Cookiecutter`` and the ``audreyr/cookiecutter-pypackage`` project template.
-
 
 * Cookiecutter: https://github.com/audreyr/cookiecutter
 * cookiecutter-pypackage: https://github.com/audreyr/cookiecutter-pypackage

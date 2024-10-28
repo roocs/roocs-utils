@@ -105,12 +105,11 @@ class Interval:
 class TimeComponents:
     """
     A simple class for parsing and representing a set of time components.
-    The components are stored in a dictionary of {time_comp: values}, such
-    as:
-        {"year": [2000, 2001], "month": [1, 2, 3]}
 
-    Note that you can provide month strings as strings or numbers, e.g.:
-        "feb", "Feb", "February", 2
+    The components are stored in a dictionary of {time_comp: values},
+    such as: {"year": [2000, 2001], "month": [1, 2, 3]}
+
+    Note that you can provide month strings as strings or numbers, e.g.: "feb", "Feb", "February", 2.
     """
 
     def __init__(

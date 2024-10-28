@@ -15,6 +15,12 @@ Welcome to roocs-utils's documentation!
    authors
    history
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Package Structure
+
+   apidoc/modules
+
 Indices and tables
 ==================
 * :ref:`genindex`

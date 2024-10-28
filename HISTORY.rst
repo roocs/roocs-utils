@@ -4,7 +4,7 @@ Version History
 v0.7.0 (unreleased)
 -------------------
 
-This is a major release to help synchronize the package with the other roocs packages in advance of
+This is a major release to help synchronize the package with the other `roocs` packages in advance of
 an eventual merge with `CLISOPS`. This will be the final release of `roocs-utils` as a standalone package.
 
 Breaking Changes
@@ -13,6 +13,7 @@ Breaking Changes
 * The testing framework has been updated to use `pooch` for testing data caching, with on-the-fly data download and caching.
 * `pre-commit` hooks have been updated and simplified.
 * `pytest-xdist` has been added to the `dev` dependencies (distributed testing is disabled by default).
+* `GitPython` has been removed from the dependencies in favour of `pooch` for testing data caching.
 
 v0.6.9 (2024-07-15)
 -------------------
@@ -54,7 +55,7 @@ v0.6.5 (2023-11-09)
 Other Changes
 ^^^^^^^^^^^^^
 * Updated ``realization`` dimension in common coords (#108).
-* Linting.
+* Code linting.
 * Added Python 3.11 to tests.
 * Updated requirements for cf_xarray.
 
@@ -106,14 +107,14 @@ Bug Fixes
 Breaking Changes
 ^^^^^^^^^^^^^^^^
 * Intake catalog maker removed, now in it's own package: `roocs/catalog-maker <https://github.com/roocs/catalog-maker>`_
-* Change to input parameter classes::
-  * Added: ``roocs_utils.parameter.time_components_parameter.TimeComponentsParameter``
-  * Modified input types required for classes::
-    * ``roocs_utils.parameter.time_parameter.TimeParameter``
-    * ``roocs_utils.parameter.level_parameter.LevelParameter``
-  * They both now require their inputs to be one of::
-    * ``roocs_utils.parameter.param_utils.Interval`` - to specify a range/interval
-    * ``roocs_utils.parameter.param_utils.Series`` - to specify a series of values
+* Change to input parameter classes:
+    * Added: ``roocs_utils.parameter.time_components_parameter.TimeComponentsParameter``
+    * Modified input types required for classes:
+        * ``roocs_utils.parameter.time_parameter.TimeParameter``
+        * ``roocs_utils.parameter.level_parameter.LevelParameter``
+    * They both now require their inputs to be one of:
+        * ``roocs_utils.parameter.param_utils.Interval`` - to specify a range/interval
+        * ``roocs_utils.parameter.param_utils.Series`` - to specify a series of values
 
 New Features
 ^^^^^^^^^^^^
@@ -147,12 +148,12 @@ Breaking Changes
 ^^^^^^^^^^^^^^^^
 * Inventory maker now removed and replaced by intake catalog maker which writes a csv file with the dataset entries and a yaml description file.
 * In ``etc/roocs.ini`` the option ``use_inventory`` has been replaced by ``use_catalog`` and the inventory maker options have been replaced with equivalent catalog options. However, the option to include file paths or not no longer exists.
-* The catalog maker now uses a database backend and creates a csv file so there are 3 new dependencies for the catalog maker: pandas and abcunit-backend and psycopg2.
-This means a database backend must be specified and the paths for the pickle files in ``etc/roocs.ini`` are no longer necessary. For more information see the README.
+* The catalog maker now uses a database backend and creates a csv file so there are three new dependencies for the catalog maker: `pandas` and `abcunit-backend` and `psycopg2`.
+  This means a database backend must be specified and the paths for the pickle files in ``etc/roocs.ini`` are no longer necessary. For more information see the README.
 
 Other Changes
 ^^^^^^^^^^^^^
-* oyaml removed as a dependency
+* `oyaml` removed as a dependency
 
 v0.3.0 (2021-03-30)
 -------------------
@@ -167,7 +168,8 @@ v0.2.1 (2021-02-19)
 
 Bug Fixes
 ^^^^^^^^^
-* clean up imports ... remove pandas dependency.
+* Cleaned up imports.
+* Removed `pandas` dependency.
 
 v0.2.0 (2021-02-18)
 -------------------
@@ -178,7 +180,7 @@ Breaking Changes
 * oyaml>=0.9 - new dependency for inventory
 * Interface to inventory maker changed. Detailed instructions for use added in README.
 * Adjusted file name template. Underscore removed before ``__derive__time_range``
-* New dev dependency: GitPython==3.1.12
+* New dev dependency: `GitPython==3.1.12`
 
 New Features
 ^^^^^^^^^^^^
@@ -218,9 +220,7 @@ Fixing formatting of doc strings and imports
 
 Breaking Changes
 ^^^^^^^^^^^^^^^^
-* Use of ``roocs_utils.parameter.parameterise.parameterise``:
-import should now be ``from roocs_utils.parameter import parameterise``
-and usage should be, for example ``parameters = parameterise(collection=ds, time=time, area=area, level=level)``
+* Use of ``roocs_utils.parameter.parameterise.parameterise``: import should now be ``from roocs_utils.parameter import parameterise`` and usage should be, for example ``parameters = parameterise(collection=ds, time=time, area=area, level=level)``
 
 New Features
 ^^^^^^^^^^^^
@@ -254,9 +254,7 @@ Breaking Changes
 New Features
 ^^^^^^^^^^^^
 * ``parameterise`` function added in ``roocs_utils.parameter`` to use in all roocs packages.
-* ``ROOCS_CONFIG`` environment variable can be used to override default config in ``etc/roocs.ini``.
-  To use a local config file set ``ROOCS_CONFIG`` as the file path to this file. Several file paths can be provided
-  separated by a ``:``
+* ``ROOCS_CONFIG`` environment variable can be used to override default config in ``etc/roocs.ini``. To use a local config file set ``ROOCS_CONFIG`` as the file path to this file. Several file paths can be provided separated by a ``:``
 * Inventory functionality added - this can be used to create an inventory of datasets. See ``README`` for more info.
 * ``project_utils`` added with the following functions to get the project name of a dataset and the base directory for
   that project.
@@ -265,8 +263,7 @@ New Features
 
 Bug Fixes
 ^^^^^^^^^
-* ``xarray_utils.xarray_utils.get_main_variable`` updated to exclude common coordinates from the search for the
-  main variable. This fixes a bug where coordinates such as ``lon_bounds`` would be returned as the main variable.
+* ``xarray_utils.xarray_utils.get_main_variable`` updated to exclude common coordinates from the search for the main variable. This fixes a bug where coordinates such as ``lon_bounds`` would be returned as the main variable.
 
 Other Changes
 ^^^^^^^^^^^^^
