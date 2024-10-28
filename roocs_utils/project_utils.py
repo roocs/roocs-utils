@@ -147,6 +147,8 @@ class DatasetMapper:
         # use to data_path to find files if not set already
         if len(self._files) < 1:
             self._files = sorted(glob.glob(os.path.join(self._data_path, "*.nc")))
+            print(self._data_path)
+            print(self._files)
 
     @property
     def raw(self):

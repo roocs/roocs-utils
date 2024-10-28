@@ -1,8 +1,7 @@
 """Top-level package for roocs-utils."""
 
-import os
 import warnings
-
+import os
 from loguru import logger
 
 from roocs_utils._version import __author__
@@ -26,11 +25,18 @@ warnings.showwarning = showwarning
 logger.disable("roocs_utils")
 logger.remove()
 
-CONFIG = get_config()
+
+class Package:
+    __file__ = __file__  # noqa
+
+
+package = Package()
+
+CONFIG = get_config(package)
 
 from roocs_utils.parameter import *
 from roocs_utils.utils import *
 from roocs_utils.xarray_utils import *
 
-for env_var, value in CONFIG["environment"].items():
-    os.environ[env_var.upper()] = value
+for key, value in CONFIG["environment"].items():
+    os.environ[key.upper()] = value

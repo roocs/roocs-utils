@@ -2,9 +2,27 @@ from pathlib import Path
 import os
 from configparser import ConfigParser
 from itertools import chain
+from typing import Optional, Dict
+
 
 # Global CONFIG used by other packages
-_CONFIG = None
+_CONFIG: Optional[dict] = None
+
+
+def reload_config(package=None):
+    """Reloads the configuration from the config file.
+
+    Used for forcibly reloading the configuration from the config file, particularly useful for pytesting mock imports.
+    """
+    global _CONFIG
+
+    _CONFIG = None
+    _load_config(package)
+
+    for key, value in _CONFIG["environment"].items():
+        os.environ[key.upper()] = value
+
+    return _CONFIG
 
 
 def get_config(package=None):
@@ -129,6 +147,7 @@ def _load_config(package=None):
             config[section][key] = value
 
     _post_process(config)
+
     _CONFIG = config
 
 
