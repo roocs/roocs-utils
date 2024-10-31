@@ -301,7 +301,7 @@ def test_unknown_fpath_force():
 
 
 class TestExceptions:
-    from roocs_utils.exceptions import InvalidProject
+    from clisops.exceptions import InvalidProject
 
     def test_unknown_fpath_no_force(self):
         dset = "/tmp/tmpxi6d78ng/subset_tttaum9d/rlds_Amon_IPSL-CM6A-LR_historical_r1i1p1f1_gr_19850116-20141216.nc"
@@ -325,7 +325,7 @@ class TestExceptions:
 
 
 class TestFileMapper:
-    from roocs_utils.utils.file_utils import FileMapper
+    from clisops.utils.file_utils import FileMapper
 
     @pytest.mark.skipif(os.path.isdir("/badc") is False, reason="data not available")
     def test_filemapper(self):

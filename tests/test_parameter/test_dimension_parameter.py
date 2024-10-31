@@ -1,6 +1,6 @@
 import pytest
 
-from roocs_utils.exceptions import InvalidParameterValue
+from clisops.exceptions import InvalidParameterValue
 from roocs_utils.parameter.dimension_parameter import DimensionParameter
 from roocs_utils.parameter.dimension_parameter import dimensions
 

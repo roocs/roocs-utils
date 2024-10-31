@@ -1,6 +1,6 @@
 import pytest
 
-from roocs_utils.exceptions import InvalidParameterValue
+from clisops.exceptions import InvalidParameterValue
 from roocs_utils.parameter.time_components_parameter import string_to_dict
 from roocs_utils.parameter.time_components_parameter import time_components
 from roocs_utils.parameter.time_components_parameter import TimeComponentsParameter

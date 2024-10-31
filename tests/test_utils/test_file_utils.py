@@ -2,8 +2,8 @@ import os
 
 import pytest
 
-from roocs_utils.utils.file_utils import FileMapper
-from roocs_utils.utils.file_utils import is_file_list
+from clisops.utils.file_utils import FileMapper
+from clisops.utils.file_utils import is_file_list
 
 
 @pytest.fixture(scope="module")

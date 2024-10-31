@@ -1,6 +1,6 @@
 import pytest
 
-from roocs_utils.exceptions import InvalidParameterValue
+from clisops.exceptions import InvalidParameterValue
 from roocs_utils.parameter.area_parameter import area
 from roocs_utils.parameter.area_parameter import AreaParameter
 

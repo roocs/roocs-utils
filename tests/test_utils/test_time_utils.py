@@ -1,7 +1,7 @@
 import pytest
 
-from roocs_utils.utils.time_utils import AnyCalendarDateTime
-from roocs_utils.utils.time_utils import str_to_AnyCalendarDateTime
+from clisops.utils.time_utils import AnyCalendarDateTime
+from clisops.utils.time_utils import str_to_AnyCalendarDateTime
 
 
 class TestAnyCalendarDateTime:

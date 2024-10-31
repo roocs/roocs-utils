@@ -1,7 +1,7 @@
 import pytest
 
-from roocs_utils.exceptions import InvalidParameterValue
-from roocs_utils.exceptions import MissingParameterValue
+from clisops.exceptions import InvalidParameterValue
+from clisops.exceptions import MissingParameterValue
 from roocs_utils.parameter.collection_parameter import collection
 from roocs_utils.parameter.collection_parameter import CollectionParameter
 

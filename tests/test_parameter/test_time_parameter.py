@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from roocs_utils.exceptions import InvalidParameterValue
+from clisops.exceptions import InvalidParameterValue
 from roocs_utils.parameter.param_utils import time_interval
 from roocs_utils.parameter.param_utils import time_series
 from roocs_utils.parameter.time_parameter import TimeParameter

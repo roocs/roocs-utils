@@ -1,4 +1,4 @@
-from roocs_utils.utils.common import parse_size
+from clisops.utils.common import parse_size
 
 
 def test_parse_size():
