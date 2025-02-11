@@ -24,4 +24,6 @@ import logging  # noqa
 for env_var, value in CONFIG["environment"].items():
     os.environ[env_var.upper()] = value
 
-warnings.warn("This package is deprecated and will no longer be maintained.", DeprecationWarning)
+warnings.warn(
+    "This package is deprecated and will no longer be maintained.", DeprecationWarning
+)
