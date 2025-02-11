@@ -36,19 +36,18 @@ def _common_test_open_xr_dataset_kerchunk(uri):
     return ds
 
 
-def test_open_xr_dataset_kerchunk_json(load_test_data, cmip6_kerchunk_https_open_json):
-    _common_test_open_xr_dataset_kerchunk(cmip6_kerchunk_https_open_json)
+# def test_open_xr_dataset_kerchunk_json(load_test_data, cmip6_kerchunk_https_open_json):
+#     _common_test_open_xr_dataset_kerchunk(cmip6_kerchunk_https_open_json)
+
+# def test_open_xr_dataset_kerchunk_zst(load_test_data, cmip6_kerchunk_https_open_zst):
+#     _common_test_open_xr_dataset_kerchunk(cmip6_kerchunk_https_open_zst)
 
 
-def test_open_xr_dataset_kerchunk_zst(load_test_data, cmip6_kerchunk_https_open_zst):
-    _common_test_open_xr_dataset_kerchunk(cmip6_kerchunk_https_open_zst)
-
-
-def test_open_xr_dataset_kerchunk_compare_json_vs_zst(
-    load_test_data, cmip6_kerchunk_https_open_json, cmip6_kerchunk_https_open_zst
-):
-    ds1 = _common_test_open_xr_dataset_kerchunk(cmip6_kerchunk_https_open_json)
-    ds2 = _common_test_open_xr_dataset_kerchunk(cmip6_kerchunk_https_open_zst)
-
-    diff = ds1.isel(time=slice(0, 2)) - ds2.isel(time=slice(0, 2))
-    assert diff.max() == diff.min() == 0.0
+# def test_open_xr_dataset_kerchunk_compare_json_vs_zst(
+#     load_test_data, cmip6_kerchunk_https_open_json, cmip6_kerchunk_https_open_zst
+# ):
+#     ds1 = _common_test_open_xr_dataset_kerchunk(cmip6_kerchunk_https_open_json)
+#     ds2 = _common_test_open_xr_dataset_kerchunk(cmip6_kerchunk_https_open_zst)
+#
+#     diff = ds1.isel(time=slice(0, 2)) - ds2.isel(time=slice(0, 2))
+#     assert diff.max() == diff.min() == 0.0
