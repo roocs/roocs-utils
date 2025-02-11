@@ -18,6 +18,7 @@ from .xarray_utils import *
 from .utils import *
 
 import os
+import logging  # noqa
 
 
 for env_var, value in CONFIG["environment"].items():
