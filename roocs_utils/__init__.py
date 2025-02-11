@@ -6,6 +6,8 @@ __copyright__ = "Copyright 2018 United Kingdom Research and Innovation"
 __license__ = "BSD - see LICENSE file in top-level package directory"
 __version__ = "0.6.9"
 
+import warnings
+
 from roocs_utils.config import get_config
 import roocs_utils
 
@@ -15,9 +17,10 @@ from .parameter import *
 from .xarray_utils import *
 from .utils import *
 
-import logging
 import os
 
 
 for env_var, value in CONFIG["environment"].items():
     os.environ[env_var.upper()] = value
+
+warnings.warn("This package is deprecated and will no longer be maintained.", DeprecationWarning)

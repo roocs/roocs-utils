@@ -41,7 +41,7 @@ setup(
     # See:
     # https://www.python.org/dev/peps/pep-0301/#distutils-trove-classification
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 7 - Inactive",
         "Environment :: Console",
         "Environment :: Web Environment",
         "Intended Audience :: End Users/Desktop",
