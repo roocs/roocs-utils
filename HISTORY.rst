@@ -1,6 +1,11 @@
 Version History
 ===============
 
+v0.7.0 (2025-02-12)
+-------------------
+
+* The roocs-utils package has been deprecated and will no longer be maintained. (#121).
+
 v0.6.9 (2024-07-15)
 -------------------
 

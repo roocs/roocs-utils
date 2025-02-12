@@ -1,6 +1,10 @@
 Welcome to roocs-utils's documentation!
 =======================================
 
+.. warning::
+
+    As of February 2025, this package has been deprecated and will no longer be maintained.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

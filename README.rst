@@ -1,6 +1,10 @@
 roocs-utils
 ===========
 
+.. warning::
+
+    As of February 2025, this package has been deprecated and will no longer be maintained.
+
 .. image:: https://img.shields.io/pypi/v/roocs_utils.svg
    :target: https://pypi.python.org/pypi/roocs_utils
    :alt: Pypi
